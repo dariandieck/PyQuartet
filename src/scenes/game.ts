@@ -5,6 +5,7 @@ import { Button } from "../render/button.ts";
 import { CardSprite, drawPile, linkAt } from "../render/cardView.ts";
 import {
   centeredRect,
+  contains,
   drawArrow,
   drawText,
   fillRoundRect,
@@ -17,12 +18,15 @@ import { colors, SCREEN_H, SCREEN_W } from "../render/theme.ts";
 import { Animator, easeOut, Sequencer } from "../render/tween.ts";
 import type { Session } from "../session/session.ts";
 import { computeLayout, type TableLayout } from "./layout.ts";
+import { isTouchDevice } from "../platform.ts";
 import { MenuScene } from "./menu.ts";
 import type { AppContext, InputEvent, Scene } from "./scene.ts";
 
 const REVEAL_PAUSE = 0.35; // cards rest face down on the table before the flip
 const MIN_BOT_THINKING = 0.8; // seconds "X is thinking..." stays visible, however early the bot's call arrives
 const TOAST_SECONDS = 4;
+/** Card zoom on touch screens: the card fills the screen height, so stats are readable and tappable on phones. */
+const INSPECT_SCALE = 2.1;
 
 type Phase = "wait" | "choose" | "confirm" | "result" | "over";
 
@@ -69,6 +73,9 @@ export class GameScene implements Scene {
   private toastTime = 0;
   private overTitle = "";
   private overDetail = "";
+  private readonly touch = isTouchDevice();
+  /** Card shown enlarged (touch screens only); taps go to it until it is closed. */
+  private inspected: CardSprite | null = null;
 
   private readonly callButton: Button;
   private readonly continueButton: Button;
@@ -144,6 +151,7 @@ export class GameScene implements Scene {
 
   private onRoundStart(event: Extract<GameEvent, { kind: "roundStart" }>): void {
     this.applyState(event.state);
+    this.inspected = null;
     this.result = null;
     this.selected = null;
     this.callout = null;
@@ -185,8 +193,12 @@ export class GameScene implements Scene {
     if (this.callerId === this.youId) {
       this.phase = "choose";
       this.message = "Your call!";
-      const hasCard = this.hand.has(this.youId);
-      this.detail = hasCard ? "Pick a value on your card." : "You don't play in this tie, but you pick the value.";
+      const own = this.hand.get(this.youId);
+      const hasCard = own !== undefined;
+      if (!hasCard) this.detail = "You don't play in this tie, but you pick the value.";
+      else this.detail = this.touch ? "Tap your card to pick a value." : "Pick a value on your card.";
+      // On phones the card is too small to read and tap, so it opens enlarged right away.
+      if (own && this.touch) this.inspected = own;
       this.layoutPicker(!hasCard);
       this.callButton.visible = true;
       this.callButton.enabled = false;
@@ -220,6 +232,7 @@ export class GameScene implements Scene {
   }
 
   private onReveal(event: Extract<GameEvent, { kind: "reveal" }>): void {
+    this.inspected = null; // let everyone watch the cards go to the table
     this.phase = "wait";
     this.hint = "";
     this.callButton.visible = false;
@@ -282,15 +295,18 @@ export class GameScene implements Scene {
       this.message = tie ? `Tie, but only one player has cards left: ${winner} the pot.` : `${winner} the round!`;
       this.detail = `${category.label}: ${values}  (${polarityHint(category)})`;
     }
+    const touchHint = this.touch ? "Tap a card to see it larger." : "";
     if (this.session.isHost) {
       this.phase = "result";
       this.continueButton.visible = true;
+      this.hint = touchHint;
     } else {
-      this.hint = "Waiting for the host to continue...";
+      this.hint = ["Waiting for the host to continue...", touchHint].filter(Boolean).join("  ");
     }
   }
 
   private onCollect(event: Extract<GameEvent, { kind: "collect" }>): void {
+    this.inspected = null;
     this.phase = "wait";
     this.hint = "";
     this.continueButton.visible = false;
@@ -342,6 +358,7 @@ export class GameScene implements Scene {
       // Nothing was played yet: everyone puts their drawn card back and the round is drawn again.
       for (const [playerId, sprite] of this.hand) this.fly(sprite, playerId, 0.1);
       this.hand = new Map();
+      this.inspected = null;
       this.callout = null;
       this.selected = null;
       this.phase = "wait";
@@ -371,6 +388,7 @@ export class GameScene implements Scene {
   private showGameOver(): void {
     this.phase = "over";
     this.callout = null;
+    this.inspected = null;
     for (const b of this.buttons) b.visible = false;
     if (this.options.playAgain) {
       this.againButton.visible = true;
@@ -466,8 +484,20 @@ export class GameScene implements Scene {
   // ---- input -------------------------------------------------------------------------------
 
   handle(event: InputEvent): void {
+    if (this.inspected) {
+      if (event.kind === "down") this.tapInspector(event.point);
+      else if (event.kind === "key" && event.key === "Escape") this.inspected = null;
+      return;
+    }
     if (event.kind === "down" && this.buttons.some((b) => b.click(event.point))) return;
-    if (event.kind === "down") {
+    if (event.kind === "down" && this.touch) {
+      // Touch: a tap on any face-up card enlarges it; values and the logo link are used on the big card.
+      const card = this.phase === "over" ? null : this.faceUpCardAt(event.point);
+      if (card) {
+        this.inspected = card;
+        return;
+      }
+    } else if (event.kind === "down") {
       const link = this.linkAt(event.point);
       if (link) {
         openUrl(link);
@@ -515,6 +545,59 @@ export class GameScene implements Scene {
       this.select(labels[(index + labels.length) % labels.length]!);
     } else if (event.key === "Enter" || event.key === " ") {
       this.callPressed();
+    }
+  }
+
+  // ---- card zoom (touch) -------------------------------------------------------------------
+
+  private faceUpCardAt(p: Point): CardSprite | null {
+    const byZ = [...this.sprites].sort((a, b) => b.z - a.z);
+    return byZ.find((s) => s.faceUp && Math.abs(Math.cos(Math.PI * s.turn)) > 0.95 && contains(s.rect(), p)) ?? null;
+  }
+
+  /** The enlarged copy of the inspected card, centered on screen (same face state as the original). */
+  private inspectorSprite(): CardSprite | null {
+    const original = this.inspected;
+    if (!original) return null;
+    const big = new CardSprite(original.card, 640, 360, { scale: INSPECT_SCALE, turn: 1 });
+    big.highlight = original.highlight;
+    big.outcome = original.outcome;
+    return big;
+  }
+
+  /** Only your own card, while it's your call, can be used to pick a value. */
+  private canPickFromInspector(): boolean {
+    return this.phase === "choose" && this.inspected !== null && this.inspected === this.hand.get(this.youId);
+  }
+
+  private tapInspector(p: Point): void {
+    const big = this.inspectorSprite();
+    if (!big) return;
+    const link = big.linkAt(p);
+    if (link) {
+      openUrl(link);
+      return;
+    }
+    const category = big.categoryAt(p, this.app.renderer);
+    if (category && this.canPickFromInspector()) this.select(category.label);
+    this.inspected = null;
+  }
+
+  private drawInspector(ctx: CanvasRenderingContext2D): void {
+    const big = this.inspectorSprite();
+    if (!big) return;
+    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.fillRect(-SCREEN_W, -SCREEN_H, SCREEN_W * 3, SCREEN_H * 3);
+    big.draw(ctx, this.app.renderer);
+    const [first, second] = this.canPickFromInspector() ? ["Tap a value", "to pick it"] : ["Tap anywhere", "to close"];
+    const box = centeredRect(1060, big.card.url ? 380 : 338, 330, big.card.url ? 180 : 110);
+    fillRoundRect(ctx, box, 16, colors.bgAccent);
+    strokeRoundRect(ctx, box, 16, colors.pyYellow, 2);
+    drawText(ctx, first, 1060, 320, { size: 28, color: colors.pyYellow, bold: true });
+    drawText(ctx, second, 1060, 356, { size: 28, color: colors.pyYellow, bold: true });
+    if (big.card.url) {
+      drawText(ctx, "Tap the logo for", 1060, 420, { size: 20, color: colors.textDim });
+      drawText(ctx, "the library's homepage", 1060, 446, { size: 20, color: colors.textDim });
     }
   }
 
@@ -596,6 +679,7 @@ export class GameScene implements Scene {
 
     // Cards are the top layer: text and in-game buttons must never cover them; only the game-over overlay does.
     for (const sprite of [...this.sprites].sort((a, b) => a.z - b.z)) sprite.draw(ctx, renderer);
+    if (this.inspected) this.drawInspector(ctx);
 
     if (this.phase === "over") {
       this.drawGameOver(ctx);

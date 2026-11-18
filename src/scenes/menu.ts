@@ -4,6 +4,7 @@ import { Button } from "../render/button.ts";
 import { CardSprite, linkAt } from "../render/cardView.ts";
 import { centeredRect, contains, drawArrow, drawText, type Point, type Rect } from "../render/draw.ts";
 import { colors } from "../render/theme.ts";
+import { canFullscreen, enterFullscreen, exitFullscreen, isFullscreen, isTouchDevice } from "../platform.ts";
 import { HostSession } from "../session/host.ts";
 import { GameScene } from "./game.ts";
 import { LobbyScene } from "./lobby.ts";
@@ -17,19 +18,27 @@ interface Showcase {
   restTurn: number;
   /** Hit-test against the resting rect so the bobbing motion can't make the hover flicker. */
   rect: Rect;
+  /** Touch screens have no hover, so there a tap flips the card instead. */
+  tapped: boolean;
 }
 
 export class MenuScene implements Scene {
   private time = 0;
   private readonly buttons: Button[];
+  private readonly fullscreenButton: Button;
   private readonly showcase: Showcase[];
 
   constructor(private readonly app: AppContext) {
+    this.fullscreenButton = new Button(centeredRect(100, 36, 160, 44), "Fullscreen", () =>
+      isFullscreen() ? exitFullscreen() : void enterFullscreen(),
+    18);
+    this.fullscreenButton.visible = isTouchDevice() && canFullscreen();
     this.buttons = [
       new Button(centeredRect(640, 325, 380, 58), "Play vs Bot", () => this.start()),
       new Button(centeredRect(640, 397, 380, 58), "Create room", () => app.switchTo(new LobbyScene(app, "host"))),
       new Button(centeredRect(640, 469, 380, 58), "Join room", () => app.switchTo(new LobbyScene(app, "join"))),
       new Button(centeredRect(1150, 684, 220, 46), "View on GitHub", () => openUrl(REPO_URL), 18),
+      this.fullscreenButton,
     ];
     const cards = app.deck.cards;
     const len = cards.length;
@@ -39,7 +48,7 @@ export class MenuScene implements Scene {
     this.showcase = [
       { sprite: new CardSprite(cards[i1]!, 190, SHOWCASE_Y, { scale: 0.8, turn: 1 }), restTurn: 1 },
       { sprite: new CardSprite(cards[i2]!, 1090, SHOWCASE_Y, { scale: 0.8, turn: 0 }), restTurn: 0 },
-    ].map((s) => ({ ...s, rect: s.sprite.rect() }));
+    ].map((s) => ({ ...s, rect: s.sprite.rect(), tapped: false }));
   }
 
   private start(): void {
@@ -60,7 +69,14 @@ export class MenuScene implements Scene {
     if (event.kind === "down") {
       if (this.buttons.some((b) => b.click(event.point))) return;
       const link = linkAt(this.sprites(), event.point);
-      if (link) openUrl(link);
+      if (link) {
+        openUrl(link);
+        return;
+      }
+      if (isTouchDevice()) {
+        const card = this.showcase.find((s) => contains(s.rect, event.point));
+        if (card) card.tapped = !card.tapped;
+      }
     } else if (event.kind === "key" && (event.key === "Enter" || event.key === " ")) {
       this.start();
     }
@@ -69,8 +85,10 @@ export class MenuScene implements Scene {
   update(dt: number): void {
     this.time += dt;
     const step = SHOWCASE_FLIP_SPEED * dt;
-    this.showcase.forEach(({ sprite, restTurn, rect }, i) => {
-      const target = contains(rect, this.app.mouse) ? 1 - restTurn : restTurn;
+    this.fullscreenButton.text = isFullscreen() ? "Exit fullscreen" : "Fullscreen";
+    this.showcase.forEach(({ sprite, restTurn, rect, tapped }, i) => {
+      const flipped = contains(rect, this.app.mouse) !== tapped;
+      const target = flipped ? 1 - restTurn : restTurn;
       sprite.turn = sprite.turn < target ? Math.min(sprite.turn + step, target) : Math.max(sprite.turn - step, target);
       sprite.y = SHOWCASE_Y + Math.sin(this.time * 1.5 + i) * 8;
     });

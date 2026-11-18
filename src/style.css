@@ -4,15 +4,26 @@ body {
   height: 100%;
   background: #182030;
   overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
 }
 
+/*
+ * Canvas and overlay share one fixed frame, so the page has nothing to scroll: on phones the keyboard would
+ * otherwise scroll the canvas away while the input overlay stays put.
+ */
 #game {
+  position: fixed;
+  inset: 0;
   display: block;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  touch-action: none;
+  width: 100%;
+  height: 100%;
+  /* Pinch zoom and panning stay possible (small phone screens); double-tap zoom and its tap delay don't. */
+  touch-action: manipulation;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* HTML elements over the canvas; positioned in CSS pixels by HtmlInput.sync(). */
@@ -35,6 +46,12 @@ body {
   font-weight: 600;
   text-align: center;
   outline: none;
+}
+
+.game-input.code {
+  /* Shown upper case while typing; the real value is normalized on submit (rewriting it mid-typing breaks mobile keyboards). */
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
 }
 
 .game-input:focus {

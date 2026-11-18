@@ -94,13 +94,18 @@ export class LobbyScene implements Scene {
       value: loadName(),
       placeholder: "Your name",
       maxLength: MAX_NAME_LENGTH,
-      onEnter: () => this.submit(),
+      enterKeyHint: mode === "join" ? "next" : "go",
+      // When joining, the keyboard's enter key moves on to the code field instead of submitting half a form.
+      onEnter: () => (this.codeInput ? this.codeInput.element.focus() : this.submit()),
     });
     if (mode === "join") {
       this.codeInput = new HtmlInput(app, centeredRect(640, 335, 220, 50), {
         placeholder: "CODE",
-        maxLength: CODE_LENGTH,
-        transform: normalizeCode,
+        // A little slack for pasted codes with spaces or dashes; normalizeCode() cleans it up on submit.
+        maxLength: CODE_LENGTH + 4,
+        className: "code",
+        autocapitalize: "characters",
+        enterKeyHint: "go",
         onEnter: () => this.submit(),
       });
     }
