@@ -1,0 +1,28 @@
+{
+  "categories": [
+    {
+      "label": "GitHub Stars",
+      "unit": "k",
+      "polarity": "positive",
+      "fetch_url": null
+    },
+    {
+      "label": "Downloads",
+      "unit": "k",
+      "polarity": "positive",
+      "fetch_url": null
+    },
+    {
+      "label": "Contributors",
+      "unit": null,
+      "polarity": "positive",
+      "fetch_url": null
+    },
+    {
+      "label": "Repo size",
+      "unit": "MB",
+      "polarity": "negative",
+      "fetch_url": null
+    }
+  ]
+}

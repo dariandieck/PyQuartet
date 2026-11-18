@@ -1,0 +1,23 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #182030;
+  overflow: hidden;
+}
+
+#game {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  touch-action: none;
+  user-select: none;
+}
+
+.fatal {
+  margin: 2rem;
+  color: #f2a3a3;
+  font: 16px/1.5 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap;
+}

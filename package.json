@@ -1,0 +1,21 @@
+{
+  "name": "pyquartet",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Top Trumps-style card game about the Python libraries behind ML pipelines",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "colors": "node scripts/extract-colors.mjs",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}
