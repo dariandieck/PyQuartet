@@ -1,11 +1,11 @@
 import { loadDeck, type Deck } from "./game/deck.ts";
 import { CardRenderer } from "./render/cardView.ts";
-import type { Point } from "./render/draw.ts";
+import type { Point, Rect } from "./render/draw.ts";
 import { ImageStore } from "./render/images.ts";
 import { colors } from "./render/theme.ts";
 import { Viewport } from "./render/viewport.ts";
 import { MenuScene } from "./scenes/menu.ts";
-import type { AppContext, InputEvent, Scene } from "./scenes/scene.ts";
+import type { AppContext, CssBox, InputEvent, Scene } from "./scenes/scene.ts";
 
 const HANDLED_KEYS = new Set(["Enter", " ", "Escape", "ArrowUp", "ArrowDown"]);
 
@@ -18,7 +18,10 @@ export class App implements AppContext {
   private scene: Scene;
   private lastTime: number | null = null;
 
-  constructor(private readonly canvas: HTMLCanvasElement) {
+  constructor(
+    private readonly canvas: HTMLCanvasElement,
+    readonly overlay: HTMLElement,
+  ) {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) throw new Error("Canvas 2D is not supported by this browser");
     this.ctx = ctx;
@@ -33,7 +36,20 @@ export class App implements AppContext {
   }
 
   switchTo(scene: Scene): void {
+    this.scene.dispose?.();
     this.scene = scene;
+  }
+
+  toCss(rect: Rect): CssBox {
+    const bounds = this.canvas.getBoundingClientRect();
+    const { scale, offsetX, offsetY } = this.viewport;
+    return {
+      left: bounds.left + offsetX + rect.x * scale,
+      top: bounds.top + offsetY + rect.y * scale,
+      width: rect.w * scale,
+      height: rect.h * scale,
+      scale,
+    };
   }
 
   private dispatch(event: InputEvent): void {
@@ -57,6 +73,8 @@ export class App implements AppContext {
     });
     window.addEventListener("keydown", (e) => {
       if (!HANDLED_KEYS.has(e.key) || e.repeat) return;
+      // Typing in a text field (lobby name/code) must not trigger game shortcuts or lose spaces.
+      if (e.target instanceof HTMLInputElement) return;
       e.preventDefault();
       this.dispatch({ kind: "key", key: e.key });
     });

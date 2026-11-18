@@ -4,7 +4,9 @@ import { Button } from "../render/button.ts";
 import { CardSprite, linkAt } from "../render/cardView.ts";
 import { centeredRect, contains, drawArrow, drawText, type Point, type Rect } from "../render/draw.ts";
 import { colors } from "../render/theme.ts";
-import { GameScene, SHORT_GAME_ROUNDS } from "./game.ts";
+import { HostSession } from "../session/host.ts";
+import { GameScene } from "./game.ts";
+import { LobbyScene } from "./lobby.ts";
 import type { AppContext, InputEvent, Scene } from "./scene.ts";
 
 const SHOWCASE_Y = 400;
@@ -24,10 +26,9 @@ export class MenuScene implements Scene {
 
   constructor(private readonly app: AppContext) {
     this.buttons = [
-      new Button(centeredRect(640, 340, 380, 62), "Play vs Bot", () => this.start(null)),
-      new Button(centeredRect(640, 420, 380, 62), `Short game (${SHORT_GAME_ROUNDS} rounds)`, () =>
-        this.start(SHORT_GAME_ROUNDS),
-      ),
+      new Button(centeredRect(640, 325, 380, 58), "Play vs Bot", () => this.start()),
+      new Button(centeredRect(640, 397, 380, 58), "Create room", () => app.switchTo(new LobbyScene(app, "host"))),
+      new Button(centeredRect(640, 469, 380, 58), "Join room", () => app.switchTo(new LobbyScene(app, "join"))),
       new Button(centeredRect(1150, 684, 220, 46), "View on GitHub", () => openUrl(REPO_URL), 18),
     ];
     const cards = app.deck.cards;
@@ -41,8 +42,14 @@ export class MenuScene implements Scene {
     ].map((s) => ({ ...s, rect: s.sprite.rect() }));
   }
 
-  private start(maxRounds: number | null): void {
-    this.app.switchTo(new GameScene(this.app, maxRounds));
+  private start(): void {
+    // Local games run through the same host session as network games, just without connections.
+    const newSession = () => {
+      const session = new HostSession(this.app.deck, [{ name: "You", isBot: false }, { name: "Bot", isBot: true }], null);
+      session.start();
+      return session;
+    };
+    this.app.switchTo(new GameScene(this.app, newSession(), { playAgain: newSession }));
   }
 
   private sprites(): CardSprite[] {
@@ -55,7 +62,7 @@ export class MenuScene implements Scene {
       const link = linkAt(this.sprites(), event.point);
       if (link) openUrl(link);
     } else if (event.kind === "key" && (event.key === "Enter" || event.key === " ")) {
-      this.start(null);
+      this.start();
     }
   }
 

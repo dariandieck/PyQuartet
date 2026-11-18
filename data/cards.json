@@ -33,10 +33,10 @@
       "img_scale": 1,
       "color": "#dd3412",
       "stats": {
-        "GitHub Stars": 999,
-        "Downloads": 9999999,
-        "Contributors": 9,
-        "Repo size": 999
+        "GitHub Stars": 5,
+        "Downloads": 5,
+        "Contributors": 5,
+        "Repo size": 5
       }
     },
     {
@@ -46,10 +46,10 @@
       "img_scale": 1,
       "color": "#ff8800",
       "stats": {
-        "GitHub Stars": 1,
-        "Downloads": 1,
-        "Contributors": 1,
-        "Repo size": 1
+        "GitHub Stars": 5,
+        "Downloads": 5,
+        "Contributors": 5,
+        "Repo size": 5
       }
     }
   ]

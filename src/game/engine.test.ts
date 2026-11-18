@@ -100,6 +100,48 @@ describe("Game", () => {
   });
 });
 
+describe("Game.removePlayer", () => {
+  const three = [{ name: "A" }, { name: "B" }, { name: "C" }];
+  const deck = [card("x", 1, 1), card("y", 1, 1), card("z", 1, 1)];
+
+  it("moves the leaver's cards to the pot without starting a tie", () => {
+    const game = new Game(three, deck, categories, { rng: zeroRng });
+    setStacks(game, [[card("a", 1, 1)], [card("b", 9, 1), card("b2", 1, 1)], [card("c", 5, 1)]]);
+    game.callerId = 1;
+    game.removePlayer(1);
+    expect(game.pot).toHaveLength(2);
+    expect(game.isTiePending).toBe(false);
+    expect(game.participants).toEqual([0, 2]);
+    expect(game.callerId).toBe(0); // caller left, next participant calls
+    // The pot goes to the next round's winner.
+    expect(game.playRound("Stars").wonCards).toHaveLength(4);
+  });
+
+  it("decides a tie that can no longer be played out", () => {
+    const game = new Game(three, deck, categories, { rng: zeroRng });
+    setStacks(game, [
+      [card("a1", 9, 1), card("a2", 1, 1)],
+      [card("b1", 9, 1), card("b2", 1, 1)],
+      [card("c1", 1, 1), card("c2", 1, 1)],
+    ]);
+    game.playRound("Stars"); // A and B tie
+    expect(game.isTiePending).toBe(true);
+    game.removePlayer(1);
+    expect(game.isTiePending).toBe(false);
+    expect(game.pot).toHaveLength(0);
+    expect(game.player(0).stack).toHaveLength(5); // a2 + 3 tied cards + b2 forfeited
+  });
+
+  it("ends the game when only one player is left, who takes the pot", () => {
+    const game = new Game([{ name: "A" }, { name: "B" }], deck, categories, { rng: zeroRng });
+    game.removePlayer(1);
+    expect(game.isOver).toBe(true);
+    expect(game.winners()).toEqual([0]);
+    expect(game.pot).toHaveLength(0);
+    expect(game.player(0).stack).toHaveLength(3);
+  });
+});
+
 describe("Bot", () => {
   it("picks the category where its card ranks best in the deck", () => {
     const deck = [card("a", 100, 900), card("b", 50, 10), card("c", 10, 500)];

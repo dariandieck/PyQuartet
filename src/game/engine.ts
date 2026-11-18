@@ -66,6 +66,9 @@ export class Game {
   /** Players who play a card in the next round (everyone with cards, or only the tied players). */
   participants: number[];
   readonly eliminated = new Set<number>();
+  /** Players who left the game (subset of eliminated). */
+  readonly left = new Set<number>();
+  private tieActive = false;
   private readonly rng: Rng;
 
   constructor(players: PlayerSetup[], cards: Card[], categories: Category[], options: GameOptions = {}) {
@@ -106,14 +109,49 @@ export class Game {
     return this.players.filter((p) => p.stack.length > 0).map((p) => p.id);
   }
 
+  /** A tie is being resolved: only the tied players draw, and the same caller picks again. */
   get isTiePending(): boolean {
-    return this.pot.length > 0 && this.roundNumber > 0;
+    return this.tieActive;
   }
 
   get isOver(): boolean {
-    if (this.pot.length > 0) return false;
+    if (this.tieActive) return false;
     if (this.activeIds().length <= 1) return true;
     return this.maxRounds !== null && this.roundNumber >= this.maxRounds;
+  }
+
+  /**
+   * A player leaves mid-game (e.g. lost connection): their cards go to the pot and they are out.
+   * A tie that can no longer be played out is decided, and the last remaining player takes everything.
+   */
+  removePlayer(id: number): void {
+    if (this.left.has(id)) return;
+    const player = this.player(id);
+    this.left.add(id);
+    this.eliminated.add(id);
+    this.pot.push(...player.stack.splice(0));
+
+    const givePot = (winnerId: number) => {
+      this.player(winnerId).stack.push(...this.pot.splice(0));
+    };
+    if (this.tieActive) {
+      const contenders = this.participants.filter((p) => p !== id && this.player(p).stack.length > 0);
+      if (contenders.length >= 2) {
+        this.participants = contenders;
+      } else {
+        this.tieActive = false;
+        if (contenders.length === 1) givePot(contenders[0]!);
+        this.participants = this.activeIds();
+      }
+    } else {
+      this.participants = this.activeIds();
+    }
+
+    const active = this.activeIds();
+    if (active.length === 1) givePot(active[0]!);
+    if (this.callerId === id || this.player(this.callerId).stack.length === 0) {
+      this.callerId = this.participants[0] ?? active[0] ?? this.callerId;
+    }
   }
 
   winners(): number[] {
@@ -148,10 +186,13 @@ export class Game {
       this.pot = [];
       this.callerId = winnerId;
       this.participants = this.activeIds();
+      this.tieActive = false;
     } else if (contenders.length > 0) {
       this.participants = contenders;
+      this.tieActive = true;
       if (this.player(this.callerId).stack.length === 0) this.callerId = contenders[0]!;
     } else {
+      this.tieActive = false;
       // Every tied player ran out of cards: hand the pot back to them so nobody "loses" by a tie.
       redistributed = true;
       const cards = shuffle([...this.pot], this.rng);

@@ -15,6 +15,38 @@ body {
   user-select: none;
 }
 
+/* HTML elements over the canvas; positioned in CSS pixels by HtmlInput.sync(). */
+#overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.game-input {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 0.6em;
+  pointer-events: auto;
+  border: 2px solid #ffd43b;
+  background: #202c42;
+  color: #ebeef5;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+}
+
+.game-input:focus {
+  border-color: #4b91cd;
+  box-shadow: 0 0 0 3px rgba(75, 145, 205, 0.35);
+}
+
+.game-input::placeholder {
+  color: #96a0b4;
+  font-weight: 400;
+}
+
 .fatal {
   margin: 2rem;
   color: #f2a3a3;

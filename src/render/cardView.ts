@@ -242,6 +242,7 @@ export function drawPile(
   count: number,
   scale: number,
   label: string,
+  labelColor: string = colors.text,
 ): void {
   const h = CARD_H * scale;
   if (count <= 0) {
@@ -262,5 +263,6 @@ export function drawPile(
       ctx.restore();
     }
   }
-  drawText(ctx, label, cx, cy + h / 2 + 22, { size: 17, color: colors.text, bold: true });
+  const size = fitFontSize(ctx, label, 220, 17, true);
+  drawText(ctx, label, cx, cy + h / 2 + 22, { size, color: labelColor, bold: true });
 }
