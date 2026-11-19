@@ -17,17 +17,29 @@ const CACHE_MS = 10 * 60_000;
 // request and keeps typing in the editor from burning through GitHub's 60 requests/hour without a token.
 const cache = new Map<string, { time: number; response: Promise<HttpResponse> }>();
 
+const RETRY_WAIT_MS = 15_000;
+const MAX_RETRY_WAIT_MS = 60_000;
+
 async function request(url: string, headers: Record<string, string>): Promise<HttpResponse> {
-  let response: Response;
-  try {
-    response = await fetch(url, {
-      headers: { "User-Agent": USER_AGENT, ...headers },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-  } catch (error) {
-    throw new LookupError(`${new URL(url).host} is not reachable (${(error as Error).message})`);
+  // pepy.tech's free API key allows only a few requests per minute and answers 429 without a Retry-After header,
+  // so short rate limits are waited out. GitHub's hourly limit (remaining 0) is reported instead, see lookup.ts.
+  for (let waited = 0; ; ) {
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        headers: { "User-Agent": USER_AGENT, ...headers },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      });
+    } catch (error) {
+      throw new LookupError(`${new URL(url).host} is not reachable (${(error as Error).message})`);
+    }
+    const result = { status: response.status, headers: response.headers, body: await response.text() };
+    const wait = (Number(response.headers.get("retry-after")) || RETRY_WAIT_MS / 1000) * 1000;
+    const hourlyLimit = response.headers.get("x-ratelimit-remaining") === "0";
+    if (result.status !== 429 || hourlyLimit || waited + wait > MAX_RETRY_WAIT_MS) return result;
+    await new Promise((resolve) => setTimeout(resolve, wait));
+    waited += wait;
   }
-  return { status: response.status, headers: response.headers, body: await response.text() };
 }
 
 /** GET with a short in-memory cache for successful responses. */

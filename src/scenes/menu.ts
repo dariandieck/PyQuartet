@@ -108,9 +108,10 @@ export class MenuScene implements Scene {
     });
     for (const button of this.buttons) button.draw(ctx, this.app.mouse);
 
-    const perColumn = 4;
+    // At most 4 rows fit below the buttons; spread evenly (5 categories → 3 + 2, not 4 + 1).
+    const columns = Math.max(1, Math.ceil(categories.length / 4));
+    const perColumn = Math.ceil(categories.length / columns);
     const columnWidth = 300;
-    const columns = Math.max(1, Math.ceil(categories.length / perColumn));
     const x0 = 640 - (columns * columnWidth) / 2;
     categories.forEach((category, i) => {
       const x = x0 + Math.floor(i / perColumn) * columnWidth + 20;

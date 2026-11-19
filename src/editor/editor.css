@@ -353,3 +353,17 @@ button.secondary:hover {
     position: static;
   }
 }
+
+/* Ctrl+click links (PyPI package, GitHub repo) and the logo search button */
+
+.ctrl .linkable input:not(:placeholder-shown) {
+  cursor: pointer;
+  color: var(--blue-hover);
+  text-decoration: underline;
+}
+
+.field .control button {
+  flex: none;
+  padding: 7px 12px;
+  font-size: 14px;
+}

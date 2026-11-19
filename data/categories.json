@@ -7,6 +7,12 @@
       "source": "github_stars"
     },
     {
+      "label": "Forks",
+      "unit": null,
+      "polarity": "positive",
+      "source": "github_forks"
+    },
+    {
       "label": "Downloads",
       "unit": null,
       "polarity": "positive",

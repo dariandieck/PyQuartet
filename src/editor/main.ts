@@ -45,6 +45,8 @@ interface FieldOptions {
   hint?: string;
   placeholder?: string;
   inputMode?: "text" | "decimal" | "url";
+  /** Makes the value Ctrl+clickable: the page it names, e.g. the PyPI project for a package name. */
+  link?: (value: string) => string;
 }
 
 class Field {
@@ -68,6 +70,16 @@ class Field {
     this.control.append(this.input);
     this.row.append(label, this.control, this.status);
     parent.append(this.row);
+    const link = options.link;
+    if (link) {
+      this.row.classList.add("linkable");
+      this.input.title = "Ctrl+click to open";
+      this.input.addEventListener("click", (event) => {
+        if (!(event.ctrlKey || event.metaKey) || !this.value) return;
+        event.preventDefault();
+        window.open(link(this.value), "_blank", "noopener");
+      });
+    }
     this.input.addEventListener("input", () => {
       this.token += 1; // a lookup still running for this field must not overwrite what was typed
       this.origin = this.input.value.trim() ? "manual" : "empty";
@@ -150,10 +162,48 @@ const saveButton = $<HTMLButtonElement>("#save");
 const messageBox = $("#message");
 
 const library = new Field(libraryBox, { label: "Library", hint: "name on the card", placeholder: "e.g. pandas" });
-const home = new Field(libraryBox, { label: "Home URL", placeholder: "https://…", inputMode: "url" });
-const pypi = new Field(libraryBox, { label: "PyPI package", hint: "for downloads", placeholder: "e.g. torch" });
-const repo = new Field(libraryBox, { label: "GitHub repo", hint: "owner/name", placeholder: "e.g. pandas-dev/pandas" });
+const home = new Field(libraryBox, {
+  label: "Home URL",
+  placeholder: "https://…",
+  inputMode: "url",
+  // Only web links; a typed "pandas.pydata.org" gets https:// in front.
+  link: (url) => (/^https?:\/\//i.test(url) ? url : `https://${url.replace(/^[a-z][\w+.-]*:\/*/i, "")}`),
+});
+const pypi = new Field(libraryBox, {
+  label: "PyPI package",
+  hint: "for downloads",
+  placeholder: "e.g. torch",
+  link: (name) => `https://pypi.org/project/${encodeURIComponent(name)}/`,
+});
+const repo = new Field(libraryBox, {
+  label: "GitHub repo",
+  hint: "owner/name",
+  placeholder: "e.g. pandas-dev/pandas",
+  link: (name) => `https://github.com/${name.split("/").map(encodeURIComponent).join("/")}`,
+});
 const imgUrl = new Field(imageBox, { label: "Image URL", placeholder: "https://…/logo.svg", inputMode: "url" });
+
+const logoSearch = Object.assign(element("button", "secondary"), {
+  type: "button",
+  textContent: "Search ↗",
+  title: "Search the web for the library's branding",
+});
+imgUrl.control.append(logoSearch);
+logoSearch.addEventListener("click", () => {
+  if (!library.value) {
+    library.input.focus();
+    showMessage("Enter the library name first", true);
+    return;
+  }
+  const q = encodeURIComponent(`${library.value} branding logo`);
+  window.open(`https://www.google.com/search?q=${q}`, "_blank", "noopener");
+});
+
+// Hold Ctrl to see which fields are links.
+for (const type of ["keydown", "keyup"] as const) {
+  window.addEventListener(type, (event) => document.body.classList.toggle("ctrl", event.ctrlKey || event.metaKey));
+}
+window.addEventListener("blur", () => document.body.classList.remove("ctrl"));
 const imgScale = new Field(imageBox, { label: "Image scale", hint: "1 = fit the box", inputMode: "decimal" });
 const color = new Field(imageBox, { label: "Color", hint: "card frame", placeholder: "#rrggbb" });
 
@@ -191,6 +241,7 @@ interface StatField {
 
 const SOURCE_NAMES: Record<StatSource, string> = {
   github_stars: "GitHub",
+  github_forks: "GitHub",
   github_contributors: "GitHub",
   github_size_mb: "GitHub",
   pepy_downloads: "pepy.tech",
@@ -228,11 +279,26 @@ function buildStatFields(): void {
 // ---------------------------------------------------------------------------------------------------------------
 // Automatic lookups
 
-/** Library name or homepage → PyPI package, GitHub repo (and homepage / name if empty) → all stats. */
-async function resolve(): Promise<void> {
+/** Name (case-insensitive, "matplotlib" → "Matplotlib" is only a display change) + home URL of the last lookup. */
+let lastLookup = "";
+/** Counts typing in the name / home URL fields, to tell the user's edits from the lookup's own fills. */
+let identityEdits = 0;
+
+function lookupKey(): string {
+  return `${library.value.toLowerCase()}\n${home.value}`;
+}
+
+/**
+ * Library name or homepage → PyPI package, GitHub repo (and homepage / name if empty) → all stats. Skipped when
+ * name and URL didn't change apart from upper/lower case, to save API calls; `force` (Fetch again) always runs.
+ */
+async function resolve(force = false): Promise<void> {
   const name = library.value;
   const url = home.value;
   if (!name && !url) return;
+  if (!force && lookupKey() === lastLookup) return;
+  lastLookup = lookupKey();
+  const edits = identityEdits;
   const checks = new Map<Field, () => boolean>();
   for (const field of [library, home, pypi, repo]) {
     // A name/URL the lookup starts from stays as typed; only empty or automatic fields are (re)filled.
@@ -241,6 +307,7 @@ async function resolve(): Promise<void> {
     if (check) checks.set(field, check);
   }
   for (const { field } of statFields) if (field.origin !== "manual") field.begin();
+  if (logoReplaceable()) imgUrl.begin();
 
   let found: Resolved;
   try {
@@ -248,6 +315,7 @@ async function resolve(): Promise<void> {
   } catch (error) {
     for (const [field, check] of checks) if (check()) field.fail(message(error));
     fetchStats();
+    void fetchLogo();
     return;
   }
   const apply = (field: Field, value: string | null, note: string, missing: string, warn = false) => {
@@ -259,7 +327,41 @@ async function resolve(): Promise<void> {
   apply(home, found.homepage, "found", "no homepage found");
   apply(repo, found.repo, "found on GitHub", "no repo found");
   apply(pypi, found.pypi, found.pypiLinked ? "found on PyPI" : "guess, check it", "not on PyPI", !found.pypiLinked);
+  // The lookup may have filled an empty name or home URL; that must not count as a change worth a new lookup.
+  if (edits === identityEdits) lastLookup = lookupKey();
   fetchStats();
+  void fetchLogo();
+}
+
+/** A saved logo was usually picked by hand (e.g. a variant for light backgrounds), so lookups only fill empty ones. */
+function logoReplaceable(): boolean {
+  return imgUrl.origin === "empty" || imgUrl.origin === "auto";
+}
+
+/** Package/repo → logo from the READMEs or the GitHub organization → then its color. */
+async function fetchLogo(): Promise<void> {
+  if (!logoReplaceable()) return;
+  const check = imgUrl.begin();
+  if (!check) return;
+  if (!pypi.value && !repo.value) {
+    imgUrl.fail("needs a package or repo");
+    return;
+  }
+  try {
+    const { logo } = await api<{ logo: { url: string; from: string } | null }>(
+      `/logo?${query({ pypi: pypi.value, repo: repo.value })}`,
+    );
+    if (!check()) return;
+    if (!logo) {
+      imgUrl.fail("no logo found, try Search");
+      return;
+    }
+    imgUrl.fill(logo.url, `from the ${logo.from}`);
+    showLogo();
+    void fetchColor();
+  } catch (error) {
+    if (check()) imgUrl.fail(message(error));
+  }
 }
 
 /** Fetches every stat whose source depends on `changed` (or all), skipping values the user typed. */
@@ -300,10 +402,18 @@ async function fetchColor(): Promise<void> {
 
 const resolveSoon = debounce(() => void resolve(), 700);
 const colorSoon = debounce(() => void fetchColor(), 600);
-const repoStatsSoon = debounce(() => fetchStats("repo"), 700);
-const pypiStatsSoon = debounce(() => fetchStats("pypi"), 700);
-library.onInput = resolveSoon;
-home.onInput = resolveSoon;
+const repoStatsSoon = debounce(() => {
+  fetchStats("repo");
+  void fetchLogo();
+}, 700);
+const pypiStatsSoon = debounce(() => {
+  fetchStats("pypi");
+  void fetchLogo();
+}, 700);
+library.onInput = home.onInput = () => {
+  identityEdits += 1;
+  resolveSoon();
+};
 repo.onInput = repoStatsSoon;
 pypi.onInput = pypiStatsSoon;
 imgUrl.onInput = () => {
@@ -423,6 +533,8 @@ function loadForm(card: RawCard | null): void {
   saveButton.textContent = card ? "Save changes" : "Add card";
   dirty = false;
   messageBox.textContent = "";
+  // An opened card counts as looked up, so fixing the case of its name doesn't refetch everything.
+  lastLookup = lookupKey();
   showLogo();
   renderList();
 }
@@ -477,11 +589,18 @@ async function save(): Promise<void> {
       body: JSON.stringify({ card, replace: editing }),
     });
     cards = result.cards;
-    editing = card.library;
-    dirty = false;
-    saveButton.textContent = "Save changes";
-    renderList();
-    showMessage(`Saved to data/cards.json (${cards.length} cards)`);
+    if (editing === null) {
+      // Adding cards is usually done in a row, so go straight to the next empty card.
+      loadForm(null);
+      window.scrollTo({ top: 0 });
+      library.input.focus();
+      showMessage(`Added "${card.library}" to data/cards.json (${cards.length} cards)`);
+    } else {
+      editing = card.library;
+      dirty = false;
+      renderList();
+      showMessage(`Saved to data/cards.json (${cards.length} cards)`);
+    }
   } catch (error) {
     showMessage(message(error), true);
   } finally {
@@ -494,7 +613,7 @@ $("#form").addEventListener("submit", (event) => {
   void save();
 });
 $("#refetch").addEventListener("click", () => {
-  void resolve();
+  void resolve(true);
   void fetchColor();
 });
 $("#new-card").addEventListener("click", () => {

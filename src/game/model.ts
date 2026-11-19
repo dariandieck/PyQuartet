@@ -1,7 +1,13 @@
 export type Polarity = "positive" | "negative"; // positive: higher value wins, negative: lower value wins
 
 /** Where `npm run stats` and the card editor fetch a category's value from. */
-export const STAT_SOURCES = ["github_stars", "github_contributors", "github_size_mb", "pepy_downloads"] as const;
+export const STAT_SOURCES = [
+  "github_stars",
+  "github_forks",
+  "github_contributors",
+  "github_size_mb",
+  "pepy_downloads",
+] as const;
 export type StatSource = (typeof STAT_SOURCES)[number];
 
 export interface Category {

@@ -44,5 +44,13 @@ for (const card of cards) {
   console.log(`${card.library.padEnd(14)} ${results.join(" | ")}`);
 }
 
+// A card can only be saved with a value for every category (e.g. right after adding a category).
+const incomplete = cards.flatMap((card) =>
+  categories.filter((c) => typeof card.stats[c.label] !== "number").map((c) => `${card.library}: ${c.label}`),
+);
+if (incomplete.length) {
+  console.error(`Nothing written, these values are still missing:\n  ${incomplete.join("\n  ")}`);
+  process.exit(1);
+}
 await writeCards(cards, categories);
 console.log(`Wrote data/cards.json${failures ? ` (${failures} value(s) kept because the lookup failed)` : ""}`);

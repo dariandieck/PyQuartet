@@ -5,31 +5,35 @@
       "url": "https://pandas.pydata.org/",
       "pypi": "pandas",
       "repo": "pandas-dev/pandas",
+      "img_url": "https://pandas.pydata.org/static/img/pandas.svg",
       "img_scale": 0.85,
       "color": "#130754",
       "stats": {
-        "GitHub stars": 50572,
+        "GitHub stars": 50575,
+        "Forks": 20765,
         "Downloads": 18300111195,
         "Contributors": 4402,
         "Repo size": 417
       }
     },
     {
-      "library": "matplotlib",
+      "library": "Matplotlib",
       "url": "https://matplotlib.org/",
       "pypi": "matplotlib",
       "repo": "matplotlib/matplotlib",
-      "img_scale": 0.95,
-      "color": "#65baea",
+      "img_url": "https://matplotlib.org/stable/_static/logo2.svg",
+      "img_scale": 0.9,
+      "color": "#11557c",
       "stats": {
         "GitHub stars": 23489,
+        "Forks": 8565,
         "Downloads": 5412708762,
         "Contributors": 1939,
         "Repo size": 482
       }
     },
     {
-      "library": "pytorch",
+      "library": "PyTorch",
       "url": "https://pytorch.org/",
       "pypi": "torch",
       "repo": "pytorch/pytorch",
@@ -37,14 +41,15 @@
       "img_scale": 1.05,
       "color": "#dd3412",
       "stats": {
-        "GitHub stars": 105707,
+        "GitHub stars": 105711,
+        "Forks": 30764,
         "Downloads": 2207511291,
         "Contributors": 7351,
         "Repo size": 1685
       }
     },
     {
-      "library": "tensorflow",
+      "library": "TensorFlow",
       "url": "https://www.tensorflow.org/",
       "pypi": "tensorflow",
       "repo": "tensorflow/tensorflow",
@@ -52,7 +57,8 @@
       "img_scale": 1,
       "color": "#ff8800",
       "stats": {
-        "GitHub stars": 201654,
+        "GitHub stars": 201656,
+        "Forks": 77970,
         "Downloads": 1427693956,
         "Contributors": 5451,
         "Repo size": 1411
@@ -70,7 +76,8 @@
         "GitHub stars": 68254,
         "Downloads": 5849408738,
         "Contributors": 3587,
-        "Repo size": 184
+        "Repo size": 184,
+        "Forks": 27691
       }
     },
     {
@@ -85,7 +92,8 @@
         "GitHub stars": 40387,
         "Downloads": 945592923,
         "Contributors": 793,
-        "Repo size": 239
+        "Repo size": 239,
+        "Forks": 3248
       }
     }
   ]

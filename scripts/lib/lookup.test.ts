@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeCard } from "./cardsFile.ts";
-import { kbToMb, lastPage, mostLinkedRepo, parseBadge, pyprojectName, repoFromUrl } from "./lookup.ts";
+import { kbToMb, lastPage, mostLinkedRepo, parseBadge, pyprojectName, readmeImages, repoFromUrl } from "./lookup.ts";
 
 describe("lookup helpers", () => {
   it("reads owner/repo from GitHub URLs", () => {
@@ -58,5 +58,25 @@ describe("repo and package matching", () => {
     expect(pyprojectName('[build-system]\nname = "x"\n\n[project]\nname = "torch"\nversion = "1"\n')).toBe("torch");
     expect(pyprojectName('[project]\ndynamic = ["version"]\n[tool.x]\nname = "nope"\n')).toBeNull();
     expect(pyprojectName("[tool.poetry]\nname = 'x'\n")).toBeNull();
+  });
+});
+
+describe("readmeImages", () => {
+  it("finds images in document order and skips badges", () => {
+    const markdown = [
+      "[![PyPI](https://img.shields.io/pypi/v/x.svg)](https://pypi.org)",
+      "[![CI](https://dev.azure.com/x/x/_apis/build/status/x?branchName=main)](https://x)",
+      '<p align="center"><img alt="logo" src="docs/logo.svg" width="300"></p>',
+      "![later](https://example.org/screenshot.png)",
+    ].join("\n");
+    expect(readmeImages(markdown, "o/x")).toEqual([
+      "https://raw.githubusercontent.com/o/x/HEAD/docs/logo.svg",
+      "https://example.org/screenshot.png",
+    ]);
+  });
+
+  it("reads reStructuredText images and GitHub blob links", () => {
+    const rst = ".. |logo| image:: https://github.com/o/x/blob/main/logo.png\n.. image:: https://codecov.io/x.svg";
+    expect(readmeImages(rst, null)).toEqual(["https://github.com/o/x/raw/main/logo.png"]);
   });
 });

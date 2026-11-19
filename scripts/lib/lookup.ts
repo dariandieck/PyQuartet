@@ -108,6 +108,26 @@ export function parseBadge(svg: string): number | null {
   return Number.isFinite(value) ? Math.round(value) : null;
 }
 
+// READMEs start with badges (version, CI, coverage, downloads) around the logo; none of them is a logo.
+const BADGE =
+  /badge|shields\.io|codecov|coverage|coveralls|travis-ci|circleci|appveyor|status\.svg|pepy\.tech|zenodo|readthedocs\.org\/projects|joss\.theoj|colab|mybinder|discord|twitter|opencollective|numfocus|build\/status|dev\.azure\.com|sonarcloud|snyk|codacy|scorecard|bestpractices|\/actions\/|\/workflows\//i;
+const README_IMAGE =
+  /!\[[^\]]*\]\(\s*<?([^)\s>]+)|<img\b[^>]*?\ssrc=["']([^"']+)["']|^\s*\.\. (?:\|[^|]+\|\s+)?(?:image|figure)::\s*(\S+)/gim;
+
+function absoluteImageUrl(url: string, repo: string | null): string | null {
+  if (/^https?:\/\//i.test(url)) return url.replace(/^(https?:\/\/github\.com\/[^/]+\/[^/]+)\/blob\//i, "$1/raw/");
+  if (url.startsWith("//")) return `https:${url}`;
+  if (!repo || /^(data:|#|mailto:)/i.test(url)) return null;
+  return `https://raw.githubusercontent.com/${repo}/HEAD/${url.replace(/^\.?\//, "")}`;
+}
+
+/** Image URLs in a README (Markdown, HTML or reStructuredText) in document order, without badges. */
+export function readmeImages(readme: string, repo: string | null): string[] {
+  return [...readme.matchAll(README_IMAGE)]
+    .map((m) => absoluteImageUrl((m[1] ?? m[2] ?? m[3])!.replace(/&amp;/g, "&"), repo))
+    .filter((url): url is string => url !== null && !BADGE.test(url));
+}
+
 /** GitHub reports KB; keep one decimal for small repos so they don't all become "0 MB". */
 export function kbToMb(kb: number): number {
   const mb = kb / 1024;
@@ -124,14 +144,26 @@ interface PypiInfo {
 }
 
 interface PypiJson {
-  info: { name: string; home_page: string | null; project_urls: Record<string, string> | null };
+  info: {
+    name: string;
+    home_page: string | null;
+    project_urls: Record<string, string> | null;
+    /** The README shown on the PyPI project page. */
+    description: string | null;
+  };
 }
 
-async function pypiInfo(name: string): Promise<PypiInfo | null> {
+async function pypiJson(name: string): Promise<PypiJson | null> {
   const response = await get(`https://pypi.org/pypi/${encodeURIComponent(name)}/json`);
   if (response.status === 404) return null;
   if (response.status !== 200) throw new LookupError(`PyPI answered ${response.status}`);
-  const { info } = parseJson<PypiJson>(response, "PyPI");
+  return parseJson<PypiJson>(response, "PyPI");
+}
+
+async function pypiInfo(name: string): Promise<PypiInfo | null> {
+  const json = await pypiJson(name);
+  if (!json) return null;
+  const { info } = json;
   const projectUrls = Object.entries(info.project_urls ?? {});
   const urls = [...projectUrls.map(([, url]) => url), info.home_page ?? ""];
   const homepageKeys = projectUrls.filter(([key]) => /^home(page)?$/i.test(key)).map(([, url]) => url);
@@ -145,6 +177,8 @@ async function pypiInfo(name: string): Promise<PypiInfo | null> {
 interface GithubRepo {
   full_name: string;
   stargazers_count: number;
+  forks_count: number;
+  owner: { type: string; avatar_url: string };
   size: number;
   homepage: string | null;
 }
@@ -159,6 +193,9 @@ function githubHeaders(credentials: Credentials): Record<string, string> {
 
 async function github(path: string, credentials: Credentials): Promise<HttpResponse> {
   const response = await get(`https://api.github.com${path}`, githubHeaders(credentials));
+  if (response.status === 401) {
+    throw new LookupError("GitHub rejected GITHUB_TOKEN; fix it in .env.local or remove the line");
+  }
   if ((response.status === 403 || response.status === 429) && response.headers.get("x-ratelimit-remaining") === "0") {
     const reset = Number(response.headers.get("x-ratelimit-reset")) * 1000;
     const minutes = Math.max(1, Math.ceil((reset - Date.now()) / 60_000));
@@ -285,6 +322,37 @@ export async function resolveLibrary(
   };
 }
 
+export interface Logo {
+  url: string;
+  /** Where it was found, shown next to the editor field. */
+  from: string;
+}
+
+/**
+ * A logo for the card: the first non-badge image of the PyPI README (what the PyPI project page shows on top),
+ * else of the GitHub README, else the avatar of the GitHub organization (usually its logo; user avatars are photos).
+ */
+export async function findLogo(ids: Ids, credentials: Credentials): Promise<Logo | null> {
+  const repo = ids.repo || null;
+  if (ids.pypi) {
+    const url = readmeImages((await pypiJson(ids.pypi))?.info.description ?? "", repo)[0];
+    if (url) return { url, from: "PyPI README" };
+  }
+  if (!repo) return null;
+  for (const file of ["README.md", "README.rst", "README"]) {
+    const response = await get(`https://raw.githubusercontent.com/${repo}/HEAD/${file}`);
+    if (response.status !== 200) continue;
+    const url = readmeImages(response.body, repo)[0];
+    if (url) return { url, from: "GitHub README" };
+    break;
+  }
+  const { owner } = await githubRepo(repo, credentials);
+  if (owner.type === "Organization") {
+    return { url: `${owner.avatar_url}${owner.avatar_url.includes("?") ? "&" : "?"}s=400`, from: "GitHub org avatar" };
+  }
+  return null;
+}
+
 /** One category value for a library. */
 export async function fetchStat(source: StatSource, ids: Ids, credentials: Credentials): Promise<number> {
   if (source === "pepy_downloads") {
@@ -295,6 +363,8 @@ export async function fetchStat(source: StatSource, ids: Ids, credentials: Crede
   switch (source) {
     case "github_stars":
       return (await githubRepo(ids.repo, credentials)).stargazers_count;
+    case "github_forks":
+      return (await githubRepo(ids.repo, credentials)).forks_count;
     case "github_size_mb":
       return kbToMb((await githubRepo(ids.repo, credentials)).size);
     case "github_contributors":

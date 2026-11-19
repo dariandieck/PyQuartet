@@ -8,7 +8,7 @@ import { DeckError } from "../../src/game/parse.ts";
 import { readCards, readCategories, writeCards, type RawCard } from "../lib/cardsFile.ts";
 import { brandColorOf } from "../lib/colors.ts";
 import { LookupError } from "../lib/http.ts";
-import { credentialsFromEnv, fetchStat, resolveLibrary, type Credentials } from "../lib/lookup.ts";
+import { credentialsFromEnv, fetchStat, findLogo, resolveLibrary, type Credentials } from "../lib/lookup.ts";
 
 const projectRoot = fileURLToPath(new URL("../..", import.meta.url));
 
@@ -64,6 +64,9 @@ function api(credentials: Credentials): Plugin {
       if (!STAT_SOURCES.includes(source)) throw new HttpError(400, `Unknown source ${source}`);
       return { value: await fetchStat(source, { repo: param(q, "repo"), pypi: param(q, "pypi") }, credentials) };
     },
+    "GET /logo": async (q) => ({
+      logo: await findLogo({ repo: param(q, "repo"), pypi: param(q, "pypi") }, credentials),
+    }),
     "GET /color": async (q) => {
       const url = param(q, "url");
       if (!url) throw new HttpError(400, "url is required");
