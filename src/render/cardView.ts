@@ -1,4 +1,4 @@
-import { cardValue, displayLabel, formatValue, type Card, type Category } from "../game/model.ts";
+import { cardValue, formatStat, type Card, type Category } from "../game/model.ts";
 import {
   contains,
   drawArrow,
@@ -114,13 +114,12 @@ export class CardRenderer {
   private drawRow(ctx: CanvasRenderingContext2D, rect: Rect, category: Category, value: number): void {
     const cy = rect.y + rect.h / 2;
     drawArrow(ctx, category.polarity === "positive", rect.x + 9, cy, 4.5);
-    const valueText = formatValue(value);
+    const valueText = formatStat(category, value);
     const valueSize = fitFontSize(ctx, valueText, 90, 14.5, true);
     const valueWidth = textWidth(ctx, valueText, valueSize, true);
     drawText(ctx, valueText, rect.x + rect.w - 6, cy, { size: valueSize, color: colors.cardText, bold: true, align: "right" });
-    const label = displayLabel(category);
-    const labelSize = fitFontSize(ctx, label, rect.w - 22 - valueWidth - 12, 14.5);
-    drawText(ctx, label, rect.x + 18, cy, { size: labelSize, color: colors.cardText, align: "left" });
+    const labelSize = fitFontSize(ctx, category.label, rect.w - 22 - valueWidth - 12, 14.5);
+    drawText(ctx, category.label, rect.x + 18, cy, { size: labelSize, color: colors.cardText, align: "left" });
   }
 
   drawBack(ctx: CanvasRenderingContext2D): void {

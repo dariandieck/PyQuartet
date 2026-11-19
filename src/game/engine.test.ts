@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Bot } from "./bot.ts";
 import { DeckError, parseCards, parseCategories } from "./deck.ts";
 import { Game, isTie } from "./engine.ts";
-import type { Card, Category } from "./model.ts";
+import { formatStat, type Card, type Category } from "./model.ts";
 
 const stars: Category = { label: "Stars", unit: "k", polarity: "positive", fetchUrl: null };
 const size: Category = { label: "Size", unit: "MB", polarity: "negative", fetchUrl: null };
@@ -178,5 +178,13 @@ describe("deck parsing", () => {
     expect(full).toMatchObject({ url: "https://x.org", imgScale: 0.8, color: "#150458" });
     expect(() => parseCards({ cards: [{ library: "x", img_scale: 0, stats: { Stars: 1 } }] }, parsed)).toThrow(DeckError);
     expect(() => parseCards({ cards: [{ library: "x", color: "blue", stats: { Stars: 1 } }] }, parsed)).toThrow(DeckError);
+  });
+});
+
+describe("formatStat", () => {
+  it("puts the unit behind the value", () => {
+    expect(formatStat(stars, 1200)).toBe("1,200k");
+    expect(formatStat(size, 3.5)).toBe("3.50 MB");
+    expect(formatStat({ ...stars, unit: null }, 42)).toBe("42");
   });
 });

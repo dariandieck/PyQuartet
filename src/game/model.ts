@@ -19,11 +19,6 @@ export interface Card {
   stats: Readonly<Record<string, number>>;
 }
 
-/** "<label> (<unit>)": only shown on the card itself; everywhere else uses the plain label. */
-export function displayLabel(category: Category): string {
-  return category.unit ? `${category.label} (${category.unit})` : category.label;
-}
-
 export function beats(category: Category, a: number, b: number): boolean {
   return category.polarity === "positive" ? a > b : a < b;
 }
@@ -43,6 +38,16 @@ export function polarityHint(category: Category): string {
 const intFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 const decimalFormat = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-export function formatValue(value: number): string {
+function formatNumber(value: number): string {
   return Number.isInteger(value) ? intFormat.format(value) : decimalFormat.format(value);
+}
+
+// Multiplier suffixes attach directly ("120k"); real units get a space ("350 MB").
+const COMPACT_UNITS = new Set(["k", "M", "B", "%"]);
+
+/** A stat value with its category's unit, e.g. "120k" or "350 MB". */
+export function formatStat(category: Category, value: number): string {
+  const number = formatNumber(value);
+  if (!category.unit) return number;
+  return COMPACT_UNITS.has(category.unit) ? number + category.unit : `${number} ${category.unit}`;
 }

@@ -1,4 +1,4 @@
-import { formatValue, polarityHint, type Card, type Category } from "../game/model.ts";
+import { formatStat, polarityHint, type Card, type Category } from "../game/model.ts";
 import { openUrl } from "../links.ts";
 import type { GameEvent, PublicState, ResultInfo, SeatInfo } from "../net/protocol.ts";
 import { Button } from "../render/button.ts";
@@ -283,7 +283,7 @@ export class GameScene implements Scene {
       }
     }
 
-    const values = result.plays.map((p) => `${this.name(p.playerId)} ${formatValue(p.value)}`).join("  vs  ");
+    const values = result.plays.map((p) => `${this.name(p.playerId)} ${formatStat(category, p.value)}`).join("  vs  ");
     if (result.redistributed) {
       this.message = "Tie, and nobody has cards left!";
       this.detail = "The pot is shared back between the tied players.";
