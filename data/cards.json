@@ -7,7 +7,7 @@
       "img_scale": 0.8,
       "color": "#130754",
       "stats": {
-        "GitHub Stars": 12345,
+        "GitHub stars": 12345,
         "Downloads": 102232,
         "Contributors": 12,
         "Repo size": 102
@@ -20,7 +20,7 @@
       "img_scale": 0.85,
       "color": "#65baea",
       "stats": {
-        "GitHub Stars": 10000,
+        "GitHub stars": 10000,
         "Downloads": 1000000,
         "Contributors": 100,
         "Repo size": 200
@@ -33,7 +33,7 @@
       "img_scale": 1,
       "color": "#dd3412",
       "stats": {
-        "GitHub Stars": 5,
+        "GitHub stars": 5,
         "Downloads": 5,
         "Contributors": 5,
         "Repo size": 5
@@ -46,7 +46,7 @@
       "img_scale": 1,
       "color": "#ff8800",
       "stats": {
-        "GitHub Stars": 5,
+        "GitHub stars": 5,
         "Downloads": 5,
         "Contributors": 5,
         "Repo size": 5

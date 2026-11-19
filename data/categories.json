@@ -1,7 +1,7 @@
 {
   "categories": [
     {
-      "label": "GitHub Stars",
+      "label": "GitHub stars",
       "unit": "k",
       "polarity": "positive",
       "fetch_url": null
