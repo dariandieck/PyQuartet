@@ -4,8 +4,8 @@ import { DeckError, parseCards, parseCategories } from "./deck.ts";
 import { Game, isTie } from "./engine.ts";
 import { formatStat, type Card, type Category } from "./model.ts";
 
-const stars: Category = { label: "Stars", unit: "k", polarity: "positive", fetchUrl: null };
-const size: Category = { label: "Size", unit: "MB", polarity: "negative", fetchUrl: null };
+const stars: Category = { label: "Stars", unit: null, polarity: "positive", source: "github_stars" };
+const size: Category = { label: "Size", unit: "MB", polarity: "negative", source: null };
 const categories = [stars, size];
 
 const card = (library: string, starsValue: number, sizeValue: number): Card => ({
@@ -152,11 +152,11 @@ describe("Bot", () => {
 });
 
 describe("deck parsing", () => {
-  const rawCategories = { categories: [{ label: "Stars", unit: "k", polarity: "positive", fetch_url: null }] };
+  const rawCategories = { categories: [{ label: "Stars", unit: null, polarity: "positive", source: "github_stars" }] };
 
   it("parses categories and cards", () => {
     const parsed = parseCategories(rawCategories);
-    expect(parsed[0]).toEqual({ label: "Stars", unit: "k", polarity: "positive", fetchUrl: null });
+    expect(parsed[0]).toEqual({ label: "Stars", unit: null, polarity: "positive", source: "github_stars" });
     const cards = parseCards({ cards: [{ library: "numpy", img_url: null, stats: { Stars: 3 } }] }, parsed);
     expect(cards[0]!.stats.Stars).toBe(3);
   });
@@ -182,9 +182,12 @@ describe("deck parsing", () => {
 });
 
 describe("formatStat", () => {
-  it("puts the unit behind the value", () => {
-    expect(formatStat(stars, 1200)).toBe("1,200k");
-    expect(formatStat(size, 3.5)).toBe("3.50 MB");
-    expect(formatStat({ ...stars, unit: null }, 42)).toBe("42");
+  it("shows counts compact and units behind the value", () => {
+    expect(formatStat(stars, 50569)).toBe("50.6k");
+    expect(formatStat(stars, 18_000_000_000)).toBe("18B");
+    expect(formatStat(stars, 42)).toBe("42");
+    expect(formatStat(stars, 50569, true)).toBe("50,569");
+    expect(formatStat(size, 3.5)).toBe("3.5 MB");
+    expect(formatStat(size, 1234)).toBe("1,234 MB");
   });
 });

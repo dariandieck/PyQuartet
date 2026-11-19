@@ -3,53 +3,89 @@
     {
       "library": "pandas",
       "url": "https://pandas.pydata.org/",
-      "img_url": "https://pandas.pydata.org/static/img/pandas.svg",
-      "img_scale": 0.8,
+      "pypi": "pandas",
+      "repo": "pandas-dev/pandas",
+      "img_scale": 0.85,
       "color": "#130754",
       "stats": {
-        "GitHub stars": 12345,
-        "Downloads": 102232,
-        "Contributors": 12,
-        "Repo size": 102
+        "GitHub stars": 50572,
+        "Downloads": 18300111195,
+        "Contributors": 4402,
+        "Repo size": 417
       }
     },
     {
       "library": "matplotlib",
       "url": "https://matplotlib.org/",
-      "img_url": "https://matplotlib.org/stable/_static/logo_light.svg",
-      "img_scale": 0.85,
+      "pypi": "matplotlib",
+      "repo": "matplotlib/matplotlib",
+      "img_scale": 0.95,
       "color": "#65baea",
       "stats": {
-        "GitHub stars": 10000,
-        "Downloads": 1000000,
-        "Contributors": 100,
-        "Repo size": 200
+        "GitHub stars": 23489,
+        "Downloads": 5412708762,
+        "Contributors": 1939,
+        "Repo size": 482
       }
     },
     {
       "library": "pytorch",
       "url": "https://pytorch.org/",
+      "pypi": "torch",
+      "repo": "pytorch/pytorch",
       "img_url": "https://raw.githubusercontent.com/pytorch-fdn/artwork/refs/heads/main/projects/PyTorch/horizontal/PyTorch%20Logo%202022_RGB_PyTorchLogo_Horiz_fullColor_RGB.png",
-      "img_scale": 1,
+      "img_scale": 1.05,
       "color": "#dd3412",
       "stats": {
-        "GitHub stars": 5,
-        "Downloads": 5,
-        "Contributors": 5,
-        "Repo size": 5
+        "GitHub stars": 105707,
+        "Downloads": 2207511291,
+        "Contributors": 7351,
+        "Repo size": 1685
       }
     },
     {
       "library": "tensorflow",
       "url": "https://www.tensorflow.org/",
+      "pypi": "tensorflow",
+      "repo": "tensorflow/tensorflow",
       "img_url": "https://www.tensorflow.org/images/tf_logo_horizontal.png",
       "img_scale": 1,
       "color": "#ff8800",
       "stats": {
-        "GitHub stars": 5,
-        "Downloads": 5,
-        "Contributors": 5,
-        "Repo size": 5
+        "GitHub stars": 201654,
+        "Downloads": 1427693956,
+        "Contributors": 5451,
+        "Repo size": 1411
+      }
+    },
+    {
+      "library": "scikit-learn",
+      "url": "https://scikit-learn.org",
+      "pypi": "scikit-learn",
+      "repo": "scikit-learn/scikit-learn",
+      "img_url": "https://scikit-learn.org/stable/_images/scikit-learn-logo-notext.png",
+      "img_scale": 0.9,
+      "color": "#f89939",
+      "stats": {
+        "GitHub stars": 68254,
+        "Downloads": 5849408738,
+        "Contributors": 3587,
+        "Repo size": 184
+      }
+    },
+    {
+      "library": "Polars",
+      "url": "https://www.pola.rs/",
+      "pypi": "polars",
+      "repo": "pola-rs/polars",
+      "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG6Y5al4W6F9cNiITwa5A0pC4QY0voll3wEZFJWWyErembK3Wida_K5js&s=10",
+      "img_scale": 0.95,
+      "color": "#0376ff",
+      "stats": {
+        "GitHub stars": 40387,
+        "Downloads": 945592923,
+        "Contributors": 793,
+        "Repo size": 239
       }
     }
   ]
