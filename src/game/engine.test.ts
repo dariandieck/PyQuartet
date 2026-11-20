@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Bot } from "./bot.ts";
 import { DeckError, parseCards, parseCategories } from "./deck.ts";
 import { Game, isTie } from "./engine.ts";
-import { formatStat, type Card, type Category } from "./model.ts";
+import { formatStat, playedCard, roundStat, type Card, type Category } from "./model.ts";
 
 const stars: Category = { label: "Stars", unit: null, polarity: "positive", source: "github_stars" };
 const size: Category = { label: "Size", unit: "MB", polarity: "negative", source: null };
@@ -158,7 +158,8 @@ describe("deck parsing", () => {
 
   it("parses categories and cards", () => {
     const parsed = parseCategories(rawCategories);
-    expect(parsed[0]).toEqual({ label: "Stars", unit: null, polarity: "positive", source: "github_stars" });
+    expect(parsed[0]).toEqual({ label: "Stars", unit: null, polarity: "positive", source: "github_stars", rounding: "digits" });
+    expect(() => parseCategories({ categories: [{ label: "X", polarity: "positive", rounding: "nope" }] })).toThrow(DeckError);
     const cards = parseCards({ cards: [{ library: "numpy", img_url: null, stats: { Stars: 3 } }] }, parsed);
     expect(cards[0]!.stats.Stars).toBe(3);
   });
@@ -191,5 +192,43 @@ describe("formatStat", () => {
     expect(formatStat(stars, 50569, true)).toBe("50,569");
     expect(formatStat(size, 3.5)).toBe("3.5 MB");
     expect(formatStat(size, 1234)).toBe("1,234 MB");
+  });
+});
+
+describe("roundStat", () => {
+  it("keeps one significant digit, two when the leading digit is 1", () => {
+    expect(roundStat(7800)).toBe(8000);
+    expect(roundStat(9.5)).toBe(10);
+    expect(roundStat(514)).toBe(500);
+    expect(roundStat(14.4)).toBe(14);
+    expect(roundStat(1_220_000_000)).toBe(1_200_000_000);
+    expect(roundStat(1960)).toBe(2000);
+    expect(roundStat(0.87)).toBe(0.9);
+  });
+
+  it("never rounds a non-zero value to 0", () => {
+    expect(roundStat(0.02)).toBe(0.02);
+    expect(roundStat(0.004)).toBe(0.004);
+    expect(roundStat(1)).toBe(1);
+    expect(roundStat(0)).toBe(0);
+    expect(roundStat(0.0012, "steps")).toBe(0.001);
+  });
+
+  it("rounds to the steps 1, 2, 3, 5 per power of ten, nearest by ratio", () => {
+    expect(roundStat(234_000_000, "steps")).toBe(200_000_000);
+    expect(roundStat(4200, "steps")).toBe(5000);
+    expect(roundStat(946_000_000, "steps")).toBe(1_000_000_000);
+    expect(roundStat(1380, "steps")).toBe(1000);
+    expect(roundStat(1450, "steps")).toBe(2000);
+    expect(roundStat(7000, "steps")).toBe(5000);
+    expect(roundStat(7200, "steps")).toBe(10000);
+    expect(roundStat(0.27, "steps")).toBe(0.3);
+    expect(roundStat(546, "steps")).toBe(500);
+  });
+
+  it("rounds each stat with its category's rounding", () => {
+    const steps: Category = { ...stars, rounding: "steps" };
+    const played = playedCard(card("x", 4200, 7800), [steps, size]);
+    expect(played.stats).toEqual({ Stars: 5000, Size: 8000 });
   });
 });

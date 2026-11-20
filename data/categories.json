@@ -22,13 +22,15 @@
       "label": "Downloads",
       "unit": null,
       "polarity": "positive",
-      "source": "pepy_downloads"
+      "source": "pepy_downloads",
+      "rounding": "steps"
     },
     {
       "label": "Dependents",
       "unit": null,
       "polarity": "positive",
-      "source": "depsdev_dependents"
+      "source": "depsdev_dependents",
+      "rounding": "steps"
     },
     {
       "label": "Age",
@@ -40,7 +42,8 @@
       "label": "Wheel size",
       "unit": "MB",
       "polarity": "negative",
-      "source": "pypi_wheel_mb"
+      "source": "pypi_wheel_mb",
+      "rounding": "steps"
     }
   ]
 }

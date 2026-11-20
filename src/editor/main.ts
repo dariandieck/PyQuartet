@@ -1,6 +1,6 @@
 import type { RawCard } from "../../scripts/lib/cardsFile.ts";
 import type { Resolved } from "../../scripts/lib/lookup.ts";
-import { formatStat, needsPypi, SUMMARY_MAX, type Card, type Category, type StatSource } from "../game/model.ts";
+import { formatStat, needsPypi, playedCard, SUMMARY_MAX, type Card, type Category, type StatSource } from "../game/model.ts";
 import { CARD_H, CARD_W, CardRenderer } from "../render/cardView.ts";
 import { ImageStore } from "../render/images.ts";
 
@@ -497,11 +497,12 @@ flipButton.addEventListener("click", () => showPreviewSide(!previewInfo));
 for (const field of [keywords, summary]) field.input.addEventListener("focus", () => showPreviewSide(true));
 let rendererKey = "";
 
+/** The card as it looks in the game, i.e. with rounded stats; the fields keep the exact values. */
 function previewCard(): Card {
   const stats: Record<string, number> = {};
   for (const { category, field } of statFields) stats[category.label] = Number(field.value) || 0;
   const scale = Number(imgScale.value);
-  return {
+  return playedCard({
     library: library.value || "library",
     url: home.value || null,
     imgUrl: imgUrl.value || null,
@@ -510,7 +511,7 @@ function previewCard(): Card {
     keywords: parseKeywords(keywords.value),
     summary: summary.value || null,
     stats,
-  };
+  }, categories);
 }
 
 function drawPreview(): void {

@@ -17,12 +17,18 @@ export function needsPypi(source: StatSource): boolean {
   return source === "pepy_downloads" || source === "pypi_wheel_mb" || source === "pypi_age_years" || source === "depsdev_dependents";
 }
 
+/** How a category's values are rounded in the game (see `roundStat`). */
+export const ROUNDINGS = ["digits", "steps"] as const;
+export type Rounding = (typeof ROUNDINGS)[number];
+
 export interface Category {
   label: string;
   /** Real unit such as "MB"; unitless counts are shown compact instead ("50.6k"). */
   unit: string | null;
   polarity: Polarity;
   source: StatSource | null;
+  /** In-game rounding; "digits" when left out. */
+  rounding?: Rounding;
 }
 
 export interface Card {
@@ -54,6 +60,40 @@ export function bestValue(category: Category, values: number[]): number {
 
 export function cardValue(card: Card, category: Category): number {
   return card.stats[category.label]!;
+}
+
+const STEPS = [1, 2, 3, 5, 10];
+
+/**
+ * In-game rounding (data/cards.json keeps exact values), so close values tie more often. Both kinds are relative
+ * to the magnitude and never turn a non-zero value into 0.
+ * - "digits": one significant digit (7.8k → 8k, 9.5 → 10, 514 → 500), two when the leading digit is 1, where one
+ *   digit would be too coarse (14.4 → 14, 1.22B → 1.2B).
+ * - "steps": only 1, 2, 3 and 5 per power of ten (234M → 200M, 4.2k → 5k), for categories spread over many powers
+ *   of ten, which tie too rarely with "digits". The nearest step is picked by ratio, not difference.
+ */
+export function roundStat(value: number, rounding: Rounding = "digits"): number {
+  if (value === 0 || !Number.isFinite(value)) return value;
+  const magnitude = Math.abs(value);
+  const base = 10 ** Math.floor(Math.log10(magnitude));
+  if (rounding === "steps") {
+    const ratio = (step: number) => Math.abs(Math.log((step * base) / magnitude));
+    const step = STEPS.reduce((best, s) => (ratio(s) < ratio(best) ? s : best));
+    // toPrecision drops float noise such as 3 * 0.1 = 0.30000000000000004.
+    return Math.sign(value) * Number((step * base).toPrecision(1));
+  }
+  return Number(value.toPrecision(magnitude / base < 2 ? 2 : 1));
+}
+
+/** The card as played: stats rounded per category (see `roundStat`), so close values tie. */
+export function playedCard(card: Card, categories: readonly Category[]): Card {
+  const stats = Object.fromEntries(
+    Object.entries(card.stats).map(([label, value]) => {
+      const rounding = categories.find((c) => c.label === label)?.rounding;
+      return [label, roundStat(value, rounding)];
+    }),
+  );
+  return { ...card, stats };
 }
 
 export function polarityHint(category: Category): string {

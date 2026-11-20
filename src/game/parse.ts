@@ -1,4 +1,4 @@
-import { STAT_SOURCES, SUMMARY_MAX, type Card, type Category, type Polarity, type StatSource } from "./model.ts";
+import { ROUNDINGS, STAT_SOURCES, SUMMARY_MAX, type Card, type Category, type Polarity, type Rounding, type StatSource } from "./model.ts";
 
 // No JSON imports here, so Node scripts (npm run stats, the card editor) can validate data with the same rules.
 
@@ -32,11 +32,16 @@ export function parseCategories(raw: unknown): Category[] {
     if (source !== null && !STAT_SOURCES.includes(source as StatSource)) {
       throw new DeckError(`Category "${entry.label}": unknown source ${JSON.stringify(source)} (one of ${STAT_SOURCES.join(", ")})`);
     }
+    const rounding = entry.rounding ?? "digits";
+    if (!ROUNDINGS.includes(rounding as Rounding)) {
+      throw new DeckError(`Category "${entry.label}": unknown rounding ${JSON.stringify(rounding)} (one of ${ROUNDINGS.join(", ")})`);
+    }
     return {
       label: entry.label,
       unit: typeof entry.unit === "string" ? entry.unit : null,
       polarity: entry.polarity as Polarity,
       source: source as StatSource | null,
+      rounding: rounding as Rounding,
     };
   });
   const labels = categories.map((c) => c.label);

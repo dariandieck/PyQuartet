@@ -1,6 +1,6 @@
 import rawCards from "../../data/cards.json";
 import rawCategories from "../../data/categories.json";
-import type { Card, Category } from "./model.ts";
+import { playedCard, type Card, type Category } from "./model.ts";
 import { parseCards, parseCategories } from "./parse.ts";
 
 export { DeckError, parseCards, parseCategories } from "./parse.ts";
@@ -23,6 +23,6 @@ function fingerprint(text: string): string {
 
 export function loadDeck(): Deck {
   const categories = parseCategories(rawCategories);
-  const cards = parseCards(rawCards, categories);
+  const cards = parseCards(rawCards, categories).map((card) => playedCard(card, categories));
   return { cards, categories, version: fingerprint(JSON.stringify([rawCategories, rawCards])) };
 }
