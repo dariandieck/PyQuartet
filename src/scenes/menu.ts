@@ -102,7 +102,7 @@ export class MenuScene implements Scene {
     drawText(ctx, "PyQuartet", 640, 140, { size: 64, color: colors.pyYellow, bold: true });
     drawText(ctx, "Learn which Python packages power ML-Pipelines", 640, 205, { size: 22 });
     const { cards, categories } = this.app.deck;
-    drawText(ctx, `${cards.length} cards  ·  ${categories.length} categories`, 640, 250, {
+    drawText(ctx, `${cards.length} cards  -   ${categories.length} categories`, 640, 250, {
       size: 18,
       color: colors.textDim,
     });

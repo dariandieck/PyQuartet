@@ -728,11 +728,11 @@ export class GameScene implements Scene {
   }
 
   private drawLegend(ctx: CanvasRenderingContext2D): void {
-    const y = 702;
-    drawArrow(ctx, true, 1000, y, 5);
-    drawText(ctx, "higher wins", 1012, y, { size: 15, color: colors.textDim, align: "left" });
-    drawArrow(ctx, false, 1140, y, 5);
-    drawText(ctx, "lower wins", 1152, y, { size: 15, color: colors.textDim, align: "left" });
+    drawText(ctx, "k = thousand    M = million    B = billion    T = trillion    MB = megabyte", 1260, 704, {
+      size: 12,
+      color: colors.textDim,
+      align: "right",
+    });
   }
 
   private drawGameOver(ctx: CanvasRenderingContext2D): void {
