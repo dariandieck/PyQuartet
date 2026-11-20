@@ -13,6 +13,8 @@ const card = (library: string, starsValue: number, sizeValue: number): Card => (
   url: null,
   imgUrl: null,
   imgScale: 1,
+  keywords: [],
+  summary: null,
   color: null,
   stats: { Stars: starsValue, Size: sizeValue },
 });

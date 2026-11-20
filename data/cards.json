@@ -8,6 +8,12 @@
       "img_url": "https://pandas.pydata.org/static/img/pandas.svg",
       "img_scale": 0.85,
       "color": "#130754",
+      "keywords": [
+        "data-science",
+        "data-analysis",
+        "data-structures"
+      ],
+      "summary": "pandas abstracts in-memory table transformations on top of vectorized NumPy arrays with automatic index alignment. It enables fast I/O, NaN imputation, relational joins, split-apply-combine aggregation (groupby) and time-series resampling without Python loops.",
       "stats": {
         "GitHub stars": 50575,
         "Forks": 20765,
@@ -26,6 +32,13 @@
       "img_url": "https://matplotlib.org/stable/_static/logo2.svg",
       "img_scale": 0.9,
       "color": "#11557c",
+      "keywords": [
+        "data-visualization",
+        "plotting",
+        "2d-graphics",
+        "scientific-computing"
+      ],
+      "summary": "Matplotlib renders 2D figures through an object-oriented artist hierarchy (Figure, Axes, Artist) that draws onto pluggable backends such as Agg raster, SVG or PDF. It covers line, scatter, bar, histogram and contour plots, subplots, annotations and NumPy-array-based image display.",
       "stats": {
         "GitHub stars": 23489,
         "Forks": 8565,
@@ -44,6 +57,13 @@
       "img_url": "https://raw.githubusercontent.com/pytorch-fdn/artwork/refs/heads/main/projects/PyTorch/horizontal/PyTorch%20Logo%202022_RGB_PyTorchLogo_Horiz_fullColor_RGB.png",
       "img_scale": 1.05,
       "color": "#dd3412",
+      "keywords": [
+        "deep-learning",
+        "tensor-computation",
+        "autograd",
+        "gpu-acceleration"
+      ],
+      "summary": "PyTorch executes tensor operations on CPU or GPU through C++/CUDA kernels and records them in a dynamic computation graph for reverse-mode automatic differentiation (autograd). Its torch.nn modules, optimizers and torch.compile build, train and optimize neural networks.",
       "stats": {
         "GitHub stars": 105711,
         "Forks": 30764,
@@ -62,6 +82,13 @@
       "img_url": "https://www.tensorflow.org/images/tf_logo_horizontal.png",
       "img_scale": 1,
       "color": "#ff8800",
+      "keywords": [
+        "machine-learning",
+        "deep-learning",
+        "dataflow-graphs",
+        "distributed-training"
+      ],
+      "summary": "TensorFlow expresses computation as dataflow graphs of tensor operations executed by a C++ runtime on CPU, GPU or TPU, with reverse-mode differentiation via GradientTape. It provides tf.data input pipelines, tf.function graph tracing, XLA compilation, distributed training and SavedModel export.",
       "stats": {
         "GitHub stars": 201656,
         "Forks": 77970,
@@ -80,6 +107,13 @@
       "img_url": "https://scikit-learn.org/stable/_images/scikit-learn-logo-notext.png",
       "img_scale": 0.9,
       "color": "#f89939",
+      "keywords": [
+        "machine-learning",
+        "classical-ml",
+        "model-selection",
+        "data-mining"
+      ],
+      "summary": "scikit-learn provides a uniform estimator API (fit, predict, transform) over NumPy and SciPy arrays, with performance-critical parts in Cython. It covers classical supervised and unsupervised learning, preprocessing, Pipeline composition, cross-validation and hyperparameter search.",
       "stats": {
         "GitHub stars": 68254,
         "Forks": 27691,
@@ -98,6 +132,13 @@
       "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG6Y5al4W6F9cNiITwa5A0pC4QY0voll3wEZFJWWyErembK3Wida_K5js&s=10",
       "img_scale": 0.95,
       "color": "#0376ff",
+      "keywords": [
+        "dataframes",
+        "data-analysis",
+        "query-engine",
+        "apache-arrow"
+      ],
+      "summary": "Polars is a columnar DataFrame engine written in Rust on the Apache Arrow memory format, with multi-threaded execution and a lazy query optimizer. It offers expression-based transformations, predicate and projection pushdown, streaming for larger-than-memory data and group-by aggregations.",
       "stats": {
         "GitHub stars": 40387,
         "Forks": 3248,
@@ -116,6 +157,13 @@
       "img_url": "https://xgboost.ai/images/logo/xgboost-logo-trimmed.png",
       "img_scale": 0.95,
       "color": "#2887d7",
+      "keywords": [
+        "gradient-boosting",
+        "decision-trees",
+        "tabular-data",
+        "distributed-training"
+      ],
+      "summary": "XGBoost implements gradient-boosted decision trees in C++ with second-order gradient optimization, regularized objectives and cache-aware histogram-based split finding. It trains in parallel on CPU or GPU, handles sparse data and missing values natively and supports distributed training.",
       "stats": {
         "GitHub stars": 29006,
         "Forks": 8983,
@@ -134,6 +182,13 @@
       "img_url": "https://keras.io/img/logo-k-keras-wb.png",
       "img_scale": 0.85,
       "color": "#d00000",
+      "keywords": [
+        "deep-learning",
+        "neural-networks",
+        "high-level-api",
+        "multi-backend"
+      ],
+      "summary": "Keras is a high-level deep learning API built around composable Layer and Model objects (Sequential, Functional, subclassing) that run on swappable backends: JAX, TensorFlow or PyTorch. It handles compile/fit/evaluate training loops, callbacks, losses, metrics and pretrained model reuse.",
       "stats": {
         "GitHub stars": 64438,
         "Forks": 19819,
@@ -152,6 +207,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/5009934?v=4&s=400",
       "img_scale": 0.85,
       "color": "#128dff",
+      "keywords": [
+        "computer-vision",
+        "image-processing",
+        "video-analysis",
+        "object-detection"
+      ],
+      "summary": "OpenCV is a C++ computer vision library whose Python bindings (cv2) expose images as NumPy arrays and call into optimized SIMD, OpenCL and CUDA code. It covers image filtering, geometric transforms, feature detection (SIFT, ORB), camera calibration, optical flow and dnn-based inference.",
       "stats": {
         "GitHub stars": 91644,
         "Forks": 57112,
@@ -170,6 +232,13 @@
       "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/transformers-logo-light.svg",
       "img_scale": 0.9,
       "color": "#ffd21e",
+      "keywords": [
+        "natural-language-processing",
+        "pretrained-models",
+        "transformer-architecture",
+        "model-hub"
+      ],
+      "summary": "Transformers provides a unified API (AutoModel, AutoTokenizer, pipeline) to load pretrained Transformer architectures as PyTorch models with matching subword tokenizers. It supports inference, fine-tuning (Trainer) and text generation across NLP, vision and audio models.",
       "stats": {
         "GitHub stars": 169284,
         "Forks": 35251,
@@ -188,6 +257,13 @@
       "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/datasets-logo-light.svg",
       "img_scale": 0.9,
       "color": "#ffd21e",
+      "keywords": [
+        "data-processing",
+        "apache-arrow",
+        "data-loading",
+        "nlp"
+      ],
+      "summary": "Datasets wraps data collections in memory-mapped Apache Arrow tables, so corpora larger than RAM are read from disk with zero-copy access. It provides streaming (IterableDataset), batched map/filter transformations with fingerprint caching, and loaders for Hub datasets, CSV, JSON and Parquet.",
       "stats": {
         "GitHub stars": 22171,
         "Forks": 3669,
@@ -206,6 +282,13 @@
       "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/huggingface_hub.svg",
       "img_scale": 0.95,
       "color": "#ffd21e",
+      "keywords": [
+        "model-hub",
+        "machine-learning",
+        "api-client",
+        "model-sharing"
+      ],
+      "summary": "huggingface_hub is the Python client for the Hugging Face Hub's Git-based model, dataset and Space repositories, wrapping its HTTP API with content-addressed file caching. It supports file download (hf_hub_download), uploads, commits, snapshot_download, repo management and the Inference API client.",
       "stats": {
         "GitHub stars": 4058,
         "Forks": 1350,
@@ -224,6 +307,13 @@
       "img_url": "https://raw.githubusercontent.com/numpy/numpy/main/branding/logo/primary/numpylogo.svg",
       "img_scale": 0.95,
       "color": "#4d77cf",
+      "keywords": [
+        "numerical-computing",
+        "n-dimensional-arrays",
+        "linear-algebra",
+        "scientific-computing"
+      ],
+      "summary": "NumPy provides the ndarray, a homogeneous n-dimensional array stored in contiguous memory with strides, so operations run in compiled C loops. It adds broadcasting, vectorized ufuncs, views, linear algebra (BLAS/LAPACK), FFTs and random number generators.",
       "stats": {
         "GitHub stars": 33428,
         "Forks": 13117,
@@ -242,6 +332,13 @@
       "img_url": "https://raw.githubusercontent.com/meta-pytorch/torchcodec/main/docs/source/_static/img/torchcodec_horizontal_logo.jpg",
       "img_scale": 1,
       "color": "#ee4a29",
+      "keywords": [
+        "video-decoding",
+        "audio-decoding",
+        "ffmpeg",
+        "pytorch"
+      ],
+      "summary": "TorchCodec decodes video and audio files directly into PyTorch tensors, using FFmpeg under the hood and optionally NVIDIA NVDEC for GPU decoding. Its VideoDecoder and AudioDecoder offer frame access by index or timestamp, clip sampling and encoding.",
       "stats": {
         "GitHub stars": 1203,
         "Forks": 139,
@@ -260,6 +357,13 @@
       "img_url": "https://raw.githubusercontent.com/pytorch/audio/HEAD/docs/source/_static/img/logo.png",
       "img_scale": 1.1,
       "color": "#f54e2b",
+      "keywords": [
+        "audio-processing",
+        "signal-processing",
+        "speech",
+        "pytorch"
+      ],
+      "summary": "TorchAudio extends PyTorch with audio signal processing on tensors, implementing transforms as differentiable, GPU-capable operations on waveforms. It offers spectrograms, mel filter banks (MelSpectrogram), MFCCs, resampling, pitch/speed augmentation and building blocks for speech models.",
       "stats": {
         "GitHub stars": 2971,
         "Forks": 813,
@@ -278,6 +382,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/21003710?v=4&s=400",
       "img_scale": 0.95,
       "color": "#ee4c2c",
+      "keywords": [
+        "computer-vision",
+        "image-transforms",
+        "object-detection",
+        "pretrained-models"
+      ],
+      "summary": "TorchVision supplies computer vision building blocks for PyTorch: image and video datasets, composable transforms operating on tensors, and C++/CUDA operators such as NMS and RoIAlign. Its model zoo offers pretrained classification, detection and segmentation networks.",
       "stats": {
         "GitHub stars": 18020,
         "Forks": 7300,
@@ -296,6 +407,13 @@
       "img_url": "https://cdn.ul.run/i/3f90d47fc8daa54a5e2478debbf87f67.svg",
       "img_scale": 0.8,
       "color": "#0b23a9",
+      "keywords": [
+        "object-detection",
+        "yolo",
+        "computer-vision",
+        "real-time-inference"
+      ],
+      "summary": "ultralytics implements the YOLO family of real-time object detectors in PyTorch, with a single YOLO class that wraps model definition, training and inference. It supports detection, segmentation, pose, classification and oriented boxes, plus tracking and export to ONNX, TensorRT and CoreML.",
       "stats": {
         "GitHub stars": 63605,
         "Forks": 12033,
@@ -314,6 +432,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/110818415?v=4&s=400",
       "img_scale": 0.85,
       "color": "#e620e9",
+      "keywords": [
+        "data-validation",
+        "type-hints",
+        "json-schema",
+        "serialization"
+      ],
+      "summary": "pydantic validates data against Python type hints by declaring models as BaseModel classes, with the validation logic implemented in Rust (pydantic-core). It performs type coercion, constraint checks and JSON Schema generation, and serializes models to dicts or JSON.",
       "stats": {
         "GitHub stars": 29583,
         "Forks": 3216,
@@ -332,6 +457,13 @@
       "img_url": "https://digitalcloud.training/wp-content/uploads/2023/08/a-logo-with-a-cube-and-text-description-automatic.jpeg?update_image_id_1692074618",
       "img_scale": 1.1,
       "color": "#fed641",
+      "keywords": [
+        "aws",
+        "cloud-sdk",
+        "api-client",
+        "infrastructure"
+      ],
+      "summary": "boto3 is the AWS SDK for Python, generating service clients and resources at runtime from JSON API models and signing HTTP requests with SigV4 via botocore. It covers S3, EC2, Lambda and SageMaker calls, with paginators, waiters, retries and credential provider chains.",
       "stats": {
         "GitHub stars": 9942,
         "Forks": 2012,
@@ -350,6 +482,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/69535?v=4&s=400",
       "img_scale": 0.8,
       "color": "#cb171e",
+      "keywords": [
+        "yaml",
+        "configuration",
+        "serialization",
+        "parser"
+      ],
+      "summary": "PyYAML parses and emits YAML 1.1, converting documents to native Python dicts, lists and scalars via a pure-Python implementation with an optional C binding to libyaml. It offers safe_load for untrusted input, dump, custom tags and representers, and multi-document streams.",
       "stats": {
         "GitHub stars": 2985,
         "Forks": 642,
@@ -368,6 +507,13 @@
       "img_url": "https://raw.githubusercontent.com/jax-ml/jax/main/images/jax_logo_250px.png",
       "img_scale": 0.85,
       "color": "#5d97f6",
+      "keywords": [
+        "automatic-differentiation",
+        "xla-compiler",
+        "array-computing",
+        "accelerators"
+      ],
+      "summary": "jax transforms pure NumPy-style Python functions through tracing to a jaxpr intermediate representation that the XLA compiler lowers to CPU, GPU and TPU code. Its transformations include automatic differentiation (grad), JIT compilation (jit), vectorization (vmap) and parallelization (pmap).",
       "stats": {
         "GitHub stars": 36654,
         "Forks": 4011,
@@ -386,6 +532,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/25720743?v=4&s=400",
       "img_scale": 0.95,
       "color": "#ffd21e",
+      "keywords": [
+        "text-embeddings",
+        "semantic-search",
+        "sentence-similarity",
+        "transformers"
+      ],
+      "summary": "sentence-transformers wraps pretrained Transformer encoders with a pooling layer that maps text to fixed-size dense embeddings, trained with contrastive losses on sentence pairs. It enables semantic search, similarity scoring, clustering and cross-encoder reranking via cosine similarity.",
       "stats": {
         "GitHub stars": 19290,
         "Forks": 3035,
@@ -404,6 +557,13 @@
       "img_url": "https://github.com/langchain-ai/langgraph/raw/main/.github/images/logo-light.svg",
       "img_scale": 0.95,
       "color": "#7fc8ff",
+      "keywords": [
+        "agent-orchestration",
+        "stateful-workflows",
+        "graph-execution",
+        "llm-agents"
+      ],
+      "summary": "langgraph models agent workflows as stateful graphs whose nodes are functions that read and update a shared typed state, with edges and conditional routing defining control flow. It provides checkpointed persistence, human-in-the-loop interrupts, streaming and cycles for long-running agents.",
       "stats": {
         "GitHub stars": 45161,
         "Forks": 7796,
@@ -422,6 +582,13 @@
       "img_url": "https://raw.githubusercontent.com/mlflow/mlflow/refs/heads/master/assets/logo.svg",
       "img_scale": 0.85,
       "color": "#0194e2",
+      "keywords": [
+        "mlops",
+        "experiment-tracking",
+        "model-registry",
+        "llmops"
+      ],
+      "summary": "mlflow standardizes the machine learning lifecycle around a tracking server that logs parameters, metrics and artifacts per run to a backend store and an artifact store. It adds a model registry with versioning, model flavors for serving, and evaluation and tracing for LLM applications.",
       "stats": {
         "GitHub stars": 28902,
         "Forks": 6638,
@@ -440,6 +607,13 @@
       "img_url": "https://comfy.org/icons/logo.svg",
       "img_scale": 0.85,
       "color": "#f2ff59",
+      "keywords": [
+        "diffusion-models",
+        "node-graph",
+        "image-generation",
+        "workflow-editor"
+      ],
+      "summary": "comfyui represents diffusion pipelines as a directed node graph in a web editor and executes it on a PyTorch backend that re-runs only nodes whose inputs changed. Nodes cover checkpoint loading, text encoders, samplers, VAE decoding, LoRA and ControlNet for image and video generation.",
       "stats": {
         "GitHub stars": 147675,
         "Forks": 17661,
@@ -458,6 +632,13 @@
       "img_url": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png",
       "img_scale": 1,
       "color": "#31a3ff",
+      "keywords": [
+        "llm-inference",
+        "model-serving",
+        "kv-cache",
+        "gpu-optimization"
+      ],
+      "summary": "vLLM serves LLMs with PagedAttention, which stores the attention KV cache in non-contiguous fixed-size blocks to avoid memory fragmentation. It adds continuous batching, prefix caching, speculative decoding, quantization, tensor parallelism and an OpenAI-compatible server.",
       "stats": {
         "GitHub stars": 97221,
         "Forks": 25041,
@@ -476,6 +657,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/151674099?v=4&s=400",
       "img_scale": 1,
       "color": "#000000",
+      "keywords": [
+        "local-llm",
+        "api-client",
+        "model-management",
+        "llm-inference"
+      ],
+      "summary": "ollama is the Python client for the Ollama server, which runs quantized LLMs locally on a llama.cpp-based engine and exposes them through a REST API on port 11434. It wraps chat, generate, embeddings, streaming, tool calling and model management (pull, create) in sync and async clients.",
       "stats": {
         "GitHub stars": 10723,
         "Forks": 1242,
@@ -494,6 +682,13 @@
       "img_url": "https://raw.githubusercontent.com/ggml-org/llama-brand/refs/heads/master/logo/svg/cover/llama-cpp/cover-llama-cpp-light.svg",
       "img_scale": 1.6,
       "color": "#ee6c1e",
+      "keywords": [
+        "llm-inference",
+        "quantization",
+        "gguf",
+        "edge-inference"
+      ],
+      "summary": "llama.cpp runs LLM inference in dependency-free C/C++ on top of the ggml tensor library, loading quantized GGUF weights for CPU, Metal, CUDA and Vulkan backends. It offers k-quant formats, KV-cache management, grammar-constrained sampling, an OpenAI-compatible server and Python bindings.",
       "stats": {
         "GitHub stars": 135759,
         "Forks": 25807,
@@ -512,6 +707,13 @@
       "img_url": "https://files.lmstudio.ai/lms-light.png",
       "img_scale": 0.95,
       "color": "#000000",
+      "keywords": [
+        "local-llm",
+        "command-line-interface",
+        "model-management",
+        "llm-server"
+      ],
+      "summary": "lms is the command-line interface of LM Studio, a TypeScript tool built on its SDK that controls the local LLM runtime through the app's server. It downloads models (get), loads and unloads them (load), starts an OpenAI-compatible API server, streams logs and opens a terminal chat.",
       "stats": {
         "GitHub stars": 5440,
         "Forks": 478,
@@ -530,6 +732,13 @@
       "img_url": "https://github.com/PaddlePaddle/Paddle/raw/develop/doc/imgs/logo.png",
       "img_scale": 2,
       "color": "#2a34df",
+      "keywords": [
+        "deep-learning",
+        "dynamic-graph",
+        "distributed-training",
+        "model-deployment"
+      ],
+      "summary": "PaddlePaddle is a deep learning framework with a C++ core that runs imperative dynamic graphs and compiles them to static graphs through dynamic-to-static conversion. It supports distributed training with hybrid parallelism, plus inference deployment via Paddle Inference and Paddle Lite.",
       "stats": {
         "GitHub stars": 24146,
         "Forks": 6020,
@@ -548,6 +757,13 @@
       "img_url": "https://pl-public-data.s3.amazonaws.com/assets_lightning/pytorch-lightning.png",
       "img_scale": 0.94,
       "color": "#792ee5",
+      "keywords": [
+        "deep-learning",
+        "training-framework",
+        "distributed-training",
+        "pytorch"
+      ],
+      "summary": "pytorch-lightning organizes PyTorch code into a LightningModule that separates model logic from the engineering loop, which a Trainer executes on any device. It automates distributed training (DDP, FSDP), mixed precision, gradient accumulation, checkpointing and logging without boilerplate.",
       "stats": {
         "GitHub stars": 31465,
         "Forks": 3865,
@@ -566,6 +782,13 @@
       "img_url": "https://www.statsmodels.org/stable/_images/statsmodels-logo-v2.svg",
       "img_scale": 0.8,
       "color": "#3f51b5",
+      "keywords": [
+        "statistics",
+        "econometrics",
+        "time-series",
+        "regression"
+      ],
+      "summary": "statsmodels implements classical statistical models on top of NumPy and SciPy, fitting them via estimators such as OLS and maximum likelihood and returning result objects with inference. It covers GLMs, ARIMA time-series models, hypothesis tests, confidence intervals and R-style formulas (patsy).",
       "stats": {
         "GitHub stars": 11756,
         "Forks": 3686,
@@ -584,6 +807,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/47359?v=4&s=400",
       "img_scale": 1,
       "color": "#d22128",
+      "keywords": [
+        "big-data",
+        "distributed-computing",
+        "dataframes",
+        "sql"
+      ],
+      "summary": "PySpark is the Python API of Apache Spark, a JVM engine that executes DataFrame and SQL queries as lazily evaluated, optimized (Catalyst) plans over partitioned data across a cluster. It provides distributed joins, aggregations, shuffles, window functions, structured streaming and MLlib pipelines.",
       "stats": {
         "GitHub stars": 44588,
         "Forks": 29598,
@@ -601,6 +831,13 @@
       "img_url": "https://raw.githubusercontent.com/dariandieck/ml-shuffling-regularization/HEAD/figures/toy_shuffling.png",
       "img_scale": 0.9,
       "color": "#2a78d6",
+      "keywords": [
+        "data-shuffling",
+        "generalization",
+        "sgd-experiment",
+        "reproducible-research"
+      ],
+      "summary": "ml-shuffling-regularization is a PyTorch experiment testing whether data shuffling improves generalization of a plain-SGD MLP (784-256-256-10) on MNIST and Fashion-MNIST. It compares five batch-order variants (A-E) over 20 seeds with paired statistics, as scripts and notebooks.",
       "stats": {
         "GitHub stars": 2,
         "Forks": 0,
@@ -619,6 +856,13 @@
       "img_url": "https://lightgbm.readthedocs.io/en/latest/_images/LightGBM_logo_black_text.svg",
       "img_scale": 0.8,
       "color": "#fcb518",
+      "keywords": [
+        "gradient-boosting",
+        "decision-trees",
+        "tabular-data",
+        "ensemble-learning"
+      ],
+      "summary": "LightGBM implements gradient-boosted decision trees in C++, using histogram-based split finding and leaf-wise tree growth. It adds Gradient-based One-Side Sampling (GOSS), Exclusive Feature Bundling, native categorical splits and GPU or distributed training.",
       "stats": {
         "GitHub stars": 18994,
         "Forks": 4111,
@@ -637,6 +881,13 @@
       "img_url": "https://github.com/fastai/logos/blob/main/Fast.ai.jpg?raw=true",
       "img_scale": 1.4,
       "color": "#54a4a3",
+      "keywords": [
+        "deep-learning",
+        "transfer-learning",
+        "high-level-api",
+        "pytorch"
+      ],
+      "summary": "fastai is a layered API on top of PyTorch whose Learner couples DataLoaders, a model and a loss with a callback system. It provides transfer learning from pretrained models, one-cycle scheduling (fit_one_cycle), data augmentation and ready-made vision, text and tabular applications.",
       "stats": {
         "GitHub stars": 28271,
         "Forks": 7632,
@@ -655,6 +906,13 @@
       "img_url": "https://raw.githubusercontent.com/mwaskom/seaborn/master/doc/_static/logo-wide-lightbg.svg",
       "img_scale": 0.95,
       "color": "#5c7da2",
+      "keywords": [
+        "data-visualization",
+        "statistical-graphics",
+        "exploratory-analysis",
+        "matplotlib"
+      ],
+      "summary": "seaborn is a statistical visualization layer over Matplotlib that maps pandas DataFrame columns to visual properties such as hue and size. It draws distributions, regression fits, categorical plots, heatmaps and multi-panel grids (FacetGrid) with built-in aggregation and confidence intervals.",
       "stats": {
         "GitHub stars": 14118,
         "Forks": 2164,
@@ -673,6 +931,13 @@
       "img_url": "https://plotly-marketing-website-2.cdn.prismic.io/plotly-marketing-website-2/Z7eNlJ7c43Q3gCJv_Plotly-Logo-Black.svg",
       "img_scale": 1.2,
       "color": "#16172c",
+      "keywords": [
+        "interactive-charts",
+        "data-visualization",
+        "web-graphics",
+        "dashboards"
+      ],
+      "summary": "plotly builds interactive figures as declarative JSON specifications (traces and layout) that the plotly.js engine renders in the browser via WebGL or SVG. Plotly Express creates scatter, line, 3D, geographic and statistical charts from DataFrames in one call, with hover, zoom and export.",
       "stats": {
         "GitHub stars": 18913,
         "Forks": 2900,
@@ -691,6 +956,13 @@
       "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcLLxOyFwzUDeWA2t1qOZJ79AHFLmvewdgkpT_dl18PRvvPY1JTOgpkAOd&s=10",
       "img_scale": 0.95,
       "color": "#e41736",
+      "keywords": [
+        "natural-language-processing",
+        "text-mining",
+        "computational-linguistics",
+        "corpora"
+      ],
+      "summary": "nltk is a toolkit for symbolic natural language processing, bundling corpus readers, WordNet access and classic algorithms in pure Python. It provides tokenization, stemming, lemmatization, part-of-speech tagging, n-gram models, parsing with context-free grammars and Naive Bayes text classifiers.",
       "stats": {
         "GitHub stars": 14774,
         "Forks": 3083,
@@ -709,6 +981,13 @@
       "img_url": "https://cdn.prod.website-files.com/69eb241da3f923869c226875/6abd81536a788cbaee24b19d_Primary%20Logo%20Blue.svg",
       "img_scale": 0.9,
       "color": "#0117be",
+      "keywords": [
+        "llm-gateway",
+        "api-abstraction",
+        "openai-compatible",
+        "llm-routing"
+      ],
+      "summary": "LiteLLM translates OpenAI-format chat completion calls into the native APIs of over 100 LLM providers through a single completion() function, and normalizes responses and errors. A proxy server (AI gateway) adds routing, retries, fallbacks, streaming, virtual API keys and cost tracking.",
       "stats": {
         "GitHub stars": 63559,
         "Forks": 13430,
@@ -727,6 +1006,13 @@
       "img_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/SpaCy_logo.svg/960px-SpaCy_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20161218210724",
       "img_scale": 0.85,
       "color": "#09a3d5",
+      "keywords": [
+        "natural-language-processing",
+        "named-entity-recognition",
+        "dependency-parsing",
+        "nlp-pipelines"
+      ],
+      "summary": "spaCy runs text through a pipeline of components that annotate a Doc of Token and Span objects, with performance-critical code compiled from Cython. It provides tokenization, dependency parsing, named entity recognition, rule-based matching and trainable transformer pipelines.",
       "stats": {
         "GitHub stars": 34074,
         "Forks": 4746,
@@ -744,6 +1030,13 @@
       "img_url": "http://bit.ly/3o3EHNN",
       "img_scale": 0.8,
       "color": "#53b2ae",
+      "keywords": [
+        "awesome-list",
+        "machine-learning",
+        "curated-list",
+        "project-ranking"
+      ],
+      "summary": "best-of-ml-python is a curated, automatically ranked list of open-source Python machine learning projects, grouped into categories such as NLP and visualization. A GitHub Action collects metadata from GitHub and PyPI to compute a project-quality score and updates the ranking weekly.",
       "stats": {
         "GitHub stars": 23874,
         "Forks": 3144,
@@ -762,6 +1055,13 @@
       "img_url": "https://haystack.deepset.ai/images/logos/haystack.png",
       "img_scale": 0.85,
       "color": "#2558ff",
+      "keywords": [
+        "retrieval-augmented-generation",
+        "llm-orchestration",
+        "semantic-search",
+        "ai-agents"
+      ],
+      "summary": "haystack composes LLM applications as pipelines, directed graphs of modular components such as retrievers, rankers, generators and converters that exchange typed data. It supports retrieval-augmented generation (RAG), document stores with vector search and tool-calling agents.",
       "stats": {
         "GitHub stars": 27053,
         "Forks": 3483,
@@ -780,6 +1080,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/11708465?v=4&s=400",
       "img_scale": 0.85,
       "color": "#4bc0a9",
+      "keywords": [
+        "word-list",
+        "english-dictionary",
+        "text-datasets",
+        "nlp-resources"
+      ],
+      "summary": "english-words is a repository of plain-text English word lists, such as words_alpha.txt containing only alphabetic words, with one word per line. The PyPI package exposes word sets (get_english_words_set) from sources like web2 and gcide with lowercase and alphabetic-only options.",
       "stats": {
         "GitHub stars": 12343,
         "Forks": 2013,
@@ -798,6 +1105,13 @@
       "img_url": "https://python-pillow.org/assets/images/pillow-logo-light-text-480x240.png",
       "img_scale": 1.05,
       "color": "#98bbf5",
+      "keywords": [
+        "image-processing",
+        "image-manipulation",
+        "image-formats",
+        "raster-graphics"
+      ],
+      "summary": "Pillow wraps C image codecs and pixel operations around an Image object that stores raster data in modes such as RGB, L and RGBA. It reads and writes many file formats and provides resizing, cropping, filtering (ImageFilter), color conversion and drawing (ImageDraw).",
       "stats": {
         "GitHub stars": 13998,
         "Forks": 2641,
@@ -816,6 +1130,13 @@
       "img_url": "https://avatars.githubusercontent.com/u/25720743?v=4&s=400",
       "img_scale": 0.95,
       "color": "#ffd21e",
+      "keywords": [
+        "computer-vision",
+        "image-classification",
+        "pretrained-models",
+        "vision-transformers"
+      ],
+      "summary": "pytorch-image-models (timm) collects PyTorch vision backbones such as ResNet, EfficientNet and ViT behind one factory (create_model) that loads pretrained weights. It also provides training scripts, augmentation, optimizers, schedulers and feature extraction.",
       "stats": {
         "GitHub stars": 37294,
         "Forks": 5232,
@@ -834,6 +1155,13 @@
       "img_url": "https://zulko.github.io/moviepy/_images/logo.png",
       "img_scale": 0.9,
       "color": "#1c1c1c",
+      "keywords": [
+        "video-editing",
+        "video-processing",
+        "gif-creation",
+        "audio-processing"
+      ],
+      "summary": "MoviePy models video and audio as clip objects (VideoFileClip, AudioFileClip) composed in time and space, reading and writing frames as NumPy arrays via FFMPEG. It supports cutting, concatenation, compositing, effects, text overlays and export to video files or GIFs.",
       "stats": {
         "GitHub stars": 15173,
         "Forks": 2170,
@@ -850,6 +1178,13 @@
       "pypi": "openpyxl",
       "repo": "ericgazoni/openpyxl",
       "img_scale": 1,
+      "keywords": [
+        "excel",
+        "spreadsheets",
+        "xlsx",
+        "office-open-xml"
+      ],
+      "summary": "openpyxl reads and writes Office Open XML spreadsheets (.xlsx) by mapping the zipped XML parts to Workbook, Worksheet and Cell objects in Python. It supports formulas, cell styles, charts, images, conditional formatting and a streaming mode for large files.",
       "stats": {
         "GitHub stars": 204,
         "Forks": 46,
@@ -867,6 +1202,13 @@
       "repo": "JaidedAI/EasyOCR",
       "img_scale": 1.1,
       "color": "#0098cb",
+      "keywords": [
+        "optical-character-recognition",
+        "text-detection",
+        "text-recognition",
+        "deep-learning"
+      ],
+      "summary": "EasyOCR is a PyTorch OCR pipeline that locates text regions with the CRAFT detector and reads them with a CRNN recognizer (CNN, LSTM, CTC decoding). It supports over 80 languages, GPU inference and returns bounding boxes with text and confidence scores.",
       "stats": {
         "GitHub stars": 30156,
         "Forks": 3624,
@@ -885,6 +1227,13 @@
       "img_url": "https://upload.wikimedia.org/wikipedia/commons/7/78/Tesseract_OCR_logo_%28Google%29.png?utm_source=de.wikipedia.org&utm_campaign=index&utm_content=original",
       "img_scale": 0.9,
       "color": "#4285f4",
+      "keywords": [
+        "optical-character-recognition",
+        "text-recognition",
+        "document-digitization",
+        "lstm"
+      ],
+      "summary": "Tesseract OCR is a C++ engine built on Leptonica that binarizes pages, analyzes layout and recognizes text lines with an LSTM neural network. Python uses it through wrappers (pytesseract, tesserocr) and gets plain text, hOCR, TSV or searchable PDF output.",
       "stats": {
         "GitHub stars": 77591,
         "Forks": 10920,

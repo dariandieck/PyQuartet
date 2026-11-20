@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Card } from "./model.ts";
 import { cleanSettings, maxRoundsOf, MIN_CARDS, pickCards, ROUND_LIMIT } from "./settings.ts";
 
-const card = (library: string): Card => ({ library, url: null, imgUrl: null, imgScale: 1, color: null, stats: {} });
+const card = (library: string): Card => ({ library, url: null, imgUrl: null, imgScale: 1, color: null, keywords: [], summary: null, stats: {} });
 
 describe("game settings", () => {
   it("clamps stored or received settings to the deck", () => {

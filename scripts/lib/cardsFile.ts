@@ -11,13 +11,15 @@ export interface RawCard {
   img_url?: string | null;
   img_scale?: number;
   color?: string | null;
+  keywords?: string[];
+  summary?: string | null;
   stats: Record<string, number>;
 }
 
 const CARDS_FILE = new URL("../../data/cards.json", import.meta.url);
 const CATEGORIES_FILE = new URL("../../data/categories.json", import.meta.url);
 
-const KEY_ORDER = ["library", "url", "pypi", "repo", "img_url", "img_scale", "color", "stats"] as const;
+const KEY_ORDER = ["library", "url", "pypi", "repo", "img_url", "img_scale", "color", "keywords", "summary", "stats"] as const;
 
 /**
  * Fixed key order and no empty optional fields, so diffs of data/cards.json stay small and readable. With
@@ -29,7 +31,8 @@ export function normalizeCard(card: RawCard, categories?: Category[]): RawCard {
     card = { ...card, stats };
   }
   const entries = KEY_ORDER.map((key) => [key, card[key]] as const).filter(
-    ([key, value]) => key === "stats" || (value !== null && value !== undefined && value !== ""),
+    ([key, value]) =>
+      key === "stats" || (value !== null && value !== undefined && value !== "" && !(Array.isArray(value) && value.length === 0)),
   );
   return Object.fromEntries(entries) as unknown as RawCard;
 }

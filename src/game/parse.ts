@@ -1,4 +1,4 @@
-import { STAT_SOURCES, type Card, type Category, type Polarity, type StatSource } from "./model.ts";
+import { STAT_SOURCES, SUMMARY_MAX, type Card, type Category, type Polarity, type StatSource } from "./model.ts";
 
 // No JSON imports here, so Node scripts (npm run stats, the card editor) can validate data with the same rules.
 
@@ -75,12 +75,22 @@ export function parseCards(raw: unknown, categories: Category[]): Card[] {
     if (color !== null && (typeof color !== "string" || !HEX_COLOR.test(color))) {
       throw new DeckError(`Card "${entry.library}": color must look like "#1a2b3c" (${JSON.stringify(color)})`);
     }
+    const keywords = entry.keywords ?? [];
+    if (!Array.isArray(keywords) || !keywords.every((k) => typeof k === "string" && k.trim() !== "")) {
+      throw new DeckError(`Card "${entry.library}": keywords must be a list of non-empty strings`);
+    }
+    const summary = entry.summary ?? null;
+    if (summary !== null && (typeof summary !== "string" || summary.length > SUMMARY_MAX)) {
+      throw new DeckError(`Card "${entry.library}": summary must be a string of at most ${SUMMARY_MAX} characters`);
+    }
     return {
       library: entry.library,
       url: typeof entry.url === "string" ? entry.url : null,
       imgUrl: typeof entry.img_url === "string" ? entry.img_url : null,
       imgScale,
       color,
+      keywords: keywords as string[],
+      summary: summary || null,
       stats: stats as Record<string, number>,
     };
   });

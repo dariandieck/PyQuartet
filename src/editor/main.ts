@@ -1,6 +1,6 @@
 import type { RawCard } from "../../scripts/lib/cardsFile.ts";
 import type { Resolved } from "../../scripts/lib/lookup.ts";
-import { formatStat, needsPypi, type Card, type Category, type StatSource } from "../game/model.ts";
+import { formatStat, needsPypi, SUMMARY_MAX, type Card, type Category, type StatSource } from "../game/model.ts";
 import { CARD_H, CARD_W, CardRenderer } from "../render/cardView.ts";
 import { ImageStore } from "../render/images.ts";
 
@@ -45,13 +45,15 @@ interface FieldOptions {
   hint?: string;
   placeholder?: string;
   inputMode?: "text" | "decimal" | "url";
+  /** A textarea instead of a one-line input. */
+  multiline?: boolean;
   /** Makes the value Ctrl+clickable: the page it names, e.g. the PyPI project for a package name. */
   link?: (value: string) => string;
 }
 
 class Field {
   readonly row = element("div", "field");
-  readonly input = element("input");
+  readonly input: HTMLInputElement | HTMLTextAreaElement;
   readonly control = element("div", "control");
   private readonly status = element("div", "status");
   origin: Origin = "empty";
@@ -59,6 +61,7 @@ class Field {
   private token = 0;
 
   constructor(parent: HTMLElement, options: FieldOptions) {
+    this.input = options.multiline ? Object.assign(element("textarea"), { rows: 4 }) : element("input");
     const label = element("label");
     label.textContent = options.label;
     if (options.hint) label.append(Object.assign(element("small"), { textContent: options.hint }));
@@ -74,7 +77,7 @@ class Field {
     if (link) {
       this.row.classList.add("linkable");
       this.input.title = "Ctrl+click to open";
-      this.input.addEventListener("click", (event) => {
+      (this.input as HTMLElement).addEventListener("click", (event) => {
         if (!(event.ctrlKey || event.metaKey) || !this.value) return;
         event.preventDefault();
         window.open(link(this.value), "_blank", "noopener");
@@ -157,6 +160,7 @@ class Field {
 const $ = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
 const libraryBox = $("#library-fields");
 const imageBox = $("#image-fields");
+const textBox = $("#text-fields");
 const statBox = $("#stat-fields");
 const saveButton = $<HTMLButtonElement>("#save");
 const messageBox = $("#message");
@@ -181,6 +185,29 @@ const repo = new Field(libraryBox, {
   placeholder: "e.g. pandas-dev/pandas",
   link: (name) => `https://github.com/${name.split("/").map(encodeURIComponent).join("/")}`,
 });
+const keywords = new Field(textBox, {
+  label: "Keywords",
+  hint: "comma-separated topics",
+  placeholder: "e.g. data-analysis, data-structures",
+});
+const summary = new Field(textBox, { label: "Summary", hint: "card back", multiline: true });
+
+/** "Data Science, data-analysis" → ["data-science", "data-analysis"], like GitHub topics. */
+function parseKeywords(text: string): string[] {
+  return text
+    .split(",")
+    .map((k) => k.trim().toLowerCase().replace(/\s+/g, "-"))
+    .filter(Boolean);
+}
+
+function showSummaryLength(): void {
+  const length = summary.value.length;
+  summary.note(length ? `${length} / ${SUMMARY_MAX} characters` : "");
+  summary.row.classList.toggle("invalid", length > SUMMARY_MAX);
+}
+summary.onInput = showSummaryLength;
+summary.onFill = showSummaryLength;
+
 const imgUrl = new Field(imageBox, { label: "Image URL", placeholder: "https://…/logo.svg", inputMode: "url" });
 
 const logoSearch = Object.assign(element("button", "secondary"), {
@@ -469,6 +496,8 @@ function previewCard(): Card {
     imgUrl: imgUrl.value || null,
     imgScale: scale > 0 ? scale : 1,
     color: HEX.test(color.value) ? color.value : null,
+    keywords: parseKeywords(keywords.value),
+    summary: summary.value || null,
     stats,
   };
 }
@@ -552,6 +581,8 @@ function loadForm(card: RawCard | null): void {
   home.load(card?.url);
   pypi.load(card?.pypi);
   repo.load(card?.repo);
+  keywords.load(card?.keywords?.join(", "));
+  summary.load(card?.summary);
   imgUrl.load(card?.img_url);
   imgScale.load(card ? (card.img_scale ?? 1) : 1);
   color.load(card?.color);
@@ -581,6 +612,7 @@ function collect(): RawCard | null {
   const scale = Number(imgScale.value || 1);
   if (!(scale > 0)) invalid.push(imgScale);
   if (color.value && !HEX.test(color.value)) invalid.push(color);
+  if (summary.value.length > SUMMARY_MAX) invalid.push(summary);
   if (!library.value) invalid.push(library);
   for (const field of invalid) field.row.classList.add("invalid");
   if (invalid.length) {
@@ -596,6 +628,8 @@ function collect(): RawCard | null {
     img_url: imgUrl.value || null,
     img_scale: scale,
     color: color.value ? color.value.toLowerCase() : null,
+    keywords: parseKeywords(keywords.value),
+    summary: summary.value || null,
     stats,
   };
 }

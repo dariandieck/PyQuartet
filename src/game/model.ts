@@ -34,8 +34,15 @@ export interface Card {
   imgScale: number;
   /** Brand color "#rrggbb" for the card frame; filled by `npm run colors`. */
   color: string | null;
+  /** GitHub-topic-like tags naming the core of the library, e.g. "data-analysis". */
+  keywords: readonly string[];
+  /** Two dense sentences for the card back (at most SUMMARY_MAX characters). */
+  summary: string | null;
   stats: Readonly<Record<string, number>>;
 }
+
+/** Longest summary that still fits on the card back. */
+export const SUMMARY_MAX = 300;
 
 export function beats(category: Category, a: number, b: number): boolean {
   return category.polarity === "positive" ? a > b : a < b;

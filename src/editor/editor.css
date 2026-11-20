@@ -180,7 +180,8 @@ button.secondary:hover {
   align-items: center;
 }
 
-.field input:not([type="color"], [type="range"]) {
+.field input:not([type="color"], [type="range"]),
+.field textarea {
   width: 100%;
   font: inherit;
   font-size: 15px;
@@ -194,7 +195,13 @@ button.secondary:hover {
     border-color 0.3s;
 }
 
-.field input:focus {
+.field textarea {
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.field input:focus,
+.field textarea:focus {
   outline: none;
   border-color: var(--blue-hover);
 }
@@ -204,7 +211,8 @@ button.secondary:hover {
   border-color: var(--yellow);
 }
 
-.field.invalid input:not([type="color"], [type="range"]) {
+.field.invalid input:not([type="color"], [type="range"]),
+.field.invalid textarea {
   border-color: var(--error);
 }
 
