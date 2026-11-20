@@ -484,6 +484,17 @@ const PREVIEW_SCALE = 1.5;
 const canvas = $<HTMLCanvasElement>("#card");
 const ctx = canvas.getContext("2d")!;
 let renderer: CardRenderer | null = null;
+/** The preview shows the info side (keywords + summary) instead of the values. */
+let previewInfo = false;
+const flipButton = $<HTMLButtonElement>("#preview-flip");
+
+function showPreviewSide(info: boolean): void {
+  previewInfo = info;
+  flipButton.textContent = info ? "Show front" : "Show back";
+}
+flipButton.addEventListener("click", () => showPreviewSide(!previewInfo));
+// Editing the card texts shows the side they are printed on, so it is visible whether they fit.
+for (const field of [keywords, summary]) field.input.addEventListener("focus", () => showPreviewSide(true));
 let rendererKey = "";
 
 function previewCard(): Card {
@@ -524,7 +535,8 @@ function drawPreview(): void {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, width, height);
   ctx.setTransform(PREVIEW_SCALE * density, 0, 0, PREVIEW_SCALE * density, 0, 0);
-  renderer?.drawFront(ctx, card, { highlight: null, outcome: null, hover: null });
+  if (previewInfo) renderer?.drawInfo(ctx, card);
+  else renderer?.drawFront(ctx, card, { highlight: null, outcome: null, hover: null });
   requestAnimationFrame(drawPreview);
 }
 

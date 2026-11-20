@@ -24,6 +24,12 @@ const STATS_BOTTOM = CARD_H - 10;
 const PAD = 12;
 const FULL: Rect = { x: 0, y: 0, w: CARD_W, h: CARD_H };
 
+const CHIP_H = 18;
+const CHIP_GAP = 5;
+const CHIP_FONT = 10.5;
+const SUMMARY_SIZES = [13.5, 13, 12.5, 12, 11.5, 11, 10.5, 10, 9.5, 9];
+const LINE_HEIGHT = 1.32;
+
 export type Outcome = "win" | "lose" | "tie";
 
 const OUTCOME_COLORS: Record<Outcome, string> = {
@@ -43,11 +49,31 @@ export interface StatRow {
   rect: Rect;
 }
 
+interface InfoWord {
+  text: string;
+  x: number;
+  y: number;
+  width: number;
+  bold: boolean;
+  link: boolean;
+}
+
+/** Positions on the info side, computed once per card (also used to hit-test the homepage link). */
+interface InfoLayout {
+  chips: { text: string; rect: Rect }[];
+  dividerY: number;
+  size: number;
+  words: InfoWord[];
+  linkRects: Rect[];
+}
+
 /** Draws cards in card-local coordinates (0..CARD_W, 0..CARD_H); callers set up the transform. */
 export class CardRenderer {
   readonly rows: StatRow[];
-  readonly imageBox: Rect;
+  private readonly imageBox: Rect;
   private readonly fontSize: number;
+  private readonly infoLayouts = new WeakMap<Card, InfoLayout>();
+  private measureCtx: CanvasRenderingContext2D | null = null;
 
   constructor(
     categories: Category[],
@@ -66,11 +92,10 @@ export class CardRenderer {
     }));
   }
 
-  drawFront(ctx: CanvasRenderingContext2D, card: Card, state: FaceState): void {
+  /** Card face with the accent header (library name); returns the accent color. */
+  private drawFace(ctx: CanvasRenderingContext2D, card: Card): string {
     const accent = card.color ?? libraryColor(card.library);
-    const onAccent = textColorOn(accent);
     fillRoundRect(ctx, FULL, RADIUS, colors.cardFace);
-
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(0, 0, CARD_W, CARD_H, RADIUS);
@@ -79,7 +104,13 @@ export class CardRenderer {
     ctx.fillRect(0, 0, CARD_W, HEADER_H);
     ctx.restore();
     const nameSize = fitFontSize(ctx, card.library, CARD_W - 2 * PAD, 21, true);
-    drawText(ctx, card.library, CARD_W / 2, HEADER_H / 2 + 1, { size: nameSize, color: onAccent, bold: true });
+    drawText(ctx, card.library, CARD_W / 2, HEADER_H / 2 + 1, { size: nameSize, color: textColorOn(accent), bold: true });
+    return accent;
+  }
+
+  drawFront(ctx: CanvasRenderingContext2D, card: Card, state: FaceState): void {
+    const accent = this.drawFace(ctx, card);
+    const onAccent = textColorOn(accent);
 
     const box = this.imageBox;
     fillRoundRect(ctx, box, 8, colors.white);
@@ -128,6 +159,103 @@ export class CardRenderer {
     drawText(ctx, category.label, rect.x + 18, cy, { size: labelSize, color: colors.cardText, align: "left" });
   }
 
+  /** The side you flip your hand card to: keywords as chips and the summary, whose library name links home. */
+  drawInfo(ctx: CanvasRenderingContext2D, card: Card): void {
+    const accent = this.drawFace(ctx, card);
+    const layout = this.infoLayout(card);
+    for (const { text, rect } of layout.chips) {
+      ctx.save();
+      ctx.globalAlpha = 0.16;
+      fillRoundRect(ctx, rect, rect.h / 2, accent);
+      ctx.restore();
+      strokeRoundRect(ctx, rect, rect.h / 2, accent, 1);
+      const size = fitFontSize(ctx, text, rect.w - 10, CHIP_FONT);
+      drawText(ctx, text, rect.x + rect.w / 2, rect.y + rect.h / 2 + 0.5, { size, color: colors.cardText });
+    }
+    ctx.fillStyle = "rgba(30, 34, 44, 0.15)";
+    ctx.fillRect(PAD, layout.dividerY, CARD_W - 2 * PAD, 1);
+    if (layout.words.length === 0) {
+      drawText(ctx, "No description yet", CARD_W / 2, (layout.dividerY + CARD_H) / 2, { size: 13, color: colors.textDim });
+    }
+    for (const word of layout.words) {
+      const color = word.link ? colors.pyBlue : colors.cardText;
+      drawText(ctx, word.text, word.x, word.y, { size: layout.size, color, bold: word.bold, align: "left" });
+      if (word.link) {
+        ctx.fillStyle = colors.pyBlue;
+        ctx.fillRect(word.x, word.y + layout.size * 0.55, word.width, 1);
+      }
+    }
+    strokeRoundRect(ctx, FULL, RADIUS, accent, 3);
+  }
+
+  /** Whether a card-local point is on the library name link of the info side. */
+  infoLinkAt(card: Card, p: Point): boolean {
+    return this.infoLayout(card).linkRects.some((rect) => contains(rect, p));
+  }
+
+  private measure(): CanvasRenderingContext2D {
+    // Hit-testing needs the text layout outside of drawing, so measuring has its own context.
+    this.measureCtx ??= document.createElement("canvas").getContext("2d")!;
+    return this.measureCtx;
+  }
+
+  private infoLayout(card: Card): InfoLayout {
+    const cached = this.infoLayouts.get(card);
+    if (cached) return cached;
+    const ctx = this.measure();
+    const width = CARD_W - 2 * PAD;
+
+    const chips: InfoLayout["chips"] = [];
+    let x = PAD;
+    let y = HEADER_H + 10;
+    for (const text of card.keywords) {
+      const w = Math.min(width, textWidth(ctx, text, CHIP_FONT) + 14);
+      if (x > PAD && x + w > PAD + width) {
+        x = PAD;
+        y += CHIP_H + CHIP_GAP;
+      }
+      chips.push({ text, rect: { x, y, w, h: CHIP_H } });
+      x += w + CHIP_GAP;
+    }
+    const dividerY = (chips.length ? y + CHIP_H : HEADER_H) + 9;
+
+    // The summary starts with the library name (see the card texts), which becomes the homepage link.
+    const summary = card.summary ?? "";
+    const tokens = summary.split(/\s+/).filter(Boolean);
+    const startsWithName = summary.startsWith(card.library) && !/[\w-]/.test(summary.charAt(card.library.length));
+    const nameTokens = startsWithName ? card.library.split(/\s+/).length : 0;
+    const top = dividerY + 9;
+    const bottom = CARD_H - 12;
+    let words: InfoWord[] = [];
+    let size = SUMMARY_SIZES[0]!;
+    // Largest font size at which the whole summary fits.
+    for (size of SUMMARY_SIZES) {
+      words = [];
+      const lineH = size * LINE_HEIGHT;
+      const space = textWidth(ctx, " ", size);
+      let line = 0;
+      let cursor = PAD;
+      tokens.forEach((text, i) => {
+        const bold = i < nameTokens;
+        const w = textWidth(ctx, text, size, bold);
+        if (cursor > PAD && cursor + w > PAD + width) {
+          line += 1;
+          cursor = PAD;
+        }
+        words.push({ text, x: cursor, y: top + (line + 0.5) * lineH, width: w, bold, link: bold && card.url !== null });
+        cursor += w + space;
+      });
+      if (top + (line + 1) * lineH <= bottom) break;
+    }
+    const lineH = size * LINE_HEIGHT;
+    const linkRects = words
+      .filter((w) => w.link)
+      .map((w) => ({ x: w.x - 3, y: w.y - lineH / 2 - 2, w: w.width + 6, h: lineH + 4 }));
+    const layout = { chips, dividerY, size, words, linkRects };
+    this.infoLayouts.set(card, layout);
+    return layout;
+  }
+
   drawBack(ctx: CanvasRenderingContext2D): void {
     fillRoundRect(ctx, FULL, RADIUS, colors.cardBack);
     const inner: Rect = { x: 12, y: 12, w: CARD_W - 24, h: CARD_H - 24 };
@@ -170,7 +298,10 @@ export class CardRenderer {
 
 export class CardSprite implements FaceState {
   scale = 1;
-  /** 0 = face down, 1 = face up; the width follows |cos| to fake a 3D flip. */
+  /**
+   * 0 = face down (PyQuartet back), 1 = front with the values, 2 = info side (keywords + summary);
+   * the width follows |cos| to fake a 3D flip between them.
+   */
   turn = 0;
   z = 0;
   highlight: string | null = null;
@@ -190,6 +321,15 @@ export class CardSprite implements FaceState {
     return this.turn >= 0.5;
   }
 
+  get side(): "back" | "front" | "info" {
+    return this.turn < 0.5 ? "back" : this.turn < 1.5 ? "front" : "info";
+  }
+
+  /** Not in the middle of a flip. */
+  get settled(): boolean {
+    return Math.abs(Math.cos(Math.PI * this.turn)) > 0.95;
+  }
+
   rect(): Rect {
     const w = CARD_W * this.scale;
     const h = CARD_H * this.scale;
@@ -204,7 +344,9 @@ export class CardSprite implements FaceState {
     ctx.scale(this.scale * squash, this.scale);
     ctx.translate(-CARD_W / 2, -CARD_H / 2);
     renderer.drawShadow(ctx, 6, 8);
-    if (this.faceUp) renderer.drawFront(ctx, this.card, this);
+    const side = this.side;
+    if (side === "info") renderer.drawInfo(ctx, this.card);
+    else if (side === "front") renderer.drawFront(ctx, this.card, this);
     else renderer.drawBack(ctx);
     ctx.restore();
   }
@@ -217,20 +359,21 @@ export class CardSprite implements FaceState {
 
   /** Hit-tests a logical point against the stat rows (only meaningful while face up and unflipped). */
   categoryAt(p: Point, renderer: CardRenderer): Category | null {
+    if (this.side !== "front" || !this.settled) return null;
     const local = this.toLocal(p);
     if (!local) return null;
     return renderer.rows.find((row) => contains(row.rect, local))?.category ?? null;
   }
 
-  /** Homepage link if `p` is on the logo of a fully face-up card (not mid-flip). */
+  /** Homepage link if `p` is on the library name in the summary of the info side (not mid-flip). */
   linkAt(p: Point, renderer: CardRenderer): string | null {
-    if (!this.card.url || Math.abs(Math.cos(Math.PI * this.turn)) < 0.95 || !this.faceUp) return null;
+    if (!this.card.url || this.side !== "info" || !this.settled) return null;
     const local = this.toLocal(p);
-    return local && contains(renderer.imageBox, local) ? this.card.url : null;
+    return local && renderer.infoLinkAt(this.card, local) ? this.card.url : null;
   }
 }
 
-/** Topmost card under `p` whose logo links to the library homepage. */
+/** Topmost card under `p` whose info side links to the library homepage. */
 export function linkAt(sprites: Iterable<CardSprite>, p: Point, renderer: CardRenderer): string | null {
   const byZ = [...sprites].sort((a, b) => b.z - a.z);
   for (const sprite of byZ) {

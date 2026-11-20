@@ -27,6 +27,7 @@ const MIN_BOT_THINKING = 0.8; // seconds "X is thinking..." stays visible, howev
 const TOAST_SECONDS = 4;
 /** Card zoom on touch screens: the card fills the screen height, so stats are readable and tappable on phones. */
 const INSPECT_SCALE = 2.1;
+const FLIP_SECONDS = 0.45;
 
 type Phase = "wait" | "choose" | "confirm" | "result" | "over";
 
@@ -92,7 +93,8 @@ export class GameScene implements Scene {
     private readonly options: GameSceneOptions = {},
   ) {
     this.callButton = new Button(centeredRect(910, 600, 170, 58), "Call!", () => this.callPressed(), 24);
-    this.continueButton = new Button(centeredRect(640, 620, 220, 56), "Continue", () => this.continuePressed());
+    // Below the result's hint line (center text ends around y 600).
+    this.continueButton = new Button(centeredRect(640, 645, 220, 56), "Continue", () => this.continuePressed());
     this.againButton = new Button(centeredRect(540, 470, 200, 58), "Play again", () => this.playAgain());
     this.menuButton = new Button(centeredRect(760, 470, 200, 58), "Menu", () => this.toMenu());
     this.leaveButton = new Button(centeredRect(70, 26, 110, 36), "Leave", () => this.toMenu(), 16);
@@ -197,7 +199,7 @@ export class GameScene implements Scene {
       const own = this.hand.get(this.youId);
       const hasCard = own !== undefined;
       if (!hasCard) this.detail = "You don't play in this tie, but you pick the value.";
-      else this.detail = this.touch ? "Tap your card to pick a value." : "Pick a value on your card.";
+      else this.detail = this.touch ? "Tap your card to pick a value." : "Pick a value on your card, or click the card to flip it.";
       // On phones the card is too small to read and tap, so it opens enlarged right away.
       if (own && this.touch) this.inspected = own;
       this.layoutPicker(!hasCard);
@@ -212,7 +214,8 @@ export class GameScene implements Scene {
       } else {
         this.message = `Waiting for ${caller} to call...`;
       }
-      this.detail = "";
+      const verb = this.touch ? "tap" : "click";
+      this.detail = this.hand.has(this.youId) ? `Meanwhile, ${verb} your card to read about it.` : "";
     }
   }
 
@@ -251,7 +254,9 @@ export class GameScene implements Scene {
       sprite.highlight = event.result.label;
       sprite.hover = null;
       sprite.z = 20;
-      this.animator.tween(sprite, 0.55, { x: seat.table.x, y: seat.table.y, scale: this.layout.tableScale });
+      // A card still showing its info side turns back to the values on the way to the table.
+      const turn = sprite.side === "info" ? { turn: 1 } : {};
+      this.animator.tween(sprite, 0.55, { x: seat.table.x, y: seat.table.y, scale: this.layout.tableScale, ...turn });
       table.set(play.playerId, sprite);
     }
     this.table = table;
@@ -301,7 +306,7 @@ export class GameScene implements Scene {
       this.message = tie ? `Tie, but only one player has cards left: ${winner} the pot.` : `${winner} the round!`;
       this.detail = `${category.label}: ${values}  (${polarityHint(category)})`;
     }
-    const touchHint = this.touch ? "Tap a card to see it larger." : "";
+    const touchHint = this.touch ? "Tap a card to see it larger." : "Click a card to read about it.";
     if (this.session.isHost) {
       this.phase = "result";
       this.continueButton.visible = true;
@@ -458,7 +463,10 @@ export class GameScene implements Scene {
     if (this.phase === "choose" && this.selected !== null) {
       const label = this.selected;
       const own = this.hand.get(this.youId);
-      if (own) own.hover = null;
+      if (own) {
+        own.hover = null;
+        if (own.turn > 1) this.animator.tween(own, FLIP_SECONDS, { turn: 1 });
+      }
       this.phase = "wait";
       this.callButton.visible = false;
       this.layoutPicker(false);
@@ -499,7 +507,7 @@ export class GameScene implements Scene {
     }
     if (event.kind === "down" && this.buttons.some((b) => b.click(event.point))) return;
     if (event.kind === "down" && this.touch) {
-      // Touch: a tap on any face-up card enlarges it; values and the logo link are used on the big card.
+      // Touch: a tap on any face-up card enlarges it; values, flipping and the homepage link work on the big card.
       const card = this.phase === "over" ? null : this.faceUpCardAt(event.point);
       if (card) {
         this.inspected = card;
@@ -515,6 +523,12 @@ export class GameScene implements Scene {
     // Online, Escape would silently drop the player from the room; there is the Leave button instead.
     if (event.kind === "key" && event.key === "Escape") {
       if (!this.session.isOnline) this.toMenu();
+      return;
+    }
+    // Outside your own call, a click turns your hand card or a revealed table card to its info side.
+    const flippable = event.kind === "down" && this.phase !== "choose" ? this.flippableAt(event.point) : null;
+    if (flippable) {
+      this.flip(flippable);
       return;
     }
     const confirmKey = event.kind === "key" && (event.key === "Enter" || event.key === " ");
@@ -546,6 +560,7 @@ export class GameScene implements Scene {
     } else if (event.kind === "down") {
       const category = sprite?.categoryAt(event.point, this.app.renderer);
       if (category) this.select(category.label);
+      else if (sprite && contains(sprite.rect(), event.point)) this.flip(sprite);
     } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       const labels = this.app.deck.categories.map((c) => c.label);
       const step = event.key === "ArrowUp" ? -1 : 1;
@@ -554,6 +569,29 @@ export class GameScene implements Scene {
     } else if (event.key === "Enter" || event.key === " ") {
       this.callPressed();
     }
+  }
+
+  /**
+   * Cards that can be turned to their info side: your face-up hand card (from the draw until the reveal) and
+   * every face-up card on the table while a round result is shown.
+   */
+  private flippableCards(): CardSprite[] {
+    if (this.phase === "over") return [];
+    const own = this.hand.get(this.youId);
+    return [...this.table.values(), ...(own ? [own] : [])].filter((s) => s.faceUp);
+  }
+
+  private flippableAt(p: Point): CardSprite | null {
+    const byZ = this.flippableCards().sort((a, b) => b.z - a.z);
+    return byZ.find((s) => contains(s.rect(), p)) ?? null;
+  }
+
+  /** Turns your hand card between its values and its info side (keywords + summary). */
+  private flip(sprite: CardSprite): void {
+    // Only from a resting side, not during the draw or another flip (two tweens would fight over `turn`).
+    if (Math.abs(sprite.turn - Math.round(sprite.turn)) > 1e-3) return;
+    sprite.hover = null;
+    this.animator.tween(sprite, FLIP_SECONDS, { turn: sprite.side === "info" ? 1 : 2 });
   }
 
   // ---- card zoom (touch) -------------------------------------------------------------------
@@ -567,7 +605,8 @@ export class GameScene implements Scene {
   private inspectorSprite(): CardSprite | null {
     const original = this.inspected;
     if (!original) return null;
-    const big = new CardSprite(original.card, 640, 360, { scale: INSPECT_SCALE, turn: 1 });
+    // Same turn as the original, so flipping your hand card animates in the zoom as well.
+    const big = new CardSprite(original.card, 640, 360, { scale: INSPECT_SCALE, turn: original.turn });
     big.highlight = original.highlight;
     big.outcome = original.outcome;
     return big;
@@ -586,8 +625,11 @@ export class GameScene implements Scene {
       openUrl(link);
       return;
     }
-    const category = big.categoryAt(p, this.app.renderer);
-    if (category && this.canPickFromInspector()) this.select(category.label);
+    if (this.inspected && this.flippableCards().includes(this.inspected)) {
+      const category = this.canPickFromInspector() ? big.categoryAt(p, this.app.renderer) : null;
+      if (category) this.select(category.label);
+      else if (contains(big.rect(), p)) return this.flip(this.inspected!);
+    }
     this.inspected = null;
   }
 
@@ -597,26 +639,42 @@ export class GameScene implements Scene {
     ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
     ctx.fillRect(-SCREEN_W, -SCREEN_H, SCREEN_W * 3, SCREEN_H * 3);
     big.draw(ctx, this.app.renderer);
-    const [first, second] = this.canPickFromInspector() ? ["Tap a value", "to pick it"] : ["Tap anywhere", "to close"];
-    const box = centeredRect(1060, big.card.url ? 380 : 338, 330, big.card.url ? 180 : 110);
+    const canPick = this.canPickFromInspector();
+    const flippable = this.inspected !== null && this.flippableCards().includes(this.inspected);
+    const info = big.side === "info";
+    let lines: [string, string] = ["Tap anywhere", "to close"];
+    let small: [string, string] | null = null;
+    if (canPick && !info) {
+      lines = ["Tap a value", "to pick it"];
+      small = ["Tap the card elsewhere", "to read about it"];
+    } else if (flippable && info) {
+      lines = ["Tap the card", "to turn it back"];
+      if (big.card.url) small = ["Tap the blue name for", "the library's homepage"];
+    } else if (flippable) {
+      lines = ["Tap the card", "to read about it"];
+      small = ["Tap outside the card", "to close"];
+    }
+    const [first, second] = lines;
+    const box = centeredRect(1060, small ? 380 : 338, 330, small ? 180 : 110);
     fillRoundRect(ctx, box, 16, colors.bgAccent);
     strokeRoundRect(ctx, box, 16, colors.pyYellow, 2);
     drawText(ctx, first, 1060, 320, { size: 28, color: colors.pyYellow, bold: true });
     drawText(ctx, second, 1060, 356, { size: 28, color: colors.pyYellow, bold: true });
-    if (big.card.url) {
-      drawText(ctx, "Tap the logo for", 1060, 420, { size: 20, color: colors.textDim });
-      drawText(ctx, "the library's homepage", 1060, 446, { size: 20, color: colors.textDim });
+    if (small) {
+      drawText(ctx, small[0], 1060, 420, { size: 20, color: colors.textDim });
+      drawText(ctx, small[1], 1060, 446, { size: 20, color: colors.textDim });
     }
   }
 
-  /** Logo links are disabled under the game-over overlay. */
+  /** Homepage links (library name on an info side) are disabled under the game-over overlay. */
   private linkAt(p: Point): string | null {
     return this.phase === "over" ? null : linkAt(this.sprites, p, this.app.renderer);
   }
 
   wantsPointer(p: Point): boolean {
     if (this.buttons.some((b) => b.hovered(p)) || this.linkAt(p) !== null) return true;
-    return this.phase === "choose" && this.hand.get(this.youId)?.categoryAt(p, this.app.renderer) != null;
+    // Flippable cards are clickable as a whole (on your call, the values of your card select instead).
+    return this.flippableAt(p) !== null;
   }
 
   // ---- helpers -----------------------------------------------------------------------------

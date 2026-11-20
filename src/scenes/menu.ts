@@ -15,6 +15,7 @@ const SHOWCASE_FLIP_SPEED = 2.5; // turns per second, i.e. one flip takes 0.4 s
 interface Showcase {
   sprite: CardSprite;
   restTurn: number;
+  flipTurn: number;
   /** Hit-test against the resting rect so the bobbing motion can't make the hover flicker. */
   rect: Rect;
   /** Touch screens have no hover, so there a tap flips the card instead. */
@@ -43,10 +44,10 @@ export class MenuScene implements Scene {
     const len = cards.length;
     const i1 = Math.floor(Math.random() * len);
     const i2 = (i1 + 1 + Math.floor(Math.random() * (len - 1))) % len;
-    // Left card rests face up, right card face down; hovering flips to the other side.
+    // Left card rests on its values, right card on its info side (keywords + summary); hovering flips to the other.
     this.showcase = [
-      { sprite: new CardSprite(cards[i1]!, 190, SHOWCASE_Y, { scale: 0.8, turn: 1 }), restTurn: 1 },
-      { sprite: new CardSprite(cards[i2]!, 1090, SHOWCASE_Y, { scale: 0.8, turn: 0 }), restTurn: 0 },
+      { sprite: new CardSprite(cards[i1]!, 190, SHOWCASE_Y, { scale: 0.8, turn: 1 }), restTurn: 1, flipTurn: 2 },
+      { sprite: new CardSprite(cards[i2]!, 1090, SHOWCASE_Y, { scale: 0.8, turn: 2 }), restTurn: 2, flipTurn: 1 },
     ].map((s) => ({ ...s, rect: s.sprite.rect(), tapped: false }));
   }
 
@@ -54,14 +55,10 @@ export class MenuScene implements Scene {
     this.app.switchTo(new SetupScene(this.app));
   }
 
-  private sprites(): CardSprite[] {
-    return this.showcase.map((s) => s.sprite);
-  }
-
   handle(event: InputEvent): void {
     if (event.kind === "down") {
       if (this.buttons.some((b) => b.click(event.point))) return;
-      const link = linkAt(this.sprites(), event.point, this.app.renderer);
+      const link = this.linkAt(event.point);
       if (link) {
         openUrl(link);
         return;
@@ -79,16 +76,25 @@ export class MenuScene implements Scene {
     this.time += dt;
     const step = SHOWCASE_FLIP_SPEED * dt;
     this.fullscreenButton.text = isFullscreen() ? "Exit fullscreen" : "Fullscreen";
-    this.showcase.forEach(({ sprite, restTurn, rect, tapped }, i) => {
+    this.showcase.forEach(({ sprite, restTurn, flipTurn, rect, tapped }, i) => {
       const flipped = contains(rect, this.app.mouse) !== tapped;
-      const target = flipped ? 1 - restTurn : restTurn;
+      const target = flipped ? flipTurn : restTurn;
       sprite.turn = sprite.turn < target ? Math.min(sprite.turn + step, target) : Math.max(sprite.turn - step, target);
       sprite.y = SHOWCASE_Y + Math.sin(this.time * 1.5 + i) * 8;
     });
   }
 
+  /** The library name on a showcase card's info side links to its homepage. */
+  private linkAt(p: Point): string | null {
+    return linkAt(
+      this.showcase.map((s) => s.sprite),
+      p,
+      this.app.renderer,
+    );
+  }
+
   wantsPointer(p: Point): boolean {
-    return this.buttons.some((b) => b.hovered(p)) || linkAt(this.sprites(), p, this.app.renderer) !== null;
+    return this.buttons.some((b) => b.hovered(p)) || this.linkAt(p) !== null;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {

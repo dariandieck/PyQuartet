@@ -309,6 +309,11 @@ button.secondary:hover {
   align-self: start;
 }
 
+#preview-flip {
+  display: block;
+  margin: 10px auto 0;
+}
+
 .preview canvas {
   display: block;
   filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.35));
