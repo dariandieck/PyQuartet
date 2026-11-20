@@ -95,6 +95,29 @@ button.secondary:hover {
   margin-bottom: 12px;
 }
 
+#card-search {
+  width: 100%;
+  margin-bottom: 10px;
+  font: inherit;
+  font-size: 15px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+}
+
+#card-search:focus {
+  outline: none;
+  border-color: var(--blue-hover);
+}
+
+#no-match {
+  margin: 4px 0;
+  color: var(--dim);
+  font-size: 14px;
+}
+
 #card-list {
   list-style: none;
   margin: 0;
@@ -327,6 +350,7 @@ button.secondary:hover {
   }
 
   .cards #new-card,
+  #card-search,
   #card-list button {
     width: auto;
     margin: 0;

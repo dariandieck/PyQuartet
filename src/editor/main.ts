@@ -499,10 +499,22 @@ function drawPreview(): void {
 // Card list, load and save
 
 const list = $("#card-list");
+const search = $<HTMLInputElement>("#card-search");
+const noMatch = $("#no-match");
+
+function matchingCards(): RawCard[] {
+  const query = search.value.trim().toLowerCase();
+  if (!query) return cards;
+  return cards.filter((card) =>
+    [card.library, card.pypi, card.repo].some((text) => text?.toLowerCase().includes(query)),
+  );
+}
 
 function renderList(): void {
+  const shown = matchingCards();
+  noMatch.hidden = shown.length > 0 || cards.length === 0;
   list.replaceChildren(
-    ...cards.map((card) => {
+    ...shown.map((card) => {
       const button = element("button", card.library === editing ? "active" : "");
       button.type = "button";
       const swatch = element("span", "swatch");
@@ -515,6 +527,17 @@ function renderList(): void {
     }),
   );
 }
+
+search.addEventListener("input", renderList);
+search.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    const first = matchingCards()[0];
+    if (first) openCard(first);
+  } else if (event.key === "Escape" && search.value) {
+    search.value = "";
+    renderList();
+  }
+});
 
 function confirmDiscard(): boolean {
   return !dirty || window.confirm("Discard the unsaved changes of this card?");
