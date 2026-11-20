@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Deck } from "../game/deck.ts";
 import type { Card, Category } from "../game/model.ts";
+import { defaultSettings } from "../game/settings.ts";
 import type { HostLink } from "../net/peer.ts";
 import type { ClientMessage, GameEvent, HostMessage } from "../net/protocol.ts";
 import { HostSession } from "./host.ts";
@@ -19,6 +20,7 @@ const deck: Deck = {
   categories: [stars],
   version: "test",
 };
+const ALL_CARDS = defaultSettings(deck.cards.length);
 
 /** Stands in for a PeerJS link: records what the host sends and lets the test play the remote side. */
 function fakeLink() {
@@ -47,7 +49,7 @@ afterEach(() => vi.useRealTimers());
 
 describe("HostSession", () => {
   it("plays a local round against a bot: start, draw, call, reveal, collect", () => {
-    const session = new HostSession(deck, [{ name: "You", isBot: false }, { name: "Bot", isBot: true }], null);
+    const session = new HostSession(deck, [{ name: "You", isBot: false }, { name: "Bot", isBot: true }], ALL_CARDS);
     const received = collect(session);
     session.start();
     expect(received.map((e) => e.kind)).toEqual(["start", "roundStart"]);
@@ -76,7 +78,7 @@ describe("HostSession", () => {
         { name: "Host", isBot: false },
         { name: "Anna", isBot: false, link: remote as unknown as HostLink },
       ],
-      null,
+      ALL_CARDS,
     );
     const local = collect(session);
     session.start();
@@ -106,7 +108,7 @@ describe("HostSession", () => {
         { name: "Anna", isBot: false, link: remote as unknown as HostLink },
         { name: "Bot 1", isBot: true },
       ],
-      null,
+      ALL_CARDS,
     );
     const local = collect(session);
     session.start();
@@ -129,11 +131,23 @@ describe("HostSession", () => {
         { name: "Host", isBot: false },
         { name: "Anna", isBot: false, link: remote as unknown as HostLink },
       ],
-      null,
+      ALL_CARDS,
     );
     const local = collect(session);
     session.start();
     remote.close();
     expect(local.at(-1)).toMatchObject({ kind: "gameOver", winners: [0] });
+  });
+
+  it("deals only the chosen number of cards and announces the round limit", () => {
+    const session = new HostSession(deck, [{ name: "You", isBot: false }, { name: "Bot", isBot: true }], {
+      mode: "rounds",
+      cardCount: 4,
+    });
+    const received = collect(session);
+    session.start();
+    const start = received[0] as Extract<GameEvent, { kind: "start" }>;
+    expect(start.maxRounds).toBe(10);
+    expect(start.state.counts.reduce((a, b) => a + b, 0) + start.state.potCount).toBe(4);
   });
 });

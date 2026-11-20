@@ -118,7 +118,7 @@
       "pypi": "keras",
       "repo": "keras-team/keras",
       "img_url": "https://keras.io/img/logo-k-keras-wb.png",
-      "img_scale": 0.95,
+      "img_scale": 0.85,
       "color": "#d00000",
       "stats": {
         "GitHub stars": 64438,

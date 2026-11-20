@@ -160,8 +160,9 @@ export class GameScene implements Scene {
     if (event.tie) {
       this.message = "Tie! Draw your next card.";
     } else {
-      const limit = this.maxRounds ? ` of ${this.maxRounds}` : "";
-      this.message = `Round ${this.roundNumber + 1}${limit}`;
+      const next = this.roundNumber + 1;
+      const limit = this.maxRounds ? ` of ${this.maxRounds}${next === this.maxRounds ? " (last round)" : ""}` : "";
+      this.message = `Round ${next}${limit}`;
     }
     this.detail = "";
     const ownCard = event.card ? this.cardByLibrary(event.card) : null;
@@ -379,7 +380,9 @@ export class GameScene implements Scene {
     if (winners.length > 1) this.overTitle = "Draw!";
     else if (winners[0] === this.youId) this.overTitle = "You win the game!";
     else this.overTitle = `${this.name(winners[0]!)} wins the game!`;
-    this.overDetail = `Final cards:  ${this.seats.map((s) => `${this.name(s.id)} ${this.counts[s.id] ?? 0}`).join("  -  ")}`;
+    // In the rounds mode the game may also end early, when one player has won every card.
+    const prefix = this.maxRounds && this.roundNumber >= this.maxRounds ? `After ${this.maxRounds} rounds` : "Final cards";
+    this.overDetail = `${prefix}:  ${this.seats.map((s) => `${this.name(s.id)} ${this.counts[s.id] ?? 0}`).join("  -  ")}`;
     this.showGameOver();
   }
 
@@ -671,7 +674,11 @@ export class GameScene implements Scene {
         drawPile(ctx, renderer, pos.pile.x, pos.pile.y, count, pos.pileScale, label, color);
       }
       drawPile(ctx, renderer, this.layout.pot.x, this.layout.pot.y, this.potCount, this.layout.potScale, `Pot: ${this.potCount}`);
-      const roundText = `Round ${this.roundNumber}` + (this.maxRounds ? ` / ${this.maxRounds}` : "");
+      // A tie in the last round is still played out, so the count can pass the limit.
+      const roundText =
+        this.maxRounds && this.roundNumber > this.maxRounds
+          ? "Tie-break"
+          : `Round ${this.roundNumber}` + (this.maxRounds ? ` / ${this.maxRounds}` : "");
       drawText(ctx, roundText, 1260, 26, { size: 20, color: colors.textDim, align: "right" });
       this.drawLegend(ctx);
     }

@@ -5,10 +5,9 @@ import { CardSprite, linkAt } from "../render/cardView.ts";
 import { centeredRect, contains, drawArrow, drawText, type Point, type Rect } from "../render/draw.ts";
 import { colors } from "../render/theme.ts";
 import { canFullscreen, enterFullscreen, exitFullscreen, isFullscreen, isTouchDevice } from "../platform.ts";
-import { HostSession } from "../session/host.ts";
-import { GameScene } from "./game.ts";
 import { LobbyScene } from "./lobby.ts";
 import type { AppContext, InputEvent, Scene } from "./scene.ts";
+import { SetupScene } from "./setup.ts";
 
 const SHOWCASE_Y = 400;
 const SHOWCASE_FLIP_SPEED = 2.5; // turns per second, i.e. one flip takes 0.4 s
@@ -52,13 +51,7 @@ export class MenuScene implements Scene {
   }
 
   private start(): void {
-    // Local games run through the same host session as network games, just without connections.
-    const newSession = () => {
-      const session = new HostSession(this.app.deck, [{ name: "You", isBot: false }, { name: "Bot", isBot: true }], null);
-      session.start();
-      return session;
-    };
-    this.app.switchTo(new GameScene(this.app, newSession(), { playAgain: newSession }));
+    this.app.switchTo(new SetupScene(this.app));
   }
 
   private sprites(): CardSprite[] {
@@ -102,7 +95,7 @@ export class MenuScene implements Scene {
     drawText(ctx, "PyQuartet", 640, 140, { size: 64, color: colors.pyYellow, bold: true });
     drawText(ctx, "Learn which Python packages power ML-Pipelines", 640, 205, { size: 22 });
     const { cards, categories } = this.app.deck;
-    drawText(ctx, `${cards.length} cards  -   ${categories.length} categories`, 640, 250, {
+    drawText(ctx, `${cards.length} cards  -  ${categories.length} categories`, 640, 250, {
       size: 18,
       color: colors.textDim,
     });

@@ -1,6 +1,7 @@
 import { Bot } from "../game/bot.ts";
 import type { Deck } from "../game/deck.ts";
 import { Game, type RoundResult } from "../game/engine.ts";
+import { maxRoundsOf, pickCards, type GameSettings } from "../game/settings.ts";
 import type { HostLink } from "../net/peer.ts";
 import type { ClientMessage, GameEvent, PublicState, ResultInfo, SeatInfo } from "../net/protocol.ts";
 import { EventChannel, type Session } from "./session.ts";
@@ -30,10 +31,11 @@ export class HostSession implements Session {
   constructor(
     deck: Deck,
     private readonly seats: HostSeat[],
-    maxRounds: number | null,
+    settings: GameSettings,
     private readonly onLeave: () => void = () => {},
   ) {
-    this.game = new Game(seats, deck.cards, deck.categories, { maxRounds });
+    const cards = pickCards(deck.cards, settings.cardCount);
+    this.game = new Game(seats, cards, deck.categories, { maxRounds: maxRoundsOf(settings) });
     seats.forEach((seat, id) => {
       if (seat.isBot) this.bots.set(id, new Bot(deck.cards, deck.categories));
       if (seat.link) {

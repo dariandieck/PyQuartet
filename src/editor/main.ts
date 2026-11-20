@@ -262,7 +262,7 @@ function markDirty(): void {
 function buildStatFields(): void {
   statFields = categories.map((category) => {
     const arrow = category.polarity === "positive" ? "▲ higher wins" : "▼ lower wins";
-    const source = category.source ? ` · ${SOURCE_NAMES[category.source]}` : "";
+    const source = category.source ? ` - ${SOURCE_NAMES[category.source]}` : "";
     const field = new Field(statBox, {
       label: category.unit ? `${category.label} (${category.unit})` : category.label,
       hint: arrow + source,

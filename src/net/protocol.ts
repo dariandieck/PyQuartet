@@ -1,3 +1,5 @@
+import type { GameSettings } from "../game/settings.ts";
+
 /**
  * Messages between the host (runs the authoritative engine) and the other players.
  * Cards travel as library names; every client has the same bundled deck (checked via `Deck.version`).
@@ -55,7 +57,8 @@ export interface LobbySeat {
 }
 
 export type HostMessage =
-  | { t: "lobby"; code: string; seats: LobbySeat[] }
+  /** `settings` is only shown to guests; the host applies them when the game starts. */
+  | { t: "lobby"; code: string; seats: LobbySeat[]; settings: GameSettings }
   | { t: "reject"; reason: string }
   | { t: "event"; event: GameEvent }
   | { t: "ping" };

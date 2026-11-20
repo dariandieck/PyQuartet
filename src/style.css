@@ -64,6 +64,71 @@ body {
   font-weight: 400;
 }
 
+.game-slider {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  /* Dragging the thumb must not pan or zoom the page. */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.game-slider::-webkit-slider-runnable-track {
+  height: var(--track, 8px);
+  border-radius: 999px;
+  background: #465064;
+}
+
+.game-slider::-moz-range-track {
+  height: var(--track, 8px);
+  border-radius: 999px;
+  background: #465064;
+}
+
+.game-slider::-moz-range-progress {
+  height: var(--track, 8px);
+  border-radius: 999px;
+  background: #3776ab;
+}
+
+.game-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb, 28px);
+  height: var(--thumb, 28px);
+  margin-top: calc((var(--track, 8px) - var(--thumb, 28px)) / 2);
+  border-radius: 50%;
+  border: 3px solid #182030;
+  background: #ffd43b;
+}
+
+.game-slider::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--thumb, 28px);
+  height: var(--thumb, 28px);
+  border-radius: 50%;
+  border: 3px solid #182030;
+  background: #ffd43b;
+}
+
+.game-slider:focus {
+  outline: none;
+}
+
+.game-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(75, 145, 205, 0.6);
+}
+
+.game-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgba(75, 145, 205, 0.6);
+}
+
 .fatal {
   margin: 2rem;
   color: #f2a3a3;

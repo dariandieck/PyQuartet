@@ -1,3 +1,4 @@
+import { cleanSettings } from "../game/settings.ts";
 import type { HostLink, HostPeer, JoinedRoom } from "../net/peer.ts";
 import {
   cleanName,
@@ -17,6 +18,7 @@ import { HostSession } from "../session/host.ts";
 import { GameScene } from "./game.ts";
 import { MenuScene } from "./menu.ts";
 import type { AppContext, InputEvent, Scene } from "./scene.ts";
+import { loadSettings, SettingsPanel } from "./settingsPanel.ts";
 
 const NAME_KEY = "pyquartet.name";
 
@@ -53,8 +55,12 @@ interface Member {
   link?: HostLink;
 }
 
+const ROW_X = 430;
 const ROW_Y = 290;
 const ROW_STEP = 50;
+// Game settings sit to the right of the player list.
+const PANEL_X = 930;
+const PANEL_TOP = 262;
 
 /** Create a room (host) or join one by code; hands the connections to a game session on start. */
 export class LobbyScene implements Scene {
@@ -64,6 +70,9 @@ export class LobbyScene implements Scene {
   private toastTime = 0;
   private readonly nameInput: HtmlInput;
   private readonly codeInput: HtmlInput | null = null;
+  /** Editable for the host; guests see the host's choice once the first lobby update arrives. */
+  private readonly panel: SettingsPanel;
+  private settingsKnown: boolean;
 
   // Host side
   private hostPeer: HostPeer | null = null;
@@ -109,14 +118,18 @@ export class LobbyScene implements Scene {
         onEnter: () => this.submit(),
       });
     }
+    const settings = loadSettings(app.deck.cards.length);
+    this.panel = new SettingsPanel(app, PANEL_X, PANEL_TOP, settings, mode === "host" ? () => this.broadcastLobby() : undefined);
+    this.panel.visible = false;
+    this.settingsKnown = mode === "host";
     const primaryY = mode === "host" ? 340 : 430;
     this.primaryButton = new Button(centeredRect(640, primaryY, 300, 58), mode === "host" ? "Create room" : "Join", () =>
       this.submit(),
     );
     this.backButton = new Button(centeredRect(640, primaryY + 72, 300, 50), "Back", () => this.toMenu(), 18);
     this.copyButton = new Button(centeredRect(830, 178, 100, 40), "Copy", () => this.copyCode(), 16);
-    this.addBotButton = new Button(centeredRect(530, 525, 200, 52), "Add bot", () => this.addBot(), 18);
-    this.startButton = new Button(centeredRect(750, 525, 200, 52), "Start game", () => this.startGame(), 18);
+    this.addBotButton = new Button(centeredRect(ROW_X, 525, 200, 52), "Add bot", () => this.addBot(), 18);
+    this.startButton = new Button(centeredRect(PANEL_X, 525, 200, 52), "Start game", () => this.startGame(), 18);
     this.leaveButton = new Button(centeredRect(640, 610, 200, 50), "Leave", () => this.toMenu(), 18);
     (this.codeInput ?? this.nameInput).focus();
     if (mode === "join" && !this.nameInput.value) this.nameInput.focus();
@@ -147,6 +160,7 @@ export class LobbyScene implements Scene {
     this.stage = stage;
     this.nameInput.visible = stage === "form";
     if (this.codeInput) this.codeInput.visible = stage === "form";
+    this.panel.visible = stage === "room";
   }
 
   private fail(message: string): void {
@@ -226,8 +240,13 @@ export class LobbyScene implements Scene {
 
   private membersChanged(): void {
     this.rebuildRows();
+    this.broadcastLobby();
+  }
+
+  private broadcastLobby(): void {
+    const settings = this.panel.settings;
     const seats: LobbySeat[] = this.members.map(({ name, isBot, isHost }) => ({ name, isBot, isHost }));
-    for (const member of this.members) member.link?.send({ t: "lobby", code: this.code, seats });
+    for (const member of this.members) member.link?.send({ t: "lobby", code: this.code, seats, settings });
   }
 
   private rebuildRows(): void {
@@ -235,7 +254,7 @@ export class LobbyScene implements Scene {
     if (this.mode !== "host") return;
     this.members.forEach((member, i) => {
       if (!member.isBot) return;
-      const button = new Button(centeredRect(640 + 190, ROW_Y + i * ROW_STEP, 34, 34), "×", () => this.removeMember(i), 20);
+      const button = new Button(centeredRect(ROW_X + 190, ROW_Y + i * ROW_STEP, 34, 34), "×", () => this.removeMember(i), 20);
       this.removeButtons.push(button);
     });
   }
@@ -245,7 +264,7 @@ export class LobbyScene implements Scene {
     if (!peer || this.members.length < 2 || this.handedOver) return;
     this.handedOver = true;
     const seats = this.members.map(({ name, isBot, link }) => ({ name, isBot, link }));
-    const session = new HostSession(this.app.deck, seats, null, () => peer.destroy());
+    const session = new HostSession(this.app.deck, seats, this.panel.settings, () => peer.destroy());
     this.app.switchTo(new GameScene(this.app, session));
     session.start();
   }
@@ -293,6 +312,8 @@ export class LobbyScene implements Scene {
     if (!room) return;
     if (message.t === "lobby") {
       this.seats = message.seats;
+      this.panel.settings = cleanSettings(message.settings, this.app.deck.cards.length);
+      this.settingsKnown = true;
     } else if (message.t === "reject") {
       this.fail(message.reason);
     } else if (message.t === "event" && message.event.kind === "start") {
@@ -331,6 +352,7 @@ export class LobbyScene implements Scene {
     this.disposed = true;
     this.nameInput.dispose();
     this.codeInput?.dispose();
+    this.panel.dispose();
     this.closeConnections();
   }
 
@@ -343,7 +365,7 @@ export class LobbyScene implements Scene {
 
   handle(event: InputEvent): void {
     if (event.kind === "down") {
-      this.buttons.some((b) => b.click(event.point));
+      if (!this.panel.click(event.point)) this.buttons.some((b) => b.click(event.point));
     } else if (event.kind === "key") {
       if (event.key === "Escape") this.toMenu();
       else if (event.key === "Enter" && this.stage === "form") this.submit();
@@ -365,10 +387,11 @@ export class LobbyScene implements Scene {
     this.leaveButton.visible = stage === "room";
     this.nameInput.sync();
     this.codeInput?.sync();
+    this.panel.update();
   }
 
   wantsPointer(p: Point): boolean {
-    return this.buttons.some((b) => b.hovered(p));
+    return this.panel.wantsPointer(p) || this.buttons.some((b) => b.hovered(p));
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -410,13 +433,14 @@ export class LobbyScene implements Scene {
     for (let i = 0; i < MAX_PLAYERS; i++) {
       const y = ROW_Y + i * ROW_STEP;
       const seat = rows[i] ?? null;
-      fillRoundRect(ctx, centeredRect(640, y, 440, 42), 10, colors.bgAccent);
+      fillRoundRect(ctx, centeredRect(ROW_X, y, 440, 42), 10, colors.bgAccent);
       if (!seat) {
-        drawText(ctx, `${i + 1}.  Open seat`, 440, y + 1, { size: 18, color: colors.textDim, align: "left" });
+        drawText(ctx, `${i + 1}.  Open seat`, ROW_X - 200, y + 1, { size: 18, color: colors.textDim, align: "left" });
         continue;
       }
       const tag = seat.isHost ? "  (host)" : seat.isBot ? "  (bot)" : "";
-      drawText(ctx, `${i + 1}.  ${seat.name}${tag}`, 440, y + 1, { size: 18, bold: !seat.isBot, align: "left" });
+      drawText(ctx, `${i + 1}.  ${seat.name}${tag}`, ROW_X - 200, y + 1, { size: 18, bold: !seat.isBot, align: "left" });
     }
+    if (this.settingsKnown) this.panel.draw(ctx);
   }
 }
