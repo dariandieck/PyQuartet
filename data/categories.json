@@ -2,27 +2,33 @@
   "categories": [
     {
       "label": "GitHub stars",
-      "unit": "k",
+      "unit": null,
       "polarity": "positive",
-      "fetch_url": null
+      "source": "github_stars"
+    },
+    {
+      "label": "Forks",
+      "unit": null,
+      "polarity": "positive",
+      "source": "github_forks"
     },
     {
       "label": "Downloads",
-      "unit": "k",
+      "unit": null,
       "polarity": "positive",
-      "fetch_url": null
+      "source": "pepy_downloads"
     },
     {
       "label": "Contributors",
       "unit": null,
       "polarity": "positive",
-      "fetch_url": null
+      "source": "github_contributors"
     },
     {
       "label": "Repo size",
       "unit": "MB",
       "polarity": "negative",
-      "fetch_url": null
+      "source": "github_size_mb"
     }
   ]
 }

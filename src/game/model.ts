@@ -1,10 +1,21 @@
 export type Polarity = "positive" | "negative"; // positive: higher value wins, negative: lower value wins
 
+/** Where `npm run stats` and the card editor fetch a category's value from. */
+export const STAT_SOURCES = [
+  "github_stars",
+  "github_forks",
+  "github_contributors",
+  "github_size_mb",
+  "pepy_downloads",
+] as const;
+export type StatSource = (typeof STAT_SOURCES)[number];
+
 export interface Category {
   label: string;
+  /** Real unit such as "MB"; unitless counts are shown compact instead ("50.6k"). */
   unit: string | null;
   polarity: Polarity;
-  fetchUrl: string | null;
+  source: StatSource | null;
 }
 
 export interface Card {
@@ -35,19 +46,14 @@ export function polarityHint(category: Category): string {
   return category.polarity === "positive" ? "higher wins" : "lower wins";
 }
 
-const intFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
-const decimalFormat = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const exactFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
+const compactFormat = new Intl.NumberFormat("en-US", { notation: "compact", maximumSignificantDigits: 3 });
 
-function formatNumber(value: number): string {
-  return Number.isInteger(value) ? intFormat.format(value) : decimalFormat.format(value);
-}
-
-// Multiplier suffixes attach directly ("120k"); real units get a space ("350 MB").
-const COMPACT_UNITS = new Set(["k", "M", "B", "%"]);
-
-/** A stat value with its category's unit, e.g. "120k" or "350 MB". */
-export function formatStat(category: Category, value: number): string {
-  const number = formatNumber(value);
-  if (!category.unit) return number;
-  return COMPACT_UNITS.has(category.unit) ? number + category.unit : `${number} ${category.unit}`;
+/**
+ * A stat value as shown to players: unitless counts compact ("50.6k", "18B"), values with a unit exact plus
+ * unit ("417 MB"). `exact` spells counts out in full, for when compact values would look equal.
+ */
+export function formatStat(category: Category, value: number, exact = false): string {
+  if (category.unit) return `${exactFormat.format(value)} ${category.unit}`;
+  return exact ? exactFormat.format(value) : compactFormat.format(value).replace("K", "k");
 }

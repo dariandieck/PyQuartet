@@ -283,7 +283,12 @@ export class GameScene implements Scene {
       }
     }
 
-    const values = result.plays.map((p) => `${this.name(p.playerId)} ${formatStat(category, p.value)}`).join("  vs  ");
+    // Compact values can look equal ("50.6k" vs "50.6k") although one is higher; then spell them out.
+    const compact = result.plays.map((p) => formatStat(category, p.value));
+    const exact = new Set(compact).size < new Set(result.plays.map((p) => p.value)).size;
+    const values = result.plays
+      .map((p, i) => `${this.name(p.playerId)} ${exact ? formatStat(category, p.value, true) : compact[i]}`)
+      .join("  vs  ");
     if (result.redistributed) {
       this.message = "Tie, and nobody has cards left!";
       this.detail = "The pot is shared back between the tied players.";

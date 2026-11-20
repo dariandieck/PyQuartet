@@ -1,0 +1,393 @@
+:root {
+  --bg: #182030;
+  --panel: #202c42;
+  --line: #33415c;
+  --text: #ebeef5;
+  --dim: #96a0b4;
+  --blue: #3776ab;
+  --blue-hover: #4b91cd;
+  --yellow: #ffd43b;
+  --auto-bg: #3a3415;
+  --ok: #7fd28f;
+  --warn: #ffb347;
+  --error: #ff7b72;
+  color-scheme: dark;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 360px;
+  gap: 24px;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+}
+
+h1 .py {
+  color: var(--yellow);
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+}
+
+.intro {
+  margin: 0 0 20px;
+  color: var(--dim);
+  line-height: 1.5;
+  max-width: 70ch;
+}
+
+section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px 6px;
+  margin-bottom: 16px;
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 16px;
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--blue-hover);
+}
+
+button.secondary {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+button.secondary:hover {
+  border-color: var(--blue-hover);
+  background: transparent;
+}
+
+/* Card list */
+
+.cards #new-card {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+#card-search {
+  width: 100%;
+  margin-bottom: 10px;
+  font: inherit;
+  font-size: 15px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+}
+
+#card-search:focus {
+  outline: none;
+  border-color: var(--blue-hover);
+}
+
+#no-match {
+  margin: 4px 0;
+  color: var(--dim);
+  font-size: 14px;
+}
+
+#card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#card-list button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font-weight: 400;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 10px;
+}
+
+#card-list button:hover {
+  background: var(--panel);
+}
+
+#card-list button.active {
+  background: var(--panel);
+  outline: 1px solid var(--yellow);
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex: none;
+  border: 1px solid rgb(255 255 255 / 0.25);
+}
+
+/* Fields */
+
+.field {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 210px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.field label {
+  color: var(--dim);
+  font-size: 14px;
+}
+
+.field label small {
+  display: block;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.field .control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.field input:not([type="color"], [type="range"]) {
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background 0.3s,
+    border-color 0.3s;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--blue-hover);
+}
+
+.field.auto input:not([type="color"], [type="range"]) {
+  background: var(--auto-bg);
+  border-color: var(--yellow);
+}
+
+.field.invalid input:not([type="color"], [type="range"]) {
+  border-color: var(--error);
+}
+
+.field input[type="color"] {
+  width: 42px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--bg);
+  flex: none;
+}
+
+.field input[type="range"] {
+  width: 140px;
+  flex: none;
+}
+
+.status {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--dim);
+}
+
+.status span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status.done {
+  color: var(--ok);
+}
+
+.status.warn {
+  color: var(--warn);
+}
+
+.status.error {
+  color: var(--error);
+}
+
+.status .badge {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--yellow);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 2px solid var(--line);
+  border-top-color: var(--yellow);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#message.ok {
+  color: var(--ok);
+}
+
+#message.error {
+  color: var(--error);
+}
+
+/* Preview */
+
+.preview {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+.preview canvas {
+  display: block;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.35));
+}
+
+.logo-box {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px dashed var(--line);
+  text-align: center;
+  color: var(--dim);
+  font-size: 13px;
+}
+
+.logo-box img[hidden] {
+  display: none;
+}
+
+.logo-box img {
+  display: block;
+  max-width: 100%;
+  max-height: 140px;
+  margin: 0 auto 8px;
+  background: white;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+/* Narrower windows: card list on top, then form + preview; single column below that. */
+
+@media (max-width: 1240px) {
+  body {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+
+  .cards {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cards h2 {
+    margin: 0 8px 0 0;
+  }
+
+  .cards #new-card,
+  #card-search,
+  #card-list button {
+    width: auto;
+    margin: 0;
+  }
+
+  #card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 960px) {
+  body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .preview {
+    position: static;
+  }
+}
+
+/* Ctrl+click links (PyPI package, GitHub repo) and the logo search button */
+
+.ctrl .linkable input:not(:placeholder-shown) {
+  cursor: pointer;
+  color: var(--blue-hover);
+  text-decoration: underline;
+}
+
+.field .control button {
+  flex: none;
+  padding: 7px 12px;
+  font-size: 14px;
+}

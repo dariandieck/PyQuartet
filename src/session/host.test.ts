@@ -5,7 +5,7 @@ import type { HostLink } from "../net/peer.ts";
 import type { ClientMessage, GameEvent, HostMessage } from "../net/protocol.ts";
 import { HostSession } from "./host.ts";
 
-const stars: Category = { label: "Stars", unit: null, polarity: "positive", fetchUrl: null };
+const stars: Category = { label: "Stars", unit: null, polarity: "positive", source: null };
 const card = (library: string, value: number): Card => ({
   library,
   url: null,

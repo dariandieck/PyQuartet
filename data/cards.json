@@ -3,53 +3,796 @@
     {
       "library": "pandas",
       "url": "https://pandas.pydata.org/",
+      "pypi": "pandas",
+      "repo": "pandas-dev/pandas",
       "img_url": "https://pandas.pydata.org/static/img/pandas.svg",
-      "img_scale": 0.8,
+      "img_scale": 0.85,
       "color": "#130754",
       "stats": {
-        "GitHub stars": 12345,
-        "Downloads": 102232,
-        "Contributors": 12,
-        "Repo size": 102
+        "GitHub stars": 50575,
+        "Forks": 20765,
+        "Downloads": 18300111195,
+        "Contributors": 4402,
+        "Repo size": 417
       }
     },
     {
-      "library": "matplotlib",
+      "library": "Matplotlib",
       "url": "https://matplotlib.org/",
-      "img_url": "https://matplotlib.org/stable/_static/logo_light.svg",
-      "img_scale": 0.85,
-      "color": "#65baea",
+      "pypi": "matplotlib",
+      "repo": "matplotlib/matplotlib",
+      "img_url": "https://matplotlib.org/stable/_static/logo2.svg",
+      "img_scale": 0.9,
+      "color": "#11557c",
       "stats": {
-        "GitHub stars": 10000,
-        "Downloads": 1000000,
-        "Contributors": 100,
-        "Repo size": 200
+        "GitHub stars": 23489,
+        "Forks": 8565,
+        "Downloads": 5412708762,
+        "Contributors": 1939,
+        "Repo size": 482
       }
     },
     {
-      "library": "pytorch",
+      "library": "PyTorch",
       "url": "https://pytorch.org/",
+      "pypi": "torch",
+      "repo": "pytorch/pytorch",
       "img_url": "https://raw.githubusercontent.com/pytorch-fdn/artwork/refs/heads/main/projects/PyTorch/horizontal/PyTorch%20Logo%202022_RGB_PyTorchLogo_Horiz_fullColor_RGB.png",
-      "img_scale": 1,
+      "img_scale": 1.05,
       "color": "#dd3412",
       "stats": {
-        "GitHub stars": 5,
-        "Downloads": 5,
-        "Contributors": 5,
-        "Repo size": 5
+        "GitHub stars": 105711,
+        "Forks": 30764,
+        "Downloads": 2207511291,
+        "Contributors": 7351,
+        "Repo size": 1685
       }
     },
     {
-      "library": "tensorflow",
+      "library": "TensorFlow",
       "url": "https://www.tensorflow.org/",
+      "pypi": "tensorflow",
+      "repo": "tensorflow/tensorflow",
       "img_url": "https://www.tensorflow.org/images/tf_logo_horizontal.png",
       "img_scale": 1,
       "color": "#ff8800",
       "stats": {
-        "GitHub stars": 5,
-        "Downloads": 5,
-        "Contributors": 5,
-        "Repo size": 5
+        "GitHub stars": 201656,
+        "Forks": 77970,
+        "Downloads": 1427693956,
+        "Contributors": 5451,
+        "Repo size": 1411
+      }
+    },
+    {
+      "library": "scikit-learn",
+      "url": "https://scikit-learn.org",
+      "pypi": "scikit-learn",
+      "repo": "scikit-learn/scikit-learn",
+      "img_url": "https://scikit-learn.org/stable/_images/scikit-learn-logo-notext.png",
+      "img_scale": 0.9,
+      "color": "#f89939",
+      "stats": {
+        "GitHub stars": 68254,
+        "Downloads": 5849408738,
+        "Contributors": 3587,
+        "Repo size": 184,
+        "Forks": 27691
+      }
+    },
+    {
+      "library": "Polars",
+      "url": "https://www.pola.rs/",
+      "pypi": "polars",
+      "repo": "pola-rs/polars",
+      "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG6Y5al4W6F9cNiITwa5A0pC4QY0voll3wEZFJWWyErembK3Wida_K5js&s=10",
+      "img_scale": 0.95,
+      "color": "#0376ff",
+      "stats": {
+        "GitHub stars": 40387,
+        "Downloads": 945592923,
+        "Contributors": 793,
+        "Repo size": 239,
+        "Forks": 3248
+      }
+    },
+    {
+      "library": "XGBoost",
+      "url": "https://xgboost.readthedocs.io/",
+      "pypi": "xgboost",
+      "repo": "dmlc/xgboost",
+      "img_url": "https://xgboost.ai/images/logo/xgboost-logo-trimmed.png",
+      "img_scale": 0.95,
+      "color": "#2887d7",
+      "stats": {
+        "GitHub stars": 29006,
+        "Forks": 8983,
+        "Downloads": 1397513484,
+        "Contributors": 746,
+        "Repo size": 39
+      }
+    },
+    {
+      "library": "Keras",
+      "url": "https://keras.io/",
+      "pypi": "keras",
+      "repo": "keras-team/keras",
+      "img_url": "https://keras.io/img/logo-k-keras-wb.png",
+      "img_scale": 0.95,
+      "color": "#d00000",
+      "stats": {
+        "GitHub stars": 64438,
+        "Forks": 19819,
+        "Downloads": 923969037,
+        "Contributors": 1611,
+        "Repo size": 58
+      }
+    },
+    {
+      "library": "OpenCV",
+      "url": "https://opencv.org",
+      "pypi": "opencv-python",
+      "repo": "opencv/opencv",
+      "img_url": "https://avatars.githubusercontent.com/u/5009934?v=4&s=400",
+      "img_scale": 0.85,
+      "color": "#128dff",
+      "stats": {
+        "GitHub stars": 91644,
+        "Forks": 57112,
+        "Downloads": 1266495699,
+        "Contributors": 2643,
+        "Repo size": 559
+      }
+    },
+    {
+      "library": "Transformers",
+      "url": "https://huggingface.co/transformers",
+      "pypi": "transformers",
+      "repo": "huggingface/transformers",
+      "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/transformers-logo-light.svg",
+      "img_scale": 0.9,
+      "color": "#ffd21e",
+      "stats": {
+        "GitHub stars": 169284,
+        "Forks": 35251,
+        "Downloads": 3074860946,
+        "Contributors": 4271,
+        "Repo size": 559
+      }
+    },
+    {
+      "library": "Datasets",
+      "url": "https://huggingface.co/docs/datasets",
+      "pypi": "datasets",
+      "repo": "huggingface/datasets",
+      "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/datasets-logo-light.svg",
+      "img_scale": 0.9,
+      "color": "#ffd21e",
+      "stats": {
+        "GitHub stars": 22171,
+        "Forks": 3669,
+        "Downloads": 1604696192,
+        "Contributors": 746,
+        "Repo size": 114
+      }
+    },
+    {
+      "library": "huggingface_hub",
+      "url": "https://huggingface.co/docs/huggingface_hub",
+      "pypi": "huggingface-hub",
+      "repo": "huggingface/huggingface_hub",
+      "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/huggingface_hub.svg",
+      "img_scale": 0.95,
+      "color": "#ffd21e",
+      "stats": {
+        "GitHub stars": 4058,
+        "Forks": 1350,
+        "Downloads": 5010793316,
+        "Contributors": 424,
+        "Repo size": 46
+      }
+    },
+    {
+      "library": "NumPy",
+      "url": "https://numpy.org",
+      "pypi": "numpy",
+      "repo": "numpy/numpy",
+      "img_url": "https://raw.githubusercontent.com/numpy/numpy/main/branding/logo/primary/numpylogo.svg",
+      "img_scale": 0.95,
+      "color": "#4d77cf",
+      "stats": {
+        "GitHub stars": 33428,
+        "Forks": 13117,
+        "Downloads": 24993724752,
+        "Contributors": 2198,
+        "Repo size": 183
+      }
+    },
+    {
+      "library": "TorchCodec",
+      "url": "http://meta-pytorch.org/torchcodec/",
+      "pypi": "torchcodec",
+      "repo": "meta-pytorch/torchcodec",
+      "img_url": "https://raw.githubusercontent.com/meta-pytorch/torchcodec/main/docs/source/_static/img/torchcodec_horizontal_logo.jpg",
+      "img_scale": 1,
+      "color": "#ee4a29",
+      "stats": {
+        "GitHub stars": 1203,
+        "Forks": 139,
+        "Downloads": 40721129,
+        "Contributors": 48,
+        "Repo size": 668
+      }
+    },
+    {
+      "library": "TorchAudio",
+      "url": "https://pytorch.org/audio",
+      "pypi": "torchaudio",
+      "repo": "pytorch/audio",
+      "img_url": "https://raw.githubusercontent.com/pytorch/audio/HEAD/docs/source/_static/img/logo.png",
+      "img_scale": 1.1,
+      "color": "#f54e2b",
+      "stats": {
+        "GitHub stars": 2971,
+        "Forks": 813,
+        "Downloads": 335567438,
+        "Contributors": 251,
+        "Repo size": 1760
+      }
+    },
+    {
+      "library": "TorchVision",
+      "url": "https://pytorch.org/vision",
+      "pypi": "torchvision",
+      "repo": "pytorch/vision",
+      "img_url": "https://avatars.githubusercontent.com/u/21003710?v=4&s=400",
+      "img_scale": 0.95,
+      "color": "#ee4c2c",
+      "stats": {
+        "GitHub stars": 18020,
+        "Forks": 7300,
+        "Downloads": 922516607,
+        "Contributors": 694,
+        "Repo size": 1286
+      }
+    },
+    {
+      "library": "ultralytics",
+      "url": "https://ultralytics.com",
+      "pypi": "ultralytics",
+      "repo": "ultralytics/ultralytics",
+      "img_url": "https://cdn.ul.run/i/3f90d47fc8daa54a5e2478debbf87f67.svg",
+      "img_scale": 0.8,
+      "color": "#0b23a9",
+      "stats": {
+        "GitHub stars": 63605,
+        "Forks": 12033,
+        "Downloads": 229753494,
+        "Contributors": 498,
+        "Repo size": 66
+      }
+    },
+    {
+      "library": "pydantic",
+      "url": "https://pydantic.dev/docs/validation",
+      "pypi": "pydantic",
+      "repo": "pydantic/pydantic",
+      "img_url": "https://avatars.githubusercontent.com/u/110818415?v=4&s=400",
+      "img_scale": 0.85,
+      "color": "#e620e9",
+      "stats": {
+        "GitHub stars": 29583,
+        "Forks": 3216,
+        "Downloads": 19033430349,
+        "Contributors": 837,
+        "Repo size": 463
+      }
+    },
+    {
+      "library": "boto3",
+      "url": "https://aws.amazon.com/sdk-for-python/",
+      "pypi": "boto3",
+      "repo": "boto/boto3",
+      "img_url": "https://digitalcloud.training/wp-content/uploads/2023/08/a-logo-with-a-cube-and-text-description-automatic.jpeg?update_image_id_1692074618",
+      "img_scale": 1.1,
+      "color": "#fed641",
+      "stats": {
+        "GitHub stars": 9942,
+        "Forks": 2012,
+        "Downloads": 77156313125,
+        "Contributors": 174,
+        "Repo size": 26
+      }
+    },
+    {
+      "library": "PyYAML",
+      "url": "https://pyyaml.org/",
+      "pypi": "PyYAML",
+      "repo": "yaml/pyyaml",
+      "img_url": "https://avatars.githubusercontent.com/u/69535?v=4&s=400",
+      "img_scale": 0.8,
+      "color": "#cb171e",
+      "stats": {
+        "GitHub stars": 2985,
+        "Forks": 642,
+        "Downloads": 27164043984,
+        "Contributors": 40,
+        "Repo size": 0.7
+      }
+    },
+    {
+      "library": "jax",
+      "url": "https://docs.jax.dev",
+      "pypi": "jax",
+      "repo": "jax-ml/jax",
+      "img_url": "https://raw.githubusercontent.com/jax-ml/jax/main/images/jax_logo_250px.png",
+      "img_scale": 0.85,
+      "color": "#5d97f6",
+      "stats": {
+        "GitHub stars": 36654,
+        "Forks": 4011,
+        "Downloads": 430159731,
+        "Contributors": 1187,
+        "Repo size": 200
+      }
+    },
+    {
+      "library": "sentence-transformers",
+      "url": "https://www.SBERT.net",
+      "pypi": "sentence-transformers",
+      "repo": "huggingface/sentence-transformers",
+      "img_url": "https://avatars.githubusercontent.com/u/25720743?v=4&s=400",
+      "img_scale": 0.95,
+      "color": "#ffd21e",
+      "stats": {
+        "GitHub stars": 19290,
+        "Forks": 3035,
+        "Downloads": 534157808,
+        "Contributors": 380,
+        "Repo size": 45
+      }
+    },
+    {
+      "library": "langgraph",
+      "url": "https://docs.langchain.com/oss/python/langgraph/overview",
+      "pypi": "langgraph",
+      "repo": "langchain-ai/langgraph",
+      "img_url": "https://github.com/langchain-ai/langgraph/raw/main/.github/images/logo-light.svg",
+      "img_scale": 0.95,
+      "color": "#7fc8ff",
+      "stats": {
+        "GitHub stars": 45161,
+        "Forks": 7796,
+        "Downloads": 680791035,
+        "Contributors": 295,
+        "Repo size": 522
+      }
+    },
+    {
+      "library": "mlflow",
+      "url": "https://mlflow.org",
+      "pypi": "mlflow",
+      "repo": "mlflow/mlflow",
+      "img_url": "https://raw.githubusercontent.com/mlflow/mlflow/refs/heads/master/assets/logo.svg",
+      "img_scale": 0.85,
+      "color": "#0194e2",
+      "stats": {
+        "GitHub stars": 28902,
+        "Forks": 6638,
+        "Downloads": 1222672929,
+        "Contributors": 1287,
+        "Repo size": 1485
+      }
+    },
+    {
+      "library": "comfyui",
+      "url": "https://www.comfy.org/",
+      "pypi": "comfyui",
+      "repo": "Comfy-Org/ComfyUI",
+      "img_url": "https://comfy.org/icons/logo.svg",
+      "img_scale": 0.85,
+      "color": "#f2ff59",
+      "stats": {
+        "GitHub stars": 147675,
+        "Forks": 17661,
+        "Downloads": 4715,
+        "Contributors": 363,
+        "Repo size": 106
+      }
+    },
+    {
+      "library": "vLLM",
+      "url": "https://vllm.ai",
+      "pypi": "vllm",
+      "repo": "vllm-project/vllm",
+      "img_url": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png",
+      "img_scale": 1,
+      "color": "#31a3ff",
+      "stats": {
+        "GitHub stars": 97221,
+        "Forks": 25041,
+        "Downloads": 101328495,
+        "Contributors": 4153,
+        "Repo size": 376
+      }
+    },
+    {
+      "library": "ollama",
+      "url": "https://ollama.com",
+      "pypi": "ollama",
+      "repo": "ollama/ollama-python",
+      "img_url": "https://avatars.githubusercontent.com/u/151674099?v=4&s=400",
+      "img_scale": 1,
+      "color": "#000000",
+      "stats": {
+        "GitHub stars": 10723,
+        "Forks": 1242,
+        "Downloads": 202546940,
+        "Contributors": 45,
+        "Repo size": 0.6
+      }
+    },
+    {
+      "library": "llama.cpp",
+      "url": "https://llama.app",
+      "pypi": "llama-cpp-python",
+      "repo": "ggml-org/llama.cpp",
+      "img_url": "https://raw.githubusercontent.com/ggml-org/llama-brand/refs/heads/master/logo/svg/cover/llama-cpp/cover-llama-cpp-light.svg",
+      "img_scale": 1.6,
+      "color": "#ee6c1e",
+      "stats": {
+        "GitHub stars": 135759,
+        "Forks": 25807,
+        "Downloads": 16646432,
+        "Contributors": 2277,
+        "Repo size": 495
+      }
+    },
+    {
+      "library": "lms",
+      "url": "https://lmstudio.ai/",
+      "pypi": "lmstudio",
+      "repo": "lmstudio-ai/lms",
+      "img_url": "https://files.lmstudio.ai/lms-light.png",
+      "img_scale": 0.95,
+      "color": "#000000",
+      "stats": {
+        "GitHub stars": 5440,
+        "Forks": 478,
+        "Downloads": 1013285,
+        "Contributors": 13,
+        "Repo size": 0.8
+      }
+    },
+    {
+      "library": "PaddlePaddle",
+      "url": "https://www.paddlepaddle.org.cn/",
+      "pypi": "paddlepaddle",
+      "repo": "PaddlePaddle/Paddle",
+      "img_url": "https://github.com/PaddlePaddle/Paddle/raw/develop/doc/imgs/logo.png",
+      "img_scale": 2,
+      "color": "#2a34df",
+      "stats": {
+        "GitHub stars": 24146,
+        "Forks": 6020,
+        "Downloads": 32875635,
+        "Contributors": 1538,
+        "Repo size": 547
+      }
+    },
+    {
+      "library": "pytorch-lightning",
+      "url": "https://lightning.ai/pytorch-lightning/?utm_source=ptl_readme&utm_medium=referral&utm_campaign=ptl_readme",
+      "pypi": "pytorch-lightning",
+      "repo": "Lightning-AI/pytorch-lightning",
+      "img_url": "https://pl-public-data.s3.amazonaws.com/assets_lightning/pytorch-lightning.png",
+      "img_scale": 0.94,
+      "color": "#792ee5",
+      "stats": {
+        "GitHub stars": 31465,
+        "Forks": 3865,
+        "Downloads": 397965176,
+        "Contributors": 1075,
+        "Repo size": 131
+      }
+    },
+    {
+      "library": "statsmodels",
+      "url": "https://www.statsmodels.org",
+      "pypi": "statsmodels",
+      "repo": "statsmodels/statsmodels",
+      "img_url": "https://www.statsmodels.org/stable/_images/statsmodels-logo-v2.svg",
+      "img_scale": 0.8,
+      "color": "#3f51b5",
+      "stats": {
+        "GitHub stars": 11756,
+        "Forks": 3686,
+        "Downloads": 1180521241,
+        "Contributors": 636,
+        "Repo size": 69
+      }
+    },
+    {
+      "library": "PySpark",
+      "url": "https://spark.apache.org/",
+      "pypi": "pyspark",
+      "repo": "apache/spark",
+      "img_url": "https://avatars.githubusercontent.com/u/47359?v=4&s=400",
+      "img_scale": 1,
+      "color": "#d22128",
+      "stats": {
+        "GitHub stars": 44588,
+        "Forks": 29598,
+        "Downloads": 2228474508,
+        "Contributors": 3678,
+        "Repo size": 637
+      }
+    },
+    {
+      "library": "ml-shuffling-regularization",
+      "url": "https://github.com/dariandieck/ml-shuffling-regularization",
+      "repo": "dariandieck/ml-shuffling-regularization",
+      "img_url": "https://raw.githubusercontent.com/dariandieck/ml-shuffling-regularization/HEAD/figures/toy_shuffling.png",
+      "img_scale": 0.9,
+      "color": "#2a78d6",
+      "stats": {
+        "GitHub stars": 2,
+        "Forks": 0,
+        "Downloads": 0,
+        "Contributors": 1,
+        "Repo size": 7
+      }
+    },
+    {
+      "library": "LightGBM",
+      "url": "https://lightgbm.readthedocs.io/en/latest/",
+      "pypi": "lightgbm",
+      "repo": "lightgbm-org/LightGBM",
+      "img_url": "https://lightgbm.readthedocs.io/en/latest/_images/LightGBM_logo_black_text.svg",
+      "img_scale": 0.9,
+      "color": "#fcb518",
+      "stats": {
+        "GitHub stars": 18994,
+        "Forks": 4111,
+        "Downloads": 727871441,
+        "Contributors": 363,
+        "Repo size": 26
+      }
+    },
+    {
+      "library": "fastai",
+      "url": "https://docs.fast.ai/",
+      "pypi": "fastai",
+      "repo": "fastai/fastai",
+      "img_url": "https://github.com/fastai/logos/blob/main/Fast.ai.jpg?raw=true",
+      "img_scale": 1.4,
+      "color": "#54a4a3",
+      "stats": {
+        "GitHub stars": 28271,
+        "Forks": 7632,
+        "Downloads": 31786058,
+        "Contributors": 264,
+        "Repo size": 869
+      }
+    },
+    {
+      "library": "seaborn",
+      "url": "https://seaborn.pydata.org",
+      "pypi": "seaborn",
+      "repo": "mwaskom/seaborn",
+      "img_url": "https://raw.githubusercontent.com/mwaskom/seaborn/master/doc/_static/logo-wide-lightbg.svg",
+      "img_scale": 0.95,
+      "color": "#5c7da2",
+      "stats": {
+        "GitHub stars": 14118,
+        "Forks": 2164,
+        "Downloads": 1335572559,
+        "Contributors": 217,
+        "Repo size": 53
+      }
+    },
+    {
+      "library": "plotly",
+      "url": "https://plotly.com/python/",
+      "pypi": "plotly",
+      "repo": "plotly/plotly.py",
+      "img_url": "https://plotly-marketing-website-2.cdn.prismic.io/plotly-marketing-website-2/Z7eNlJ7c43Q3gCJv_Plotly-Logo-Black.svg",
+      "img_scale": 1.2,
+      "color": "#16172c",
+      "stats": {
+        "GitHub stars": 18913,
+        "Forks": 2900,
+        "Downloads": 1547749103,
+        "Contributors": 354,
+        "Repo size": 426
+      }
+    },
+    {
+      "library": "nltk",
+      "url": "https://www.nltk.org/",
+      "pypi": "nltk",
+      "repo": "nltk/nltk",
+      "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcLLxOyFwzUDeWA2t1qOZJ79AHFLmvewdgkpT_dl18PRvvPY1JTOgpkAOd&s=10",
+      "img_scale": 0.95,
+      "color": "#e41736",
+      "stats": {
+        "GitHub stars": 14774,
+        "Forks": 3083,
+        "Downloads": 1754155089,
+        "Contributors": 535,
+        "Repo size": 365
+      }
+    },
+    {
+      "library": "LiteLLM",
+      "url": "https://litellm.ai",
+      "pypi": "litellm",
+      "repo": "BerriAI/litellm",
+      "img_url": "https://cdn.prod.website-files.com/69eb241da3f923869c226875/6abd81536a788cbaee24b19d_Primary%20Logo%20Blue.svg",
+      "img_scale": 0.9,
+      "color": "#0117be",
+      "stats": {
+        "GitHub stars": 63559,
+        "Forks": 13430,
+        "Downloads": 3544098888,
+        "Contributors": 1958,
+        "Repo size": 3054
+      }
+    },
+    {
+      "library": "spaCy",
+      "url": "https://spacy.io",
+      "pypi": "spacy",
+      "repo": "explosion/spaCy",
+      "img_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/SpaCy_logo.svg/960px-SpaCy_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20161218210724",
+      "img_scale": 0.85,
+      "color": "#09a3d5",
+      "stats": {
+        "GitHub stars": 34074,
+        "Forks": 4746,
+        "Downloads": 736866070,
+        "Contributors": 783,
+        "Repo size": 200
+      }
+    },
+    {
+      "library": "best-of-ml-python",
+      "url": "https://ml-python.best-of.org",
+      "repo": "lukasmasuch/best-of-ml-python",
+      "img_url": "http://bit.ly/3o3EHNN",
+      "img_scale": 0.8,
+      "color": "#53b2ae",
+      "stats": {
+        "GitHub stars": 23874,
+        "Forks": 3144,
+        "Downloads": 1000000000000000000,
+        "Contributors": 58,
+        "Repo size": 21
+      }
+    },
+    {
+      "library": "haystack",
+      "url": "https://haystack.deepset.ai/",
+      "pypi": "haystack-ai",
+      "repo": "deepset-ai/haystack",
+      "img_url": "https://haystack.deepset.ai/images/logos/haystack.png",
+      "img_scale": 0.85,
+      "color": "#2558ff",
+      "stats": {
+        "GitHub stars": 27053,
+        "Forks": 3483,
+        "Downloads": 14977796,
+        "Contributors": 583,
+        "Repo size": 479
+      }
+    },
+    {
+      "library": "english-words",
+      "url": "https://github.com/dwyl/english-words",
+      "pypi": "english-words",
+      "repo": "dwyl/english-words",
+      "img_url": "https://avatars.githubusercontent.com/u/11708465?v=4&s=400",
+      "img_scale": 0.85,
+      "color": "#4bc0a9",
+      "stats": {
+        "GitHub stars": 12343,
+        "Forks": 2013,
+        "Downloads": 10055377,
+        "Contributors": 35,
+        "Repo size": 28
+      }
+    },
+    {
+      "library": "Pillow",
+      "url": "https://python-pillow.org",
+      "pypi": "pillow",
+      "repo": "python-pillow/Pillow",
+      "img_url": "https://python-pillow.org/assets/images/pillow-logo-light-text-480x240.png",
+      "img_scale": 1.05,
+      "color": "#98bbf5",
+      "stats": {
+        "GitHub stars": 13998,
+        "Forks": 2641,
+        "Downloads": 10308835675,
+        "Contributors": 607,
+        "Repo size": 208
+      }
+    },
+    {
+      "library": "pytorch-image-models",
+      "url": "https://huggingface.co/docs/timm/index",
+      "pypi": "timm",
+      "repo": "huggingface/pytorch-image-models",
+      "img_url": "https://avatars.githubusercontent.com/u/25720743?v=4&s=400",
+      "img_scale": 0.95,
+      "color": "#ffd21e",
+      "stats": {
+        "GitHub stars": 37294,
+        "Forks": 5232,
+        "Downloads": 366555087,
+        "Contributors": 224,
+        "Repo size": 32
+      }
+    },
+    {
+      "library": "MoviePy",
+      "url": "https://zulko.github.io/moviepy/",
+      "pypi": "moviepy",
+      "repo": "Zulko/moviepy",
+      "img_url": "https://zulko.github.io/moviepy/_images/logo.png",
+      "img_scale": 0.9,
+      "color": "#1c1c1c",
+      "stats": {
+        "GitHub stars": 15173,
+        "Forks": 2170,
+        "Downloads": 201409830,
+        "Contributors": 193,
+        "Repo size": 166
+      }
+    },
+    {
+      "library": "openpyxl",
+      "url": "https://openpyxl.readthedocs.io",
+      "pypi": "openpyxl",
+      "repo": "ericgazoni/openpyxl",
+      "img_scale": 1,
+      "stats": {
+        "GitHub stars": 204,
+        "Forks": 46,
+        "Downloads": 7524062619,
+        "Contributors": 49,
+        "Repo size": 12
+      }
+    },
+    {
+      "library": "EasyOCR",
+      "url": "https://www.jaided.ai",
+      "pypi": "easyocr",
+      "repo": "JaidedAI/EasyOCR",
+      "img_scale": 1.1,
+      "color": "#0098cb",
+      "stats": {
+        "GitHub stars": 30156,
+        "Forks": 3624,
+        "Downloads": 52030010,
+        "Contributors": 131,
+        "Repo size": 158
+      }
+    },
+    {
+      "library": "Tesseract OCR",
+      "url": "https://tesseract-ocr.github.io/",
+      "pypi": "tesseract",
+      "repo": "tesseract-ocr/tesseract",
+      "img_url": "https://upload.wikimedia.org/wikipedia/commons/7/78/Tesseract_OCR_logo_%28Google%29.png?utm_source=de.wikipedia.org&utm_campaign=index&utm_content=original",
+      "img_scale": 0.9,
+      "color": "#4285f4",
+      "stats": {
+        "GitHub stars": 77591,
+        "Forks": 10920,
+        "Downloads": 3235185,
+        "Contributors": 252,
+        "Repo size": 54
       }
     }
   ]
