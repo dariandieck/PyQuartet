@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeCard } from "./cardsFile.ts";
-import { kbToMb, lastPage, mostLinkedRepo, parseBadge, pyprojectName, readmeImages, repoFromUrl } from "./lookup.ts";
+import { ageYears, bytesToMb, lastPage, mostLinkedRepo, parseBadge, pyprojectName, readmeImages, repoFromUrl, wheelSizeMb } from "./lookup.ts";
 
 describe("lookup helpers", () => {
   it("reads owner/repo from GitHub URLs", () => {
@@ -36,14 +36,41 @@ describe("lookup helpers", () => {
     expect(parseBadge("<svg></svg>")).toBeNull();
   });
 
-  it("converts repo sizes to MB", () => {
-    expect(kbToMb(426737)).toBe(417);
-    expect(kbToMb(400)).toBe(0.4);
+  it("converts sizes to MB with more decimals for small files", () => {
+    expect(bytesToMb(539_000_000)).toBe(514);
+    expect(bytesToMb(3_300_000)).toBe(3.1);
+    expect(bytesToMb(25_000)).toBe(0.02);
+  });
+
+  it("takes the Linux x86-64 wheel, else the largest wheel, else the sdist", () => {
+    const file = (filename: string, size: number, packagetype = "bdist_wheel") => ({ filename, size, packagetype });
+    const torch = [
+      file("torch-2.9.0-cp312-cp312-manylinux_2_28_x86_64.whl", 539_000_000),
+      file("torch-2.9.0-cp312-cp312-manylinux_2_28_aarch64.whl", 104_000_000),
+      file("torch-2.9.0-cp312-cp312-win_amd64.whl", 230_000_000),
+    ];
+    expect(wheelSizeMb(torch)).toBe(514);
+    expect(wheelSizeMb([file("a-1.0-py3-none-any.whl", 2 * 1024 ** 2), file("a-1.0.tar.gz", 9 * 1024 ** 2, "sdist")])).toBe(2);
+    expect(wheelSizeMb([file("a-1.0.tar.gz", 5 * 1024 ** 2, "sdist")])).toBe(5);
+    expect(wheelSizeMb([])).toBe(0);
+  });
+
+  it("counts the age from the first upload", () => {
+    const now = new Date("2026-06-01T00:00:00Z");
+    expect(ageYears(["2016-06-01T00:00:00Z", "2006-06-01T00:00:00Z"], now)).toBe(20);
+    expect(ageYears([], now)).toBe(0);
   });
 
   it("orders card keys and drops empty fields", () => {
     const card = normalizeCard({ stats: { a: 1 }, color: null, library: "x", repo: "o/x", url: "" });
     expect(Object.keys(card)).toEqual(["library", "repo", "stats"]);
+  });
+
+  it("orders stats like the categories and drops removed ones", () => {
+    const category = (label: string) => ({ label, unit: null, polarity: "positive" as const, source: null });
+    const card = normalizeCard({ library: "x", stats: { b: 2, old: 9, a: 1 } }, [category("a"), category("b")]);
+    expect(card.stats).toEqual({ a: 1, b: 2 });
+    expect(Object.keys(card.stats)).toEqual(["a", "b"]);
   });
 });
 

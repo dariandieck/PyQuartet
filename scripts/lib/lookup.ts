@@ -1,6 +1,7 @@
 // Automated stat extraction: finds a library's PyPI package and GitHub repo, then reads the category values
-// (GitHub REST API for stars / contributors / size, pepy.tech for total downloads).
-import type { StatSource } from "../../src/game/model.ts";
+// (GitHub REST API for stars / forks / contributors, pepy.tech for total downloads, PyPI for wheel size and age,
+// deps.dev for dependents).
+import { needsPypi, type StatSource } from "../../src/game/model.ts";
 import { get, LookupError, parseJson, type HttpResponse } from "./http.ts";
 
 export interface Credentials {
@@ -128,10 +129,36 @@ export function readmeImages(readme: string, repo: string | null): string[] {
     .filter((url): url is string => url !== null && !BADGE.test(url));
 }
 
-/** GitHub reports KB; keep one decimal for small repos so they don't all become "0 MB". */
-export function kbToMb(kb: number): number {
-  const mb = kb / 1024;
-  return mb >= 10 ? Math.round(mb) : Math.round(mb * 10) / 10;
+/** Whole MB from 10 MB up; small packages keep decimals so they don't all become "0 MB" (and tie). */
+export function bytesToMb(bytes: number): number {
+  const mb = bytes / 1024 ** 2;
+  if (mb >= 10) return Math.round(mb);
+  return mb >= 1 ? Math.round(mb * 10) / 10 : Math.round(mb * 100) / 100;
+}
+
+export interface PypiFile {
+  filename: string;
+  packagetype: string;
+  size: number;
+  upload_time_iso_8601?: string;
+}
+
+// The wheel most installs get (Linux servers, CI, Colab); platform wheels differ a lot, e.g. torch.
+const COMMON_WHEEL = /manylinux.*x86_64/;
+
+/** Download size of a release: the largest Linux x86-64 wheel, else the largest wheel, else the sdist. */
+export function wheelSizeMb(files: PypiFile[]): number {
+  const wheels = files.filter((f) => f.packagetype === "bdist_wheel");
+  const linux = wheels.filter((f) => COMMON_WHEEL.test(f.filename));
+  const pick = [linux, wheels, files.filter((f) => f.packagetype === "sdist")].find((group) => group.length > 0);
+  return pick ? bytesToMb(Math.max(...pick.map((f) => f.size))) : 0;
+}
+
+/** Years since the first file was uploaded to PyPI, one decimal. */
+export function ageYears(uploadTimes: string[], now = new Date()): number {
+  const first = Math.min(...uploadTimes.map((t) => Date.parse(t)).filter(Number.isFinite));
+  if (!Number.isFinite(first)) return 0;
+  return Math.round(((now.getTime() - first) / (365.25 * 24 * 3600 * 1000)) * 10) / 10;
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -151,6 +178,9 @@ interface PypiJson {
     /** The README shown on the PyPI project page. */
     description: string | null;
   };
+  /** Files of the latest release. */
+  urls: PypiFile[];
+  releases: Record<string, PypiFile[]>;
 }
 
 async function pypiJson(name: string): Promise<PypiJson | null> {
@@ -179,7 +209,6 @@ interface GithubRepo {
   stargazers_count: number;
   forks_count: number;
   owner: { type: string; avatar_url: string };
-  size: number;
   homepage: string | null;
 }
 
@@ -353,11 +382,63 @@ export async function findLogo(ids: Ids, credentials: Credentials): Promise<Logo
   return null;
 }
 
-/** One category value for a library. */
+// ---------------------------------------------------------------------------------------------------------------
+// deps.dev
+
+interface DepsDevPackage {
+  versions: { versionKey: { version: string }; publishedAt?: string }[];
+}
+
+// deps.dev counts dependents in periodic snapshots and books them on the version that was newest at that time;
+// later versions are "not found", older ones only have a few pinned dependents. Packages that release daily
+// (boto3) can be dozens of versions past the snapshot, so search back until the count stops growing.
+const MAX_DEPENDENT_VERSIONS = 60;
+const SETTLED_AFTER = 3;
+
+async function dependentCount(pypi: string): Promise<number> {
+  const base = `https://api.deps.dev/v3alpha/systems/pypi/packages/${encodeURIComponent(pypi.toLowerCase())}`;
+  const response = await get(base);
+  if (response.status === 404) throw new LookupError("package unknown to deps.dev");
+  if (response.status !== 200) throw new LookupError(`deps.dev answered ${response.status}`);
+  const versions = parseJson<DepsDevPackage>(response, "deps.dev")
+    .versions.filter((v) => v.publishedAt)
+    .sort((a, b) => b.publishedAt!.localeCompare(a.publishedAt!))
+    .slice(0, MAX_DEPENDENT_VERSIONS);
+  let best = 0;
+  let smallerSince = 0;
+  for (const { versionKey } of versions) {
+    const r = await get(`${base}/versions/${encodeURIComponent(versionKey.version)}:dependents`);
+    if (r.status === 404) continue;
+    if (r.status !== 200) throw new LookupError(`deps.dev answered ${r.status}`);
+    const count = parseJson<{ dependentCount: number }>(r, "deps.dev").dependentCount;
+    if (count > best) {
+      best = count;
+      smallerSince = 0;
+    } else if (best > 0 && ++smallerSince >= SETTLED_AFTER) {
+      break;
+    }
+  }
+  return best;
+}
+
+/**
+ * One category value for a library. Libraries without a PyPI package (mostly SDKs or tools that aren't a Python
+ * package) get 0 for the PyPI-based values (user decision), since every card needs a value in every category.
+ */
 export async function fetchStat(source: StatSource, ids: Ids, credentials: Credentials): Promise<number> {
-  if (source === "pepy_downloads") {
-    if (!ids.pypi) throw new LookupError("no PyPI package");
-    return totalDownloads(ids.pypi, credentials);
+  if (needsPypi(source)) {
+    if (!ids.pypi) return 0;
+    switch (source) {
+      case "pepy_downloads":
+        return totalDownloads(ids.pypi, credentials);
+      case "depsdev_dependents":
+        return dependentCount(ids.pypi);
+    }
+    const json = await pypiJson(ids.pypi);
+    if (!json) throw new LookupError(`no PyPI package "${ids.pypi}"`);
+    return source === "pypi_wheel_mb"
+      ? wheelSizeMb(json.urls)
+      : ageYears(Object.values(json.releases).flat().flatMap((f) => f.upload_time_iso_8601 ?? []));
   }
   if (!ids.repo) throw new LookupError("no GitHub repo");
   switch (source) {
@@ -365,9 +446,8 @@ export async function fetchStat(source: StatSource, ids: Ids, credentials: Crede
       return (await githubRepo(ids.repo, credentials)).stargazers_count;
     case "github_forks":
       return (await githubRepo(ids.repo, credentials)).forks_count;
-    case "github_size_mb":
-      return kbToMb((await githubRepo(ids.repo, credentials)).size);
     case "github_contributors":
       return contributorCount(ids.repo, credentials);
   }
+  throw new LookupError(`unknown source ${source}`);
 }

@@ -11,9 +11,11 @@
       "stats": {
         "GitHub stars": 50575,
         "Forks": 20765,
-        "Downloads": 18300111195,
         "Contributors": 4402,
-        "Repo size": 417
+        "Downloads": 18300111195,
+        "Dependents": 78571,
+        "Age": 16.9,
+        "Wheel size": 12
       }
     },
     {
@@ -27,9 +29,11 @@
       "stats": {
         "GitHub stars": 23489,
         "Forks": 8565,
-        "Downloads": 5412708762,
         "Contributors": 1939,
-        "Repo size": 482
+        "Downloads": 5412708762,
+        "Dependents": 56457,
+        "Age": 20.9,
+        "Wheel size": 10
       }
     },
     {
@@ -43,9 +47,11 @@
       "stats": {
         "GitHub stars": 105711,
         "Forks": 30764,
-        "Downloads": 2207511291,
         "Contributors": 7351,
-        "Repo size": 1685
+        "Downloads": 2207511291,
+        "Dependents": 26410,
+        "Age": 8,
+        "Wheel size": 514
       }
     },
     {
@@ -59,9 +65,11 @@
       "stats": {
         "GitHub stars": 201656,
         "Forks": 77970,
-        "Downloads": 1427693956,
         "Contributors": 5451,
-        "Repo size": 1411
+        "Downloads": 1427693956,
+        "Dependents": 3410,
+        "Age": 9.9,
+        "Wheel size": 546
       }
     },
     {
@@ -74,10 +82,12 @@
       "color": "#f89939",
       "stats": {
         "GitHub stars": 68254,
-        "Downloads": 5849408738,
+        "Forks": 27691,
         "Contributors": 3587,
-        "Repo size": 184,
-        "Forks": 27691
+        "Downloads": 5849408738,
+        "Dependents": 32977,
+        "Age": 15.2,
+        "Wheel size": 8.9
       }
     },
     {
@@ -90,10 +100,12 @@
       "color": "#0376ff",
       "stats": {
         "GitHub stars": 40387,
-        "Downloads": 945592923,
+        "Forks": 3248,
         "Contributors": 793,
-        "Repo size": 239,
-        "Forks": 3248
+        "Downloads": 945592923,
+        "Dependents": 4632,
+        "Age": 5.7,
+        "Wheel size": 0.87
       }
     },
     {
@@ -107,9 +119,11 @@
       "stats": {
         "GitHub stars": 29006,
         "Forks": 8983,
-        "Downloads": 1397513484,
         "Contributors": 746,
-        "Repo size": 39
+        "Downloads": 1397513484,
+        "Dependents": 1680,
+        "Age": 11.3,
+        "Wheel size": 55
       }
     },
     {
@@ -123,9 +137,11 @@
       "stats": {
         "GitHub stars": 64438,
         "Forks": 19819,
-        "Downloads": 923969037,
         "Contributors": 1611,
-        "Repo size": 58
+        "Downloads": 923969037,
+        "Dependents": 4087,
+        "Age": 11.1,
+        "Wheel size": 2.3
       }
     },
     {
@@ -139,9 +155,11 @@
       "stats": {
         "GitHub stars": 91644,
         "Forks": 57112,
-        "Downloads": 1266495699,
         "Contributors": 2643,
-        "Repo size": 559
+        "Downloads": 1266495699,
+        "Dependents": 8925,
+        "Age": 8.5,
+        "Wheel size": 76
       }
     },
     {
@@ -155,9 +173,11 @@
       "stats": {
         "GitHub stars": 169284,
         "Forks": 35251,
-        "Downloads": 3074860946,
         "Contributors": 4271,
-        "Repo size": 559
+        "Downloads": 3074860946,
+        "Dependents": 9947,
+        "Age": 10.3,
+        "Wheel size": 13
       }
     },
     {
@@ -171,9 +191,11 @@
       "stats": {
         "GitHub stars": 22171,
         "Forks": 3669,
-        "Downloads": 1604696192,
         "Contributors": 746,
-        "Repo size": 114
+        "Downloads": 1604696192,
+        "Dependents": 2788,
+        "Age": 11.3,
+        "Wheel size": 0.58
       }
     },
     {
@@ -187,9 +209,11 @@
       "stats": {
         "GitHub stars": 4058,
         "Forks": 1350,
-        "Downloads": 5010793316,
         "Contributors": 424,
-        "Repo size": 46
+        "Downloads": 5010793316,
+        "Dependents": 17877,
+        "Age": 5.9,
+        "Wheel size": 0.82
       }
     },
     {
@@ -203,9 +227,11 @@
       "stats": {
         "GitHub stars": 33428,
         "Forks": 13117,
-        "Downloads": 24993724752,
         "Contributors": 2198,
-        "Repo size": 183
+        "Downloads": 24993724752,
+        "Dependents": 177482,
+        "Age": 20,
+        "Wheel size": 15
       }
     },
     {
@@ -219,9 +245,11 @@
       "stats": {
         "GitHub stars": 1203,
         "Forks": 139,
-        "Downloads": 40721129,
         "Contributors": 48,
-        "Repo size": 668
+        "Downloads": 40721129,
+        "Dependents": 305,
+        "Age": 2.5,
+        "Wheel size": 9.5
       }
     },
     {
@@ -235,9 +263,11 @@
       "stats": {
         "GitHub stars": 2971,
         "Forks": 813,
-        "Downloads": 335567438,
         "Contributors": 251,
-        "Repo size": 1760
+        "Downloads": 335567438,
+        "Dependents": 1422,
+        "Age": 7.3,
+        "Wheel size": 1.7
       }
     },
     {
@@ -251,9 +281,11 @@
       "stats": {
         "GitHub stars": 18020,
         "Forks": 7300,
-        "Downloads": 922516607,
         "Contributors": 694,
-        "Repo size": 1286
+        "Downloads": 922516607,
+        "Dependents": 6602,
+        "Age": 9.8,
+        "Wheel size": 7.2
       }
     },
     {
@@ -267,9 +299,11 @@
       "stats": {
         "GitHub stars": 63605,
         "Forks": 12033,
-        "Downloads": 229753494,
         "Contributors": 498,
-        "Repo size": 66
+        "Downloads": 229753494,
+        "Dependents": 612,
+        "Age": 4.6,
+        "Wheel size": 1.4
       }
     },
     {
@@ -283,9 +317,11 @@
       "stats": {
         "GitHub stars": 29583,
         "Forks": 3216,
-        "Downloads": 19033430349,
         "Contributors": 837,
-        "Repo size": 463
+        "Downloads": 19033430349,
+        "Dependents": 150533,
+        "Age": 9.5,
+        "Wheel size": 0.47
       }
     },
     {
@@ -299,9 +335,11 @@
       "stats": {
         "GitHub stars": 9942,
         "Forks": 2012,
-        "Downloads": 77156313125,
         "Contributors": 174,
-        "Repo size": 26
+        "Downloads": 77156313125,
+        "Dependents": 16071,
+        "Age": 12,
+        "Wheel size": 0.13
       }
     },
     {
@@ -315,9 +353,11 @@
       "stats": {
         "GitHub stars": 2985,
         "Forks": 642,
-        "Downloads": 27164043984,
         "Contributors": 40,
-        "Repo size": 0.7
+        "Downloads": 27164043984,
+        "Dependents": 139465,
+        "Age": 15.4,
+        "Wheel size": 0.8
       }
     },
     {
@@ -331,9 +371,11 @@
       "stats": {
         "GitHub stars": 36654,
         "Forks": 4011,
-        "Downloads": 430159731,
         "Contributors": 1187,
-        "Repo size": 200
+        "Downloads": 430159731,
+        "Dependents": 2668,
+        "Age": 8,
+        "Wheel size": 3.5
       }
     },
     {
@@ -347,9 +389,11 @@
       "stats": {
         "GitHub stars": 19290,
         "Forks": 3035,
-        "Downloads": 534157808,
         "Contributors": 380,
-        "Repo size": 45
+        "Downloads": 534157808,
+        "Dependents": 3122,
+        "Age": 7.3,
+        "Wheel size": 0.74
       }
     },
     {
@@ -363,9 +407,11 @@
       "stats": {
         "GitHub stars": 45161,
         "Forks": 7796,
-        "Downloads": 680791035,
         "Contributors": 295,
-        "Repo size": 522
+        "Downloads": 680791035,
+        "Dependents": 4172,
+        "Age": 2.9,
+        "Wheel size": 0.25
       }
     },
     {
@@ -379,9 +425,11 @@
       "stats": {
         "GitHub stars": 28902,
         "Forks": 6638,
-        "Downloads": 1222672929,
         "Contributors": 1287,
-        "Repo size": 1485
+        "Downloads": 1222672929,
+        "Dependents": 700,
+        "Age": 8.5,
+        "Wheel size": 12
       }
     },
     {
@@ -395,9 +443,11 @@
       "stats": {
         "GitHub stars": 147675,
         "Forks": 17661,
-        "Downloads": 4715,
         "Contributors": 363,
-        "Repo size": 106
+        "Downloads": 4715,
+        "Dependents": 0,
+        "Age": 2.4,
+        "Wheel size": 1.9
       }
     },
     {
@@ -411,9 +461,11 @@
       "stats": {
         "GitHub stars": 97221,
         "Forks": 25041,
-        "Downloads": 101328495,
         "Contributors": 4153,
-        "Repo size": 376
+        "Downloads": 101328495,
+        "Dependents": 93,
+        "Age": 3.4,
+        "Wheel size": 228
       }
     },
     {
@@ -427,9 +479,11 @@
       "stats": {
         "GitHub stars": 10723,
         "Forks": 1242,
-        "Downloads": 202546940,
         "Contributors": 45,
-        "Repo size": 0.6
+        "Downloads": 202546940,
+        "Dependents": 1888,
+        "Age": 2.9,
+        "Wheel size": 0.02
       }
     },
     {
@@ -443,9 +497,11 @@
       "stats": {
         "GitHub stars": 135759,
         "Forks": 25807,
-        "Downloads": 16646432,
         "Contributors": 2277,
-        "Repo size": 495
+        "Downloads": 16646432,
+        "Dependents": 367,
+        "Age": 3.7,
+        "Wheel size": 77
       }
     },
     {
@@ -459,9 +515,11 @@
       "stats": {
         "GitHub stars": 5440,
         "Forks": 478,
-        "Downloads": 1013285,
         "Contributors": 13,
-        "Repo size": 0.8
+        "Downloads": 1013285,
+        "Dependents": 13,
+        "Age": 3.2,
+        "Wheel size": 0.13
       }
     },
     {
@@ -475,9 +533,11 @@
       "stats": {
         "GitHub stars": 24146,
         "Forks": 6020,
-        "Downloads": 32875635,
         "Contributors": 1538,
-        "Repo size": 547
+        "Downloads": 32875635,
+        "Dependents": 131,
+        "Age": 6.1,
+        "Wheel size": 186
       }
     },
     {
@@ -491,9 +551,11 @@
       "stats": {
         "GitHub stars": 31465,
         "Forks": 3865,
-        "Downloads": 397965176,
         "Contributors": 1075,
-        "Repo size": 131
+        "Downloads": 397965176,
+        "Dependents": 1770,
+        "Age": 7.6,
+        "Wheel size": 0.81
       }
     },
     {
@@ -507,9 +569,11 @@
       "stats": {
         "GitHub stars": 11756,
         "Forks": 3686,
-        "Downloads": 1180521241,
         "Contributors": 636,
-        "Repo size": 69
+        "Downloads": 1180521241,
+        "Dependents": 6798,
+        "Age": 14.4,
+        "Wheel size": 12
       }
     },
     {
@@ -523,9 +587,11 @@
       "stats": {
         "GitHub stars": 44588,
         "Forks": 29598,
-        "Downloads": 2228474508,
         "Contributors": 3678,
-        "Repo size": 637
+        "Downloads": 2228474508,
+        "Dependents": 632,
+        "Age": 9.4,
+        "Wheel size": 435
       }
     },
     {
@@ -538,9 +604,11 @@
       "stats": {
         "GitHub stars": 2,
         "Forks": 0,
-        "Downloads": 0,
         "Contributors": 1,
-        "Repo size": 7
+        "Downloads": 0,
+        "Dependents": 0,
+        "Age": 0,
+        "Wheel size": 0
       }
     },
     {
@@ -549,14 +617,16 @@
       "pypi": "lightgbm",
       "repo": "lightgbm-org/LightGBM",
       "img_url": "https://lightgbm.readthedocs.io/en/latest/_images/LightGBM_logo_black_text.svg",
-      "img_scale": 0.9,
+      "img_scale": 0.8,
       "color": "#fcb518",
       "stats": {
         "GitHub stars": 18994,
         "Forks": 4111,
-        "Downloads": 727871441,
         "Contributors": 363,
-        "Repo size": 26
+        "Downloads": 727871441,
+        "Dependents": 1089,
+        "Age": 9.4,
+        "Wheel size": 3.3
       }
     },
     {
@@ -570,9 +640,11 @@
       "stats": {
         "GitHub stars": 28271,
         "Forks": 7632,
-        "Downloads": 31786058,
         "Contributors": 264,
-        "Repo size": 869
+        "Downloads": 31786058,
+        "Dependents": 136,
+        "Age": 9,
+        "Wheel size": 0.23
       }
     },
     {
@@ -586,9 +658,11 @@
       "stats": {
         "GitHub stars": 14118,
         "Forks": 2164,
-        "Downloads": 1335572559,
         "Contributors": 217,
-        "Repo size": 53
+        "Downloads": 1335572559,
+        "Dependents": 11785,
+        "Age": 13.1,
+        "Wheel size": 0.28
       }
     },
     {
@@ -602,9 +676,11 @@
       "stats": {
         "GitHub stars": 18913,
         "Forks": 2900,
-        "Downloads": 1547749103,
         "Contributors": 354,
-        "Repo size": 426
+        "Downloads": 1547749103,
+        "Dependents": 8615,
+        "Age": 13.4,
+        "Wheel size": 9.2
       }
     },
     {
@@ -618,9 +694,11 @@
       "stats": {
         "GitHub stars": 14774,
         "Forks": 3083,
-        "Downloads": 1754155089,
         "Contributors": 535,
-        "Repo size": 365
+        "Downloads": 1754155089,
+        "Dependents": 6309,
+        "Age": 17.3,
+        "Wheel size": 1.6
       }
     },
     {
@@ -634,9 +712,11 @@
       "stats": {
         "GitHub stars": 63559,
         "Forks": 13430,
-        "Downloads": 3544098888,
         "Contributors": 1958,
-        "Repo size": 3054
+        "Downloads": 3544098888,
+        "Dependents": 2942,
+        "Age": 3.3,
+        "Wheel size": 42
       }
     },
     {
@@ -650,9 +730,11 @@
       "stats": {
         "GitHub stars": 34074,
         "Forks": 4746,
-        "Downloads": 736866070,
         "Contributors": 783,
-        "Repo size": 200
+        "Downloads": 736866070,
+        "Dependents": 2537,
+        "Age": 11.8,
+        "Wheel size": 34
       }
     },
     {
@@ -665,9 +747,11 @@
       "stats": {
         "GitHub stars": 23874,
         "Forks": 3144,
-        "Downloads": 1000000000000000000,
         "Contributors": 58,
-        "Repo size": 21
+        "Downloads": 1000000000000000000,
+        "Dependents": 0,
+        "Age": 0,
+        "Wheel size": 0
       }
     },
     {
@@ -681,9 +765,11 @@
       "stats": {
         "GitHub stars": 27053,
         "Forks": 3483,
-        "Downloads": 14977796,
         "Contributors": 583,
-        "Repo size": 479
+        "Downloads": 14977796,
+        "Dependents": 244,
+        "Age": 3,
+        "Wheel size": 0.75
       }
     },
     {
@@ -697,9 +783,11 @@
       "stats": {
         "GitHub stars": 12343,
         "Forks": 2013,
-        "Downloads": 10055377,
         "Contributors": 35,
-        "Repo size": 28
+        "Downloads": 10055377,
+        "Dependents": 9,
+        "Age": 8.3,
+        "Wheel size": 7.8
       }
     },
     {
@@ -713,9 +801,11 @@
       "stats": {
         "GitHub stars": 13998,
         "Forks": 2641,
-        "Downloads": 10308835675,
         "Contributors": 607,
-        "Repo size": 208
+        "Downloads": 10308835675,
+        "Dependents": 95835,
+        "Age": 16.3,
+        "Wheel size": 6.9
       }
     },
     {
@@ -729,9 +819,11 @@
       "stats": {
         "GitHub stars": 37294,
         "Forks": 5232,
-        "Downloads": 366555087,
         "Contributors": 224,
-        "Repo size": 32
+        "Downloads": 366555087,
+        "Dependents": 1166,
+        "Age": 7.4,
+        "Wheel size": 2.7
       }
     },
     {
@@ -745,9 +837,11 @@
       "stats": {
         "GitHub stars": 15173,
         "Forks": 2170,
-        "Downloads": 201409830,
         "Contributors": 193,
-        "Repo size": 166
+        "Downloads": 201409830,
+        "Dependents": 803,
+        "Age": 13.2,
+        "Wheel size": 0.12
       }
     },
     {
@@ -759,9 +853,11 @@
       "stats": {
         "GitHub stars": 204,
         "Forks": 46,
-        "Downloads": 7524062619,
         "Contributors": 49,
-        "Repo size": 12
+        "Downloads": 7524062619,
+        "Dependents": 14408,
+        "Age": 16.3,
+        "Wheel size": 0.24
       }
     },
     {
@@ -774,9 +870,11 @@
       "stats": {
         "GitHub stars": 30156,
         "Forks": 3624,
-        "Downloads": 52030010,
         "Contributors": 131,
-        "Repo size": 158
+        "Downloads": 52030010,
+        "Dependents": 323,
+        "Age": 6.6,
+        "Wheel size": 2.7
       }
     },
     {
@@ -790,9 +888,11 @@
       "stats": {
         "GitHub stars": 77591,
         "Forks": 10920,
-        "Downloads": 3235185,
         "Contributors": 252,
-        "Repo size": 54
+        "Downloads": 3235185,
+        "Dependents": 17,
+        "Age": 11.5,
+        "Wheel size": 43
       }
     }
   ]

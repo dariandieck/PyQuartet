@@ -5,10 +5,17 @@ export const STAT_SOURCES = [
   "github_stars",
   "github_forks",
   "github_contributors",
-  "github_size_mb",
   "pepy_downloads",
+  "pypi_wheel_mb",
+  "pypi_age_years",
+  "depsdev_dependents",
 ] as const;
 export type StatSource = (typeof STAT_SOURCES)[number];
+
+/** Sources that need a PyPI package; the others need a GitHub repo. */
+export function needsPypi(source: StatSource): boolean {
+  return source === "pepy_downloads" || source === "pypi_wheel_mb" || source === "pypi_age_years" || source === "depsdev_dependents";
+}
 
 export interface Category {
   label: string;

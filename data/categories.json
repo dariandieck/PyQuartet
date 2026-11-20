@@ -13,22 +13,34 @@
       "source": "github_forks"
     },
     {
-      "label": "Downloads",
-      "unit": null,
-      "polarity": "positive",
-      "source": "pepy_downloads"
-    },
-    {
       "label": "Contributors",
       "unit": null,
       "polarity": "positive",
       "source": "github_contributors"
     },
     {
-      "label": "Repo size",
+      "label": "Downloads",
+      "unit": null,
+      "polarity": "positive",
+      "source": "pepy_downloads"
+    },
+    {
+      "label": "Dependents",
+      "unit": null,
+      "polarity": "positive",
+      "source": "depsdev_dependents"
+    },
+    {
+      "label": "Age",
+      "unit": "years",
+      "polarity": "positive",
+      "source": "pypi_age_years"
+    },
+    {
+      "label": "Wheel size",
       "unit": "MB",
       "polarity": "negative",
-      "source": "github_size_mb"
+      "source": "pypi_wheel_mb"
     }
   ]
 }

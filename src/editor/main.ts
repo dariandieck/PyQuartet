@@ -1,6 +1,6 @@
 import type { RawCard } from "../../scripts/lib/cardsFile.ts";
 import type { Resolved } from "../../scripts/lib/lookup.ts";
-import { formatStat, type Card, type Category, type StatSource } from "../game/model.ts";
+import { formatStat, needsPypi, type Card, type Category, type StatSource } from "../game/model.ts";
 import { CARD_H, CARD_W, CardRenderer } from "../render/cardView.ts";
 import { ImageStore } from "../render/images.ts";
 
@@ -243,8 +243,10 @@ const SOURCE_NAMES: Record<StatSource, string> = {
   github_stars: "GitHub",
   github_forks: "GitHub",
   github_contributors: "GitHub",
-  github_size_mb: "GitHub",
   pepy_downloads: "pepy.tech",
+  pypi_wheel_mb: "PyPI",
+  pypi_age_years: "PyPI",
+  depsdev_dependents: "deps.dev",
 };
 
 let categories: Category[] = [];
@@ -369,13 +371,15 @@ function fetchStats(changed?: "repo" | "pypi"): void {
   for (const { category, field } of statFields) {
     const source = category.source;
     if (!source) continue;
-    const needs = source === "pepy_downloads" ? "pypi" : "repo";
+    const needs = needsPypi(source) ? "pypi" : "repo";
     if (changed && changed !== needs) continue;
     const check = field.begin();
     if (!check) continue;
     const id = needs === "repo" ? repo.value : pypi.value;
     if (!id) {
-      field.fail(needs === "repo" ? "needs a GitHub repo" : "needs a PyPI package");
+      // Not a Python package (e.g. an SDK): its PyPI-based values are 0 by decision, not missing.
+      if (needs === "pypi") field.fill("0", "no PyPI package");
+      else field.fail("needs a GitHub repo");
       continue;
     }
     api<{ value: number }>(`/stat?${query({ source, repo: repo.value, pypi: pypi.value })}`).then(

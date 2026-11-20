@@ -581,7 +581,7 @@ export class GameScene implements Scene {
   private tapInspector(p: Point): void {
     const big = this.inspectorSprite();
     if (!big) return;
-    const link = big.linkAt(p);
+    const link = big.linkAt(p, this.app.renderer);
     if (link) {
       openUrl(link);
       return;
@@ -611,7 +611,7 @@ export class GameScene implements Scene {
 
   /** Logo links are disabled under the game-over overlay. */
   private linkAt(p: Point): string | null {
-    return this.phase === "over" ? null : linkAt(this.sprites, p);
+    return this.phase === "over" ? null : linkAt(this.sprites, p, this.app.renderer);
   }
 
   wantsPointer(p: Point): boolean {
@@ -639,8 +639,13 @@ export class GameScene implements Scene {
 
   private layoutPicker(visible: boolean): void {
     const top = this.layout.tableArea.y + 85;
+    // More than five categories would run into the bottom of the table, so they go into two columns.
+    const columns = this.pickerButtons.length > 5 ? 2 : 1;
+    const perColumn = Math.ceil(this.pickerButtons.length / columns);
     this.pickerButtons.forEach((button, i) => {
-      button.rect = centeredRect(640, top + i * 52, 320, 44);
+      const column = Math.floor(i / perColumn);
+      const x = 640 + (column - (columns - 1) / 2) * 340;
+      button.rect = centeredRect(x, top + (i % perColumn) * 52, 320, 44);
       button.visible = visible;
     });
   }

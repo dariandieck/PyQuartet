@@ -19,8 +19,15 @@ const CATEGORIES_FILE = new URL("../../data/categories.json", import.meta.url);
 
 const KEY_ORDER = ["library", "url", "pypi", "repo", "img_url", "img_scale", "color", "stats"] as const;
 
-/** Fixed key order and no empty optional fields, so diffs of data/cards.json stay small and readable. */
-export function normalizeCard(card: RawCard): RawCard {
+/**
+ * Fixed key order and no empty optional fields, so diffs of data/cards.json stay small and readable. With
+ * `categories`, stats follow their order and values of removed categories are dropped.
+ */
+export function normalizeCard(card: RawCard, categories?: Category[]): RawCard {
+  if (categories) {
+    const stats = Object.fromEntries(categories.flatMap((c) => (c.label in card.stats ? [[c.label, card.stats[c.label]!]] : [])));
+    card = { ...card, stats };
+  }
   const entries = KEY_ORDER.map((key) => [key, card[key]] as const).filter(
     ([key, value]) => key === "stats" || (value !== null && value !== undefined && value !== ""),
   );
@@ -37,7 +44,7 @@ export async function readCards(): Promise<RawCard[]> {
 
 /** Validates with the game's own parser (throws `DeckError`) before anything is written. */
 export async function writeCards(cards: RawCard[], categories: Category[]): Promise<void> {
-  const normalized = cards.map(normalizeCard);
+  const normalized = cards.map((card) => normalizeCard(card, categories));
   parseCards({ cards: normalized }, categories);
   await writeFile(CARDS_FILE, `${JSON.stringify({ cards: normalized }, null, 2)}\n`);
 }

@@ -61,7 +61,7 @@ export class MenuScene implements Scene {
   handle(event: InputEvent): void {
     if (event.kind === "down") {
       if (this.buttons.some((b) => b.click(event.point))) return;
-      const link = linkAt(this.sprites(), event.point);
+      const link = linkAt(this.sprites(), event.point, this.app.renderer);
       if (link) {
         openUrl(link);
         return;
@@ -88,7 +88,7 @@ export class MenuScene implements Scene {
   }
 
   wantsPointer(p: Point): boolean {
-    return this.buttons.some((b) => b.hovered(p)) || linkAt(this.sprites(), p) !== null;
+    return this.buttons.some((b) => b.hovered(p)) || linkAt(this.sprites(), p, this.app.renderer) !== null;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {

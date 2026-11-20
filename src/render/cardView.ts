@@ -18,13 +18,11 @@ export const CARD_H = 310;
 const RADIUS = 14;
 const HEADER_H = 40;
 const IMAGE_TOP = 48;
-const IMAGE_H = 100;
-const STATS_TOP = 158;
-const STATS_BOTTOM = CARD_H - 12;
+const MIN_IMAGE_H = 66;
+const MAX_ROW_H = 28;
+const STATS_BOTTOM = CARD_H - 10;
 const PAD = 12;
 const FULL: Rect = { x: 0, y: 0, w: CARD_W, h: CARD_H };
-const IMAGE_BOX: Rect = { x: PAD, y: IMAGE_TOP, w: CARD_W - 2 * PAD, h: IMAGE_H };
-const PLACEHOLDER_RADIUS = 35;
 
 export type Outcome = "win" | "lose" | "tie";
 
@@ -48,15 +46,23 @@ export interface StatRow {
 /** Draws cards in card-local coordinates (0..CARD_W, 0..CARD_H); callers set up the transform. */
 export class CardRenderer {
   readonly rows: StatRow[];
+  readonly imageBox: Rect;
+  private readonly fontSize: number;
 
   constructor(
     categories: Category[],
     private readonly images: ImageStore,
   ) {
-    const rowH = (STATS_BOTTOM - STATS_TOP) / Math.max(categories.length, 1);
+    // The card keeps its size (the own hand card would leave the screen otherwise): more categories mean
+    // slimmer rows and a flatter logo box, down to MIN_IMAGE_H.
+    const count = Math.max(categories.length, 1);
+    const rowH = Math.min(MAX_ROW_H, (STATS_BOTTOM - IMAGE_TOP - MIN_IMAGE_H - 8) / count);
+    const statsTop = STATS_BOTTOM - count * rowH;
+    this.imageBox = { x: PAD, y: IMAGE_TOP, w: CARD_W - 2 * PAD, h: statsTop - 8 - IMAGE_TOP };
+    this.fontSize = Math.min(14.5, rowH * 0.56);
     this.rows = categories.map((category, i) => ({
       category,
-      rect: { x: PAD / 2, y: STATS_TOP + i * rowH, w: CARD_W - PAD, h: rowH - 2 },
+      rect: { x: PAD / 2, y: statsTop + i * rowH, w: CARD_W - PAD, h: rowH - 2 },
     }));
   }
 
@@ -75,7 +81,7 @@ export class CardRenderer {
     const nameSize = fitFontSize(ctx, card.library, CARD_W - 2 * PAD, 21, true);
     drawText(ctx, card.library, CARD_W / 2, HEADER_H / 2 + 1, { size: nameSize, color: onAccent, bold: true });
 
-    const box = IMAGE_BOX;
+    const box = this.imageBox;
     fillRoundRect(ctx, box, 8, colors.white);
     const image = this.images.get(card);
     if (image && image.naturalWidth > 0) {
@@ -90,7 +96,7 @@ export class CardRenderer {
       ctx.restore();
     } else {
       ctx.beginPath();
-      ctx.arc(box.x + box.w / 2, box.y + box.h / 2, PLACEHOLDER_RADIUS, 0, Math.PI * 2);
+      ctx.arc(box.x + box.w / 2, box.y + box.h / 2, Math.min(35, box.h / 2 - 4), 0, Math.PI * 2);
       ctx.fillStyle = accent;
       ctx.fill();
       drawText(ctx, card.library.slice(0, 2).toUpperCase(), box.x + box.w / 2, box.y + box.h / 2 + 1, {
@@ -115,10 +121,10 @@ export class CardRenderer {
     const cy = rect.y + rect.h / 2;
     drawArrow(ctx, category.polarity === "positive", rect.x + 9, cy, 4.5);
     const valueText = formatStat(category, value);
-    const valueSize = fitFontSize(ctx, valueText, 90, 14.5, true);
+    const valueSize = fitFontSize(ctx, valueText, 90, this.fontSize, true);
     const valueWidth = textWidth(ctx, valueText, valueSize, true);
     drawText(ctx, valueText, rect.x + rect.w - 6, cy, { size: valueSize, color: colors.cardText, bold: true, align: "right" });
-    const labelSize = fitFontSize(ctx, category.label, rect.w - 22 - valueWidth - 12, 14.5);
+    const labelSize = fitFontSize(ctx, category.label, rect.w - 22 - valueWidth - 12, this.fontSize);
     drawText(ctx, category.label, rect.x + 18, cy, { size: labelSize, color: colors.cardText, align: "left" });
   }
 
@@ -217,18 +223,18 @@ export class CardSprite implements FaceState {
   }
 
   /** Homepage link if `p` is on the logo of a fully face-up card (not mid-flip). */
-  linkAt(p: Point): string | null {
+  linkAt(p: Point, renderer: CardRenderer): string | null {
     if (!this.card.url || Math.abs(Math.cos(Math.PI * this.turn)) < 0.95 || !this.faceUp) return null;
     const local = this.toLocal(p);
-    return local && contains(IMAGE_BOX, local) ? this.card.url : null;
+    return local && contains(renderer.imageBox, local) ? this.card.url : null;
   }
 }
 
 /** Topmost card under `p` whose logo links to the library homepage. */
-export function linkAt(sprites: Iterable<CardSprite>, p: Point): string | null {
+export function linkAt(sprites: Iterable<CardSprite>, p: Point, renderer: CardRenderer): string | null {
   const byZ = [...sprites].sort((a, b) => b.z - a.z);
   for (const sprite of byZ) {
-    if (contains(sprite.rect(), p)) return sprite.linkAt(p);
+    if (contains(sprite.rect(), p)) return sprite.linkAt(p, renderer);
   }
   return null;
 }
