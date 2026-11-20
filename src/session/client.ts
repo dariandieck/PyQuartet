@@ -29,7 +29,9 @@ export class ClientSession implements Session {
     this.link.send({ t: "call", label });
   }
 
-  confirmBotCall(): void {}
+  confirmCall(): void {
+    this.link.send({ t: "confirm" });
+  }
 
   continueRound(): void {}
 

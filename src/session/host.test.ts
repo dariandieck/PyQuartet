@@ -62,8 +62,8 @@ describe("HostSession", () => {
       session.call("Stars");
     } else {
       vi.advanceTimersByTime(2000);
-      expect(received.at(-1)).toMatchObject({ kind: "called", callerId: 1, needsConfirm: true });
-      session.confirmBotCall();
+      expect(received.at(-1)).toMatchObject({ kind: "called", callerId: 1, waitingFor: [0] });
+      session.confirmCall();
     }
     expect(received.at(-1)).toMatchObject({ kind: "reveal" });
 
@@ -98,7 +98,40 @@ describe("HostSession", () => {
 
     if (localRound.callerId === 0) session.call("Stars");
     else remote.onMessage({ t: "call", label: "Stars" });
-    expect(local.slice(-2).map((e) => e.kind)).toEqual(["called", "reveal"]);
+    expect(local.at(-1)).toMatchObject({ kind: "called", waitingFor: [notCaller] });
+
+    // The caller can't confirm for the other player; the other player's Call reveals the cards.
+    if (notCaller === 0) remote.onMessage({ t: "confirm" });
+    else session.confirmCall();
+    expect(local.at(-1)!.kind).toBe("called");
+    if (notCaller === 0) session.confirmCall();
+    else remote.onMessage({ t: "confirm" });
+    expect(local.slice(-2).map((e) => e.kind)).toEqual(["confirmed", "reveal"]);
+  });
+
+  it("waits for every human in the round to click Call after a bot's call", () => {
+    const remote = fakeLink();
+    // Math.random 0.99 makes the last seat (the bot) the first caller.
+    vi.spyOn(Math, "random").mockReturnValue(0.99);
+    const session = new HostSession(
+      deck,
+      [
+        { name: "Host", isBot: false },
+        { name: "Anna", isBot: false, link: remote as unknown as HostLink },
+        { name: "Bot", isBot: true },
+      ],
+      ALL_CARDS,
+    );
+    vi.restoreAllMocks();
+    const local = collect(session);
+    session.start();
+    vi.advanceTimersByTime(2000);
+    expect(local.at(-1)).toMatchObject({ kind: "called", callerId: 2, waitingFor: [0, 1] });
+
+    session.confirmCall();
+    expect(local.at(-1)).toMatchObject({ kind: "confirmed", playerId: 0, waitingFor: [1] });
+    remote.onMessage({ t: "confirm" });
+    expect(local.slice(-2).map((e) => e.kind)).toEqual(["confirmed", "reveal"]);
   });
 
   it("redraws the round without a player who leaves before the reveal", () => {

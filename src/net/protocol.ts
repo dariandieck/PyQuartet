@@ -41,8 +41,9 @@ export type GameEvent =
   | { kind: "start"; seats: SeatInfo[]; youId: number; maxRounds: number | null; callerId: number; state: PublicState }
   /** `card` is the receiving player's own drawn card (null if they don't play this round). */
   | { kind: "roundStart"; tie: boolean; participants: number[]; callerId: number; card: string | null; state: PublicState }
-  /** `needsConfirm`: a bot called and the host still has to confirm with Call. */
-  | { kind: "called"; callerId: number; label: string; needsConfirm: boolean }
+  /** `waitingFor`: players who still have to click Call before the reveal (humans with a card who didn't call). */
+  | { kind: "called"; callerId: number; label: string; waitingFor: number[] }
+  | { kind: "confirmed"; playerId: number; waitingFor: number[] }
   | { kind: "reveal"; result: ResultInfo; state: PublicState }
   | { kind: "collect"; state: PublicState }
   /** `restart`: the player left before the reveal, so the round is drawn again. */
@@ -63,7 +64,11 @@ export type HostMessage =
   | { t: "event"; event: GameEvent }
   | { t: "ping" };
 
-export type ClientMessage = { t: "hello"; name: string; version: string } | { t: "call"; label: string } | { t: "ping" };
+export type ClientMessage =
+  | { t: "hello"; name: string; version: string }
+  | { t: "call"; label: string }
+  | { t: "confirm" }
+  | { t: "ping" };
 
 export const MAX_PLAYERS = 4;
 export const MAX_NAME_LENGTH = 16;
@@ -89,6 +94,7 @@ export function parseClientMessage(data: unknown): ClientMessage | null {
     return { t: "hello", name: cleanName(data.name), version: data.version };
   }
   if (data.t === "call" && typeof data.label === "string") return { t: "call", label: data.label };
+  if (data.t === "confirm") return { t: "confirm" };
   if (data.t === "ping") return { t: "ping" };
   return null;
 }

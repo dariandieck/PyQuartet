@@ -11,8 +11,8 @@ export interface Session {
   listen(handler: (event: GameEvent) => void): void;
   /** The local player calls a category (only valid while they are the caller). */
   call(label: string): void;
-  /** Host only: plays the category a bot announced. */
-  confirmBotCall(): void;
+  /** Someone else called: the local player clicks Call too (the reveal waits for every human in the round). */
+  confirmCall(): void;
   /** Host only: collects the cards and starts the next round. */
   continueRound(): void;
   leave(): void;

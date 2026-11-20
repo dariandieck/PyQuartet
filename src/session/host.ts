@@ -16,7 +16,7 @@ export interface HostSeat {
   link?: HostLink;
 }
 
-type Phase = "idle" | "waitCall" | "botPending" | "result" | "over";
+type Phase = "idle" | "waitCall" | "confirming" | "result" | "over";
 
 /** Runs the authoritative game: engine, bots and turn order. Seat 0 is always the local player. */
 export class HostSession implements Session {
@@ -26,6 +26,8 @@ export class HostSession implements Session {
   private readonly bots = new Map<number, Bot>();
   private phase: Phase = "idle";
   private pendingLabel: string | null = null;
+  /** Players who still have to click Call before the called category is played. */
+  private waitingFor = new Set<number>();
   private botTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(
@@ -73,8 +75,8 @@ export class HostSession implements Session {
     this.handleCall(0, label);
   }
 
-  confirmBotCall(): void {
-    if (this.phase === "botPending" && this.pendingLabel) this.play(this.pendingLabel);
+  confirmCall(): void {
+    this.handleConfirm(0);
   }
 
   continueRound(): void {
@@ -123,16 +125,33 @@ export class HostSession implements Session {
     const callerId = this.game.callerId;
     const card = this.game.topCard(callerId);
     if (!card) return;
-    this.pendingLabel = this.bots.get(callerId)!.chooseCategory(card).label;
-    this.phase = "botPending";
-    this.broadcast({ kind: "called", callerId, label: this.pendingLabel, needsConfirm: true });
+    this.announceCall(callerId, this.bots.get(callerId)!.chooseCategory(card).label);
   }
 
   private handleCall(playerId: number, label: string): void {
     if (this.phase !== "waitCall" || playerId !== this.game.callerId) return;
     if (!this.game.categories.some((c) => c.label === label)) return;
-    this.broadcast({ kind: "called", callerId: playerId, label, needsConfirm: false });
-    this.play(label);
+    this.announceCall(playerId, label);
+  }
+
+  /**
+   * Like reading the value off your own card: every human with a card in play who didn't call clicks Call too,
+   * and the cards are revealed once all of them did (user rule; bots never confirm).
+   */
+  private announceCall(callerId: number, label: string): void {
+    this.pendingLabel = label;
+    this.phase = "confirming";
+    this.waitingFor = new Set(
+      this.game.participants.filter((id) => id !== callerId && !this.seats[id]!.isBot && !this.game.left.has(id)),
+    );
+    this.broadcast({ kind: "called", callerId, label, waitingFor: [...this.waitingFor] });
+    if (this.waitingFor.size === 0) this.play(label);
+  }
+
+  private handleConfirm(playerId: number): void {
+    if (this.phase !== "confirming" || !this.waitingFor.delete(playerId)) return;
+    this.broadcast({ kind: "confirmed", playerId, waitingFor: [...this.waitingFor] });
+    if (this.waitingFor.size === 0 && this.pendingLabel) this.play(this.pendingLabel);
   }
 
   private play(label: string): void {
@@ -148,12 +167,13 @@ export class HostSession implements Session {
 
   private onClientMessage(playerId: number, message: ClientMessage): void {
     if (message.t === "call") this.handleCall(playerId, message.label);
+    else if (message.t === "confirm") this.handleConfirm(playerId);
   }
 
   private onPlayerLeft(playerId: number): void {
     if (this.game.left.has(playerId)) return;
     // Before the reveal nothing has been played yet, so the round is simply drawn again without the leaver.
-    const restart = this.phase === "waitCall" || this.phase === "botPending";
+    const restart = this.phase === "waitCall" || this.phase === "confirming";
     const wasOver = this.phase === "over";
     clearTimeout(this.botTimer);
     this.game.removePlayer(playerId);

@@ -66,6 +66,8 @@ export class GameScene implements Scene {
   /** While set, the center text shows only "<label>!" plus arrow instead of message/detail. */
   private callout: Category | null = null;
   private result: ResultInfo | null = null;
+  /** Players who still have to click Call after the current call. */
+  private waitingFor: number[] = [];
   private message = "Starting...";
   private detail = "";
   /** Small status line for online games, e.g. who we are waiting for. */
@@ -126,6 +128,8 @@ export class GameScene implements Scene {
         return this.onPlayerLeft(event);
       case "gameOver":
         return this.onGameOver(event);
+      case "confirmed":
+        return this.onConfirmed(event);
       case "hostLeft":
         return this.onHostLeft();
     }
@@ -222,17 +226,32 @@ export class GameScene implements Scene {
   private onCalled(event: Extract<GameEvent, { kind: "called" }>): void {
     this.announce(this.category(event.label));
     this.layoutPicker(false);
-    if (event.needsConfirm && this.session.isHost) {
-      // The bot's choice is only played once the host confirms it with Call.
+    this.waitingFor = event.waitingFor;
+    if (event.waitingFor.includes(this.youId)) {
+      // Someone else called: you click Call too, as if reading the value off your own card.
       this.phase = "confirm";
       this.callButton.visible = true;
       this.callButton.enabled = true;
+      this.hint = "";
     } else {
       this.phase = "wait";
       this.callButton.visible = false;
-      if (event.needsConfirm) this.hint = "Waiting for the host to confirm...";
-      else this.seq.wait(0.6);
+      this.hint = this.waitingHint();
+      if (event.waitingFor.length === 0) this.seq.wait(0.6);
     }
+  }
+
+  private onConfirmed(event: Extract<GameEvent, { kind: "confirmed" }>): void {
+    this.waitingFor = event.waitingFor;
+    if (this.phase !== "confirm") this.hint = this.waitingHint();
+  }
+
+  /** "Waiting for Anna and Bot 2 to call..." while other players still have to click Call. */
+  private waitingHint(): string {
+    const others = this.waitingFor.filter((id) => id !== this.youId).map((id) => this.name(id));
+    if (others.length === 0) return "";
+    const names = others.length === 1 ? others[0] : `${others.slice(0, -1).join(", ")} and ${others.at(-1)}`;
+    return `Waiting for ${names} to call...`;
   }
 
   private onReveal(event: Extract<GameEvent, { kind: "reveal" }>): void {
@@ -474,7 +493,9 @@ export class GameScene implements Scene {
     } else if (this.phase === "confirm") {
       this.phase = "wait";
       this.callButton.visible = false;
-      this.seq.wait(0.6).then(() => this.session.confirmBotCall());
+      this.waitingFor = this.waitingFor.filter((id) => id !== this.youId);
+      this.hint = this.waitingHint();
+      this.seq.wait(0.6).then(() => this.session.confirmCall());
     }
   }
 
