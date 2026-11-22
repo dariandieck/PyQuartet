@@ -7,14 +7,18 @@ import type { Card } from "../game/model.ts";
 export class ImageStore {
   private readonly images = new Map<string, HTMLImageElement>();
 
-  load(cards: Card[]): void {
+  /** `onLoad` lets pages that only draw on demand (the card gallery) redraw a card once its image arrived. */
+  load(cards: Card[], onLoad?: (card: Card) => void): void {
     for (const card of cards) {
       if (!card.imgUrl) continue;
       const image = new Image();
       image.decoding = "async";
       // Some image hosts block hotlinking based on the Referer header.
       image.referrerPolicy = "no-referrer";
-      image.addEventListener("load", () => this.images.set(card.library, image));
+      image.addEventListener("load", () => {
+        this.images.set(card.library, image);
+        onLoad?.(card);
+      });
       image.addEventListener("error", () => console.warn(`[images] could not load ${card.imgUrl}`));
       image.src = card.imgUrl;
     }
