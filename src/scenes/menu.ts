@@ -11,6 +11,7 @@ import { SetupScene } from "./setup.ts";
 
 const SHOWCASE_Y = 400;
 const SHOWCASE_FLIP_SPEED = 2.5; // turns per second, i.e. one flip takes 0.4 s
+const SHOWCASE_EXCLUDED = new Set(["best-of-ml-python", "ml-shuffling-regularization"]);
 
 interface Showcase {
   sprite: CardSprite;
@@ -41,7 +42,9 @@ export class MenuScene implements Scene {
       new Button(centeredRect(1182, 694, 140, 32), "View on GitHub", () => openUrl(REPO_URL), 14),
       this.fullscreenButton,
     ];
-    const cards = app.deck.cards;
+    const allowed = app.deck.cards.filter((card) => !SHOWCASE_EXCLUDED.has(card.library));
+    // A deck of (almost) only excluded cards still needs two cards to show.
+    const cards = allowed.length >= 2 ? allowed : app.deck.cards;
     const len = cards.length;
     const i1 = Math.floor(Math.random() * len);
     const i2 = (i1 + 1 + Math.floor(Math.random() * (len - 1))) % len;
