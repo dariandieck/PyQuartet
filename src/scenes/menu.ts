@@ -1,8 +1,8 @@
 import { polarityHint } from "../game/model.ts";
-import { REPO_URL, openUrl } from "../links.ts";
+import { CARDS_PAGE, REPO_URL, openUrl } from "../links.ts";
 import { Button } from "../render/button.ts";
 import { CardSprite, linkAt } from "../render/cardView.ts";
-import { centeredRect, contains, drawArrow, drawText, type Point, type Rect } from "../render/draw.ts";
+import { centeredRect, contains, drawArrow, drawText, textWidth, type Point, type Rect } from "../render/draw.ts";
 import { colors } from "../render/theme.ts";
 import { canFullscreen, enterFullscreen, exitFullscreen, isFullscreen, isTouchDevice } from "../platform.ts";
 import { LobbyScene } from "./lobby.ts";
@@ -37,7 +37,8 @@ export class MenuScene implements Scene {
       new Button(centeredRect(640, 325, 380, 58), "Play vs Bot", () => this.start()),
       new Button(centeredRect(640, 397, 380, 58), "Create room", () => app.switchTo(new LobbyScene(app, "host"))),
       new Button(centeredRect(640, 469, 380, 58), "Join room", () => app.switchTo(new LobbyScene(app, "join"))),
-      new Button(centeredRect(1150, 684, 220, 46), "View on GitHub", () => openUrl(REPO_URL), 18),
+      new Button(centeredRect(1032, 694, 140, 32), "See all cards", () => window.location.assign(CARDS_PAGE), 14),
+      new Button(centeredRect(1182, 694, 140, 32), "View on GitHub", () => openUrl(REPO_URL), 14),
       this.fullscreenButton,
     ];
     const cards = app.deck.cards;
@@ -98,7 +99,11 @@ export class MenuScene implements Scene {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    drawText(ctx, "PyQuartet", 640, 140, { size: 64, color: colors.pyYellow, bold: true });
+    // Same two-color logo as the card backs: "Py" yellow, "Quartet" white.
+    const pyWidth = textWidth(ctx, "Py", 64, true);
+    const left = 640 - textWidth(ctx, "PyQuartet", 64, true) / 2;
+    drawText(ctx, "Py", left, 140, { size: 64, color: colors.pyYellow, bold: true, align: "left" });
+    drawText(ctx, "Quartet", left + pyWidth, 140, { size: 64, color: colors.white, bold: true, align: "left" });
     drawText(ctx, "Learn which Python packages power ML-Pipelines", 640, 205, { size: 22 });
     const { cards, categories } = this.app.deck;
     drawText(ctx, `${cards.length} cards  -  ${categories.length} categories`, 640, 250, {

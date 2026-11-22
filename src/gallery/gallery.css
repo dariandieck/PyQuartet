@@ -1,0 +1,317 @@
+:root {
+  --bg: #182030;
+  --panel: #202c42;
+  --line: #33415c;
+  --text: #ebeef5;
+  --dim: #96a0b4;
+  --blue: #4b91cd;
+  --yellow: #ffd43b;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Keeps the layout from shifting when a search leaves too few cards to scroll and the scrollbar disappears. */
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+a {
+  color: var(--blue);
+}
+
+/* Search stays reachable while scrolling through the grid. */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 14px max(16px, env(safe-area-inset-left)) 12px max(16px, env(safe-area-inset-right));
+  background: rgb(24 32 48 / 0.94);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.back {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.py {
+  color: var(--yellow);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#search {
+  width: 100%;
+  max-width: 640px;
+  /* At least 16px: iOS zooms into smaller inputs. */
+  font: inherit;
+  font-size: 17px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  outline: none;
+}
+
+#search:focus {
+  border-color: var(--blue);
+}
+
+#search::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+/* Search, sort dropdown and direction in one centered row; it wraps below the search on narrow screens. */
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 880px;
+}
+
+.search-row #search {
+  flex: 1 1 320px;
+  width: auto;
+  max-width: none;
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--dim);
+}
+
+#sort-key,
+.sort-dir {
+  /* 16px or more: iOS zooms into smaller form fields. */
+  font: inherit;
+  font-size: 16px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  outline: none;
+}
+
+#sort-key:focus-visible,
+.sort-dir:focus-visible {
+  border-color: var(--blue);
+}
+
+.sort-dir {
+  min-width: 96px;
+}
+
+.sort-dir:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.meta,
+.note {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--dim);
+}
+
+/* Count | switch | note: the switch stays in the middle, so a longer note only grows to the right. */
+.meta {
+  display: grid;
+  /* minmax(0, ...) + nowrap: a longer count or note never widens its column or wraps (both would move the switch). */
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 640px;
+  white-space: nowrap;
+}
+
+/* "0 of 50 cards" grows to the left, the note to the right. */
+#count {
+  justify-self: end;
+}
+
+#values-note {
+  justify-self: start;
+  text-align: left;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text);
+  user-select: none;
+}
+
+/* The real checkbox stays for keyboard and screen readers; the switch is its look. */
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.switch {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--line);
+  transition: background 0.15s;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform 0.15s;
+}
+
+.toggle input:checked + .switch {
+  background: var(--blue);
+}
+
+.toggle input:checked + .switch::after {
+  transform: translateX(16px);
+}
+
+.toggle input:focus-visible + .switch {
+  box-shadow: 0 0 0 3px var(--yellow);
+}
+
+#values-note {
+  font-size: 13px;
+}
+
+#count {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/*
+ * Fixed 260px columns (about 1.2x the in-game card, so keywords and summary are easy to read), centered with
+ * free space left and right: at most 5 columns, 4 on a 1280px screen. The page scrolls vertically.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 260px);
+  justify-content: center;
+  gap: 24px;
+  padding: 20px max(16px, env(safe-area-inset-left)) 40px max(16px, env(safe-area-inset-right));
+  /* 5 columns + 4 gaps + padding. */
+  max-width: 1430px;
+  margin: 0 auto;
+}
+
+.card {
+  width: 100%;
+  max-width: 260px;
+  cursor: pointer;
+  border-radius: 14px;
+  outline: none;
+  transition: transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 220 / 310;
+  filter: drop-shadow(0 6px 8px rgb(0 0 0 / 0.3));
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.card:focus-visible {
+  box-shadow: 0 0 0 3px var(--yellow);
+}
+
+.empty {
+  text-align: center;
+  color: var(--dim);
+  font-size: 17px;
+  margin: 40px 16px;
+}
+
+/* Phones: one card per row over the full width; a sticky header would cover a third of the screen. */
+@media (max-width: 520px) {
+  .top {
+    position: static;
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    max-width: none;
+  }
+
+  /* No room for the note next to the switch: it gets its own row; count and switch keep their fixed places. */
+  .meta {
+    row-gap: 6px;
+  }
+
+  #values-note {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+}
