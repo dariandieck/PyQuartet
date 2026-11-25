@@ -6,7 +6,7 @@
       "pypi": "pandas",
       "repo": "pandas-dev/pandas",
       "img_url": "https://pandas.pydata.org/static/img/pandas.svg",
-      "img_scale": 0.85,
+      "img_scale": 0.9,
       "color": "#130754",
       "keywords": [
         "data-science",
@@ -30,7 +30,7 @@
       "pypi": "matplotlib",
       "repo": "matplotlib/matplotlib",
       "img_url": "https://matplotlib.org/stable/_static/logo2.svg",
-      "img_scale": 0.9,
+      "img_scale": 0.85,
       "color": "#11557c",
       "keywords": [
         "data-visualization",
@@ -55,7 +55,7 @@
       "pypi": "torch",
       "repo": "pytorch/pytorch",
       "img_url": "https://raw.githubusercontent.com/pytorch-fdn/artwork/refs/heads/main/projects/PyTorch/horizontal/PyTorch%20Logo%202022_RGB_PyTorchLogo_Horiz_fullColor_RGB.png",
-      "img_scale": 1.05,
+      "img_scale": 1.15,
       "color": "#dd3412",
       "keywords": [
         "deep-learning",
@@ -105,7 +105,7 @@
       "pypi": "scikit-learn",
       "repo": "scikit-learn/scikit-learn",
       "img_url": "https://scikit-learn.org/stable/_images/scikit-learn-logo-notext.png",
-      "img_scale": 0.9,
+      "img_scale": 0.95,
       "color": "#f89939",
       "keywords": [
         "machine-learning",
@@ -130,7 +130,7 @@
       "pypi": "polars",
       "repo": "pola-rs/polars",
       "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG6Y5al4W6F9cNiITwa5A0pC4QY0voll3wEZFJWWyErembK3Wida_K5js&s=10",
-      "img_scale": 0.95,
+      "img_scale": 0.9,
       "color": "#0376ff",
       "keywords": [
         "dataframes",
@@ -155,7 +155,7 @@
       "pypi": "xgboost",
       "repo": "dmlc/xgboost",
       "img_url": "https://xgboost.ai/images/logo/xgboost-logo-trimmed.png",
-      "img_scale": 0.95,
+      "img_scale": 0.8,
       "color": "#2887d7",
       "keywords": [
         "gradient-boosting",
@@ -180,7 +180,7 @@
       "pypi": "keras",
       "repo": "keras-team/keras",
       "img_url": "https://keras.io/img/logo-k-keras-wb.png",
-      "img_scale": 0.85,
+      "img_scale": 0.75,
       "color": "#d00000",
       "keywords": [
         "deep-learning",
@@ -205,7 +205,7 @@
       "pypi": "opencv-python",
       "repo": "opencv/opencv",
       "img_url": "https://avatars.githubusercontent.com/u/5009934?v=4&s=400",
-      "img_scale": 0.85,
+      "img_scale": 0.94,
       "color": "#128dff",
       "keywords": [
         "computer-vision",
@@ -230,7 +230,7 @@
       "pypi": "transformers",
       "repo": "huggingface/transformers",
       "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/transformers-logo-light.svg",
-      "img_scale": 0.9,
+      "img_scale": 0.86,
       "color": "#ffd21e",
       "keywords": [
         "natural-language-processing",
@@ -255,7 +255,7 @@
       "pypi": "datasets",
       "repo": "huggingface/datasets",
       "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/datasets-logo-light.svg",
-      "img_scale": 0.9,
+      "img_scale": 0.77,
       "color": "#ffd21e",
       "keywords": [
         "data-processing",
@@ -280,7 +280,7 @@
       "pypi": "huggingface-hub",
       "repo": "huggingface/huggingface_hub",
       "img_url": "https://huggingface.co/datasets/huggingface/documentation-images/raw/main/huggingface_hub.svg",
-      "img_scale": 0.95,
+      "img_scale": 1,
       "color": "#ffd21e",
       "keywords": [
         "model-hub",
@@ -305,7 +305,7 @@
       "pypi": "numpy",
       "repo": "numpy/numpy",
       "img_url": "https://raw.githubusercontent.com/numpy/numpy/main/branding/logo/primary/numpylogo.svg",
-      "img_scale": 0.95,
+      "img_scale": 1.05,
       "color": "#4d77cf",
       "keywords": [
         "numerical-computing",
@@ -330,7 +330,7 @@
       "pypi": "torchcodec",
       "repo": "meta-pytorch/torchcodec",
       "img_url": "https://raw.githubusercontent.com/meta-pytorch/torchcodec/main/docs/source/_static/img/torchcodec_horizontal_logo.jpg",
-      "img_scale": 1,
+      "img_scale": 0.94,
       "color": "#ee4a29",
       "keywords": [
         "video-decoding",
@@ -355,7 +355,7 @@
       "pypi": "torchaudio",
       "repo": "pytorch/audio",
       "img_url": "https://raw.githubusercontent.com/pytorch/audio/HEAD/docs/source/_static/img/logo.png",
-      "img_scale": 1.1,
+      "img_scale": 1.15,
       "color": "#f54e2b",
       "keywords": [
         "audio-processing",
@@ -380,7 +380,7 @@
       "pypi": "torchvision",
       "repo": "pytorch/vision",
       "img_url": "https://avatars.githubusercontent.com/u/21003710?v=4&s=400",
-      "img_scale": 0.95,
+      "img_scale": 1,
       "color": "#ee4c2c",
       "keywords": [
         "computer-vision",
@@ -405,7 +405,7 @@
       "pypi": "ultralytics",
       "repo": "ultralytics/ultralytics",
       "img_url": "https://cdn.ul.run/i/3f90d47fc8daa54a5e2478debbf87f67.svg",
-      "img_scale": 0.8,
+      "img_scale": 0.86,
       "color": "#0b23a9",
       "keywords": [
         "object-detection",
@@ -430,7 +430,7 @@
       "pypi": "pydantic",
       "repo": "pydantic/pydantic",
       "img_url": "https://avatars.githubusercontent.com/u/110818415?v=4&s=400",
-      "img_scale": 0.85,
+      "img_scale": 0.9,
       "color": "#e620e9",
       "keywords": [
         "data-validation",
@@ -455,7 +455,7 @@
       "pypi": "boto3",
       "repo": "boto/boto3",
       "img_url": "https://digitalcloud.training/wp-content/uploads/2023/08/a-logo-with-a-cube-and-text-description-automatic.jpeg?update_image_id_1692074618",
-      "img_scale": 1.1,
+      "img_scale": 1.2,
       "color": "#fed641",
       "keywords": [
         "aws",
@@ -480,7 +480,7 @@
       "pypi": "PyYAML",
       "repo": "yaml/pyyaml",
       "img_url": "https://avatars.githubusercontent.com/u/69535?v=4&s=400",
-      "img_scale": 0.8,
+      "img_scale": 0.85,
       "color": "#cb171e",
       "keywords": [
         "yaml",
@@ -505,7 +505,7 @@
       "pypi": "jax",
       "repo": "jax-ml/jax",
       "img_url": "https://raw.githubusercontent.com/jax-ml/jax/main/images/jax_logo_250px.png",
-      "img_scale": 0.85,
+      "img_scale": 0.8,
       "color": "#5d97f6",
       "keywords": [
         "automatic-differentiation",
@@ -555,7 +555,7 @@
       "pypi": "langgraph",
       "repo": "langchain-ai/langgraph",
       "img_url": "https://github.com/langchain-ai/langgraph/raw/main/.github/images/logo-light.svg",
-      "img_scale": 0.95,
+      "img_scale": 0.87,
       "color": "#7fc8ff",
       "keywords": [
         "agent-orchestration",
@@ -580,7 +580,7 @@
       "pypi": "mlflow",
       "repo": "mlflow/mlflow",
       "img_url": "https://raw.githubusercontent.com/mlflow/mlflow/refs/heads/master/assets/logo.svg",
-      "img_scale": 0.85,
+      "img_scale": 0.75,
       "color": "#0194e2",
       "keywords": [
         "mlops",
@@ -605,7 +605,7 @@
       "pypi": "comfyui",
       "repo": "Comfy-Org/ComfyUI",
       "img_url": "https://comfy.org/icons/logo.svg",
-      "img_scale": 0.85,
+      "img_scale": 0.8,
       "color": "#f2ff59",
       "keywords": [
         "diffusion-models",
@@ -630,7 +630,7 @@
       "pypi": "vllm",
       "repo": "vllm-project/vllm",
       "img_url": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png",
-      "img_scale": 1,
+      "img_scale": 0.85,
       "color": "#31a3ff",
       "keywords": [
         "llm-inference",
@@ -655,7 +655,7 @@
       "pypi": "ollama",
       "repo": "ollama/ollama-python",
       "img_url": "https://avatars.githubusercontent.com/u/151674099?v=4&s=400",
-      "img_scale": 1,
+      "img_scale": 1.2,
       "color": "#000000",
       "keywords": [
         "local-llm",
@@ -680,7 +680,7 @@
       "pypi": "llama-cpp-python",
       "repo": "ggml-org/llama.cpp",
       "img_url": "https://raw.githubusercontent.com/ggml-org/llama-brand/refs/heads/master/logo/svg/cover/llama-cpp/cover-llama-cpp-light.svg",
-      "img_scale": 1.6,
+      "img_scale": 1.7,
       "color": "#ee6c1e",
       "keywords": [
         "llm-inference",
@@ -705,7 +705,7 @@
       "pypi": "lmstudio",
       "repo": "lmstudio-ai/lms",
       "img_url": "https://files.lmstudio.ai/lms-light.png",
-      "img_scale": 0.95,
+      "img_scale": 1.05,
       "color": "#000000",
       "keywords": [
         "local-llm",
@@ -730,7 +730,7 @@
       "pypi": "paddlepaddle",
       "repo": "PaddlePaddle/Paddle",
       "img_url": "https://github.com/PaddlePaddle/Paddle/raw/develop/doc/imgs/logo.png",
-      "img_scale": 2,
+      "img_scale": 1.6,
       "color": "#2a34df",
       "keywords": [
         "deep-learning",
@@ -755,7 +755,7 @@
       "pypi": "pytorch-lightning",
       "repo": "Lightning-AI/pytorch-lightning",
       "img_url": "https://pl-public-data.s3.amazonaws.com/assets_lightning/pytorch-lightning.png",
-      "img_scale": 0.94,
+      "img_scale": 0.95,
       "color": "#792ee5",
       "keywords": [
         "deep-learning",
@@ -780,7 +780,7 @@
       "pypi": "statsmodels",
       "repo": "statsmodels/statsmodels",
       "img_url": "https://www.statsmodels.org/stable/_images/statsmodels-logo-v2.svg",
-      "img_scale": 0.8,
+      "img_scale": 0.9,
       "color": "#3f51b5",
       "keywords": [
         "statistics",
@@ -829,7 +829,7 @@
       "url": "https://github.com/dariandieck/ml-shuffling-regularization",
       "repo": "dariandieck/ml-shuffling-regularization",
       "img_url": "https://raw.githubusercontent.com/dariandieck/ml-shuffling-regularization/HEAD/figures/toy_shuffling.png",
-      "img_scale": 0.9,
+      "img_scale": 1,
       "color": "#2a78d6",
       "keywords": [
         "data-shuffling",
@@ -837,7 +837,7 @@
         "sgd-experiment",
         "reproducible-research"
       ],
-      "summary": "ml-shuffling-regularization is a PyTorch experiment testing whether data shuffling improves generalization of a plain-SGD MLP (784-256-256-10) on MNIST and Fashion-MNIST. It compares five batch-order variants (A-E) over 20 seeds with paired statistics, as scripts and notebooks.",
+      "summary": "ml-shuffling-regularization is a PyTorch experiment testing whether data shuffling improves generalization of simple MLPs on two small datasets. It compares five batch-order variants over 20 seeds with paired statistic. This is one of my own projects. A completely unbiased recommendation, of course.",
       "stats": {
         "GitHub stars": 2,
         "Forks": 0,
@@ -854,7 +854,7 @@
       "pypi": "lightgbm",
       "repo": "lightgbm-org/LightGBM",
       "img_url": "https://lightgbm.readthedocs.io/en/latest/_images/LightGBM_logo_black_text.svg",
-      "img_scale": 0.8,
+      "img_scale": 0.75,
       "color": "#fcb518",
       "keywords": [
         "gradient-boosting",
@@ -904,7 +904,7 @@
       "pypi": "seaborn",
       "repo": "mwaskom/seaborn",
       "img_url": "https://raw.githubusercontent.com/mwaskom/seaborn/master/doc/_static/logo-wide-lightbg.svg",
-      "img_scale": 0.95,
+      "img_scale": 0.84,
       "color": "#5c7da2",
       "keywords": [
         "data-visualization",
@@ -929,7 +929,7 @@
       "pypi": "plotly",
       "repo": "plotly/plotly.py",
       "img_url": "https://plotly-marketing-website-2.cdn.prismic.io/plotly-marketing-website-2/Z7eNlJ7c43Q3gCJv_Plotly-Logo-Black.svg",
-      "img_scale": 1.2,
+      "img_scale": 1.05,
       "color": "#16172c",
       "keywords": [
         "interactive-charts",
@@ -953,8 +953,8 @@
       "url": "https://www.nltk.org/",
       "pypi": "nltk",
       "repo": "nltk/nltk",
-      "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcLLxOyFwzUDeWA2t1qOZJ79AHFLmvewdgkpT_dl18PRvvPY1JTOgpkAOd&s=10",
-      "img_scale": 0.95,
+      "img_url": "https://avatars.githubusercontent.com/u/124114?v=4&s=400",
+      "img_scale": 1,
       "color": "#e41736",
       "keywords": [
         "natural-language-processing",
@@ -967,9 +967,9 @@
         "GitHub stars": 14774,
         "Forks": 3083,
         "Contributors": 535,
-        "Downloads": 1754155089,
+        "Downloads": 2000000000,
         "Dependents": 6309,
-        "Age": 17.3,
+        "Age": 17.4,
         "Wheel size": 1.6
       }
     },
@@ -979,7 +979,7 @@
       "pypi": "litellm",
       "repo": "BerriAI/litellm",
       "img_url": "https://cdn.prod.website-files.com/69eb241da3f923869c226875/6abd81536a788cbaee24b19d_Primary%20Logo%20Blue.svg",
-      "img_scale": 0.9,
+      "img_scale": 0.8,
       "color": "#0117be",
       "keywords": [
         "llm-gateway",
@@ -1004,7 +1004,7 @@
       "pypi": "spacy",
       "repo": "explosion/spaCy",
       "img_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/SpaCy_logo.svg/960px-SpaCy_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20161218210724",
-      "img_scale": 0.85,
+      "img_scale": 0.7,
       "color": "#09a3d5",
       "keywords": [
         "natural-language-processing",
@@ -1027,8 +1027,8 @@
       "library": "best-of-ml-python",
       "url": "https://ml-python.best-of.org",
       "repo": "lukasmasuch/best-of-ml-python",
-      "img_url": "http://bit.ly/3o3EHNN",
-      "img_scale": 0.8,
+      "img_url": "https://img.shields.io/badge/-best--of-blue?link=https://github.com/ml-tooling/best-of&style=flat&color=5ac4bf&logoWidth=20&labelColor=grey&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAcZJREFUaN7tmDFrFEEYht/vcs2lEBQhpJUgCIGrooVpQlKly6/RVsROkZR2Abs06RTBVoJesPAgRX7BFXdZSJ99LG4PL3tLLrMzu0Nwnm5nd+Z7nxmYnV0pkUjcgOWMgfdAL2DNHvChGPtWQgjMOAshAawCv+9aNKQAwMcAAocuBcv9rUrAof7EzB57CkwkPbrr82Z2I/NSgXIHR0FnltUr3+80GaYNkkBskkBskkBskkBskkBskkBsuhVtmaSHs4umT59lltTLyg1VK3DcZmBHFrJVfQ88kDSQ9DR22hIXkrbM7Gq+cWEFige2JH1SxZJFICuyLISvBfDa8bvZhVeueersQl8bnO0vDY79D+C0gdn/0Ur4QmAbyAOGz4GXrQkUEm8DCrxpNXwhYMA7z5XIi4kw/0T1RXaBQY3wv4Ad3/pBzIsZfC7pQNILSZuSyn/sxpKGkn5KOpE0MDPvY0pjSwe3/1ELxb0/jSaB2HT9h5gCdCTtSdqX9Kzi/jdJ55oeRb6bWR5bfj5cHxg6bKF/gH7s3LPwG0BW4z1wCTyJnV/AZ4838ZFvfe+9GRhJWqvZfWRm67EFrlV/N8vNbMU3QyLxP/MXaNf32Sohq8oAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMTEtMTNUMTM6Mzg6MTArMDA6MDCuo3JzAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTExLTEzVDEzOjM4OjEwKzAwOjAw3/7KzwAAACh0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vdG1wL21hZ2ljay0wREdPdU80YXKayL4AAAAASUVORK5CYII=",
+      "img_scale": 0.7,
       "color": "#53b2ae",
       "keywords": [
         "awesome-list",
@@ -1036,12 +1036,12 @@
         "curated-list",
         "project-ranking"
       ],
-      "summary": "best-of-ml-python is a curated, automatically ranked list of open-source Python machine learning projects, grouped into categories such as NLP and visualization. A GitHub Action collects metadata from GitHub and PyPI to compute a project-quality score and updates the ranking weekly.",
+      "summary": "best-of-ml-python is a curated, automatically ranked list of open-source Python machine learning projects, grouped into categories such as NLP and visualization. This repository served as a reference point and inspiration for identifying leading ML projects and libraries.",
       "stats": {
         "GitHub stars": 23874,
         "Forks": 3144,
         "Contributors": 58,
-        "Downloads": 1000000000000000000,
+        "Downloads": 0,
         "Dependents": 0,
         "Age": 0,
         "Wheel size": 0
@@ -1053,7 +1053,7 @@
       "pypi": "haystack-ai",
       "repo": "deepset-ai/haystack",
       "img_url": "https://haystack.deepset.ai/images/logos/haystack.png",
-      "img_scale": 0.85,
+      "img_scale": 0.75,
       "color": "#2558ff",
       "keywords": [
         "retrieval-augmented-generation",
@@ -1078,7 +1078,7 @@
       "pypi": "english-words",
       "repo": "dwyl/english-words",
       "img_url": "https://avatars.githubusercontent.com/u/11708465?v=4&s=400",
-      "img_scale": 0.85,
+      "img_scale": 0.9,
       "color": "#4bc0a9",
       "keywords": [
         "word-list",
@@ -1103,7 +1103,7 @@
       "pypi": "pillow",
       "repo": "python-pillow/Pillow",
       "img_url": "https://python-pillow.org/assets/images/pillow-logo-light-text-480x240.png",
-      "img_scale": 1.05,
+      "img_scale": 1.1,
       "color": "#98bbf5",
       "keywords": [
         "image-processing",
@@ -1153,7 +1153,7 @@
       "pypi": "moviepy",
       "repo": "Zulko/moviepy",
       "img_url": "https://zulko.github.io/moviepy/_images/logo.png",
-      "img_scale": 0.9,
+      "img_scale": 0.8,
       "color": "#1c1c1c",
       "keywords": [
         "video-editing",
